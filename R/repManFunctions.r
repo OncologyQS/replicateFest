@@ -1,10 +1,10 @@
 # Functions for analysis of Manafest data in shiny app
-# 
+#
 #
 geti = function(x,i){return(x[i])}
 
 
-# reads files, removes non-productive sequencies, extracts counts, 
+# reads files, removes non-productive sequencies, extracts counts,
 # creates all necessary objects, and saves them
 # input: a path to folder with input files
 # output:
@@ -20,13 +20,13 @@ readMergeSave = function(files, filenames = NULL)
 	}
 		require(tools)
 		require(immunarch)
-		
+
   # output objects
 		mergedData = ntData = list()
-		
+
 		# read all files with immunarch functionality
 		repertoire = repLoad(.path = files)
-		
+
 		# the names of files that were actually read in
 		readFiles = c()
 		for(i in names(repertoire$data))
@@ -47,7 +47,7 @@ readMergeSave = function(files, filenames = NULL)
 			return(NULL)
 		}
 		# if file names are not supplied, use internal shiny server file names (0,1,2,..)
-		if (is.null(filenames)) 
+		if (is.null(filenames))
 		{
 		  filenames = readFiles
 		} else {
@@ -56,10 +56,10 @@ readMergeSave = function(files, filenames = NULL)
 		  # shiny server saves files with 0,1,2,.. names
 		  ind = as.numeric(names(repertoire$data))+1
 		  filenames = sapply(unlist(filenames[ind]),file_path_sans_ext)
-		}	
+		}
 		# assign file names as names to objects
 #		browser()
-		# if not all loaded files 
+		# if not all loaded files
 		names(mergedData) = names(ntData) = filenames
 		return(list(mergedData = mergedData,ntData = ntData))
 }
@@ -74,7 +74,7 @@ readCount=function(mergeData){  ### calculate total read count for each sample, 
     reads=sapply(mergeData,function(x) return(sum(x)))
     return(reads)
     }
-    
+
 
 #### function to make the count matrix for 1 clone, from merged data
 #### requires 1 input:
@@ -83,9 +83,9 @@ cTabPR=function(clone,mergeData,correct=.5){
      minna=function(x){  ### function to deal with missing values
         if(is.na(x)) x=0
         return(x)}
-     
+
      cts=sapply(mergeData,function(x) return(x[clone]))
-     cts=sapply(cts,minna) 
+     cts=sapply(cts,minna)
      sms=readCount(mergeData)-cts
      ans=cbind(cts,sms)+correct
      return(ans)
@@ -103,7 +103,7 @@ cDfPR=function(cTab,peps,control="NPA"){
 datPR=data.frame(as.vector(cTab),rep(c("c+","c-"),rep(nrow(cTab),2)),rep(peps,2))
 colnames(datPR)=c("cts","clone","pep")
 datPR$pep[which(datPR$pep==control)]=paste0("000",control)
-return(datPR)  
+return(datPR)
 }
 
 #### new function to make data frame for regression
@@ -121,21 +121,22 @@ cDfPRv2=function(cTab,peps,control="NPA"){
                           levels=c("c-","c+")),
                    factor(rep(peps,2),levels=c(control,sort(setdiff(peps,control)))))
   colnames(datPR)=c("cts","clone","pep")
-  return(datPR)  
+  return(datPR)
 }
 
 #### function to put the peptides into order from most expanded to least.
 #### requires 1 input:
-###### 1) coefs = model coefficeint matrix (mhcMod$coef) 
+###### 1) coefs = model coefficeint matrix (mhcMod$coef)
 pepOrdPR=function(coefs){
     intCoefLocs=grep("clonec+:",names(coefs),fixed=T)
     names(intCoefLocs)=sub("clonec+:pep","",names(coefs)[intCoefLocs],fixed=T)
     intCoefLocs=intCoefLocs[order(coefs[intCoefLocs],decreasing=T)]
     return(intCoefLocs)}
 
-#### function to convert regression output to OR scale and format    
+#### function to convert regression output to OR scale and format
 #### requires 1 input:
 ###### 1) dt = row from mhcMod$coef matrix
+######
 
 prepStatsPR=function(dt){  ## dt=row from coefficent matrix
     ##dt=summary(mhcMod)$coef[pepOrd[pep],]
@@ -153,7 +154,7 @@ prepStatsPR=function(dt){  ## dt=row from coefficent matrix
 #### messy, surely can be improved
 #### requires 2 inputs:
 ###### 1) cts = counts object created by cTabPR
-###### 2) cfs = matrix extracted from model results as 
+###### 2) cfs = matrix extracted from model results as
 ###### coefs[interact,] where
 ##### coefs=summary(mhcMod)$coef; interact=grep(":",rownames(coefs),fixed=T)
 ##### probably better to either operate straight on mhcMod or add a function like cTabPR to do so
@@ -169,17 +170,17 @@ dfResultPR=function(cts,cfs){
 #### should one line of code even be a function?
 #### still includes code for reporting frequencies instead of or in addition to counts,
 ## which should be reinstated as agreed in call with Kellie Smith
-#### requires 2 inputs 
+#### requires 2 inputs
 ###### 1) cts = counts object created by cTabPR
-###### 2) groups = vector of peptides corresponding to columns in merged data, 
+###### 2) groups = vector of peptides corresponding to columns in merged data,
 ######.   called 'peps' or 'peptides' in most functions, maybe change?
 vResultPR=function(cts,groups){
-   
+
     #freqs=cts[,1]/apply(cts,1,sum)
     #freqs=paste(cts[,1],apply(cts,1,sum),sep="/")
    # names(freqs)=groups
     return(cts[,1])
-   
+
     }
 
 
@@ -193,13 +194,13 @@ vResultPR=function(cts,groups){
 ##### should probably be broken down further
 #### evaluates model for one clone at a time, use sapply for a set of clones
 #### requires 3 inputs
-###### 1) mergedData=merged data from readMergeSave, 
+###### 1) mergedData=merged data from readMergeSave,
 ######.   called mergeData elsewhere, change?
 ###### 2) peptides=vector of peptides corresponding to columns in merged data
 ###### 3) control=name of control peptide
 
 poisReg=function(clone,mergedData,peptides,control="NPA",c.corr=1,screen=F,printDetail=F){
-    
+
 #### peptides is a vector, equal in length to merged data indicating which peptide is represented in each rep.
 #### could extend with a matrix of covariates, rows = length merged data
     require(lme4)
@@ -209,16 +210,16 @@ poisReg=function(clone,mergedData,peptides,control="NPA",c.corr=1,screen=F,print
 ### make the count matrix
     ctsPR=cTabPR(clone,mergedData,correct=c.corr)
     ctsPR0=ctsPR-c.corr
-### make the regression data    
+### make the regression data
     datPR=cDfPR(ctsPR,peps=peptides, control=control)
 
-### perform the regression    
+### perform the regression
     #mhcMod <- glm(cts ~ clone*pep, data = datPR, family = poisson(link = "log"))
 mhcMod <- glm.nb(cts ~ clone*pep, data = datPR)
     coefs=summary(mhcMod)$coef
-    
+
     interact=grep(":",rownames(coefs),fixed=T)
-    
+
           #best=interact[which(coefs[interact, "z value"]==max(coefs[interact, "z value"]))][1]
     pepOrd=interact[order(coefs[interact, "z value"],decreasing=T)]
     best=pepOrd[1]
@@ -228,7 +229,7 @@ mhcMod <- glm.nb(cts ~ clone*pep, data = datPR)
     cMat[1,c(best,scnd)]=c(1,-1)   ### specify contrast top peptide to second
     pepComp<- glht(mhcMod, linfct=cMat)  ### fit
     compP=summary(pepComp)$test$pvalues
-    
+
     bCts=ctsPR[which(peptides==bestPep),,drop=F]
     bRts=sort(bCts[,1]/apply(bCts,1,sum),decreasing=T)
     ctDisc=bRts[2]/bRts[1]
@@ -236,16 +237,16 @@ mhcMod <- glm.nb(cts ~ clone*pep, data = datPR)
  if(screen==T){
     ans=c("pep"=rownames(coefs)[best],prepStatsPR(summary(mhcMod)$coef[best,]),"coef2"=summary(mhcMod)$coef[scnd,1],"p2"=summary(mhcMod)$coef[scnd,4],"ctDiff"=ctDisc)
     #names(ansP)=c("pep","OR","LCB","UCB","pval","coef2","p2","ctDiff")
-  
+
  }else{
 
      detail=dfResultPR(ctsPR0,coefs[interact,])
      if(printDetail){
                                         #write.xlsx(detail,file=outFile,sheetName=clone,col.names=F,row.names=F,overwrite=F)
-        
-         
+
+
      }
-     
+
    res=c(rownames(coefs)[best],prepStatsPR(summary(mhcMod)$coef[best,]),vResultPR(ctsPR0,peptides))
      res[1]=sub("clonec+:pep","",res[1],fixed=T)
      names(res)[1]="peptide"
@@ -259,38 +260,38 @@ mhcMod <- glm.nb(cts ~ clone*pep, data = datPR)
 #### main arguments are filenames (full paths in current implementation) and a vector of peptide ids for each file.
 #### additional arguments include a minimal number of reads required to consider a clone
 #### the control peptide ID,
-#### and an identifying character string for the output file name. 
+#### and an identifying character string for the output file name.
 
 
 runRM=function(files, gps,ctThresh=50,cont="NP",outF="manafest"){
  require(openxlsx)
-#### initiate output file    
+#### initiate output file
     of=paste("screen",outF,"Cands.xlsx",sep="_")
     if (file.exists(of))  file.remove(of)
 
-  
+
 #### initiate xlsx workbook
 
     wBook=createWorkbook()
-    
+
 ### and main sheet for the workbook
     addWorksheet(wBook,"summary")
-    
+
 
 #### save wBook for adding detail sheets and acutal summary later
-   
 
 
-#### start algorthm read data    
+
+#### start algorthm read data
     mergeDat=readMergeSave(files, filenames = NULL)$mergedDat
 
-    
+
     clones=unlist(sapply(mergeDat,function(x)  return(names(x))))
  cts=unlist(sapply(mergeDat,function(x)  return(x)))
  readSums=sapply(mergeDat,sum)
     maxCt=tapply(cts,clones,max)
     sumCt=tapply(cts,clones,sum)
-  
+
     #cloneCts=table(clones)
     goodClones=names(sumCt)[which(sumCt>ctThresh)]
 
@@ -298,7 +299,7 @@ runRM=function(files, gps,ctThresh=50,cont="NP",outF="manafest"){
 
     screenM=matrix(as.numeric(t(screen[-1,])),ncol=nrow(screen)-1)
     rownames(screenM)=screen[1,]
-   
+
     colnames(screenM)=rownames(screen)[-1]
 
 topPbs=which(rownames(screenM)%in%c("clonec+:pepE6","clonec+:pepE7","clonec+:pepL2") & as.numeric(screenM[,"OR"])>1 & p.adjust(as.numeric(screenM[,"pval"]))<0.001 & as.numeric(screenM[,"coef2"])>0 & as.numeric(screenM[,"p2"])>0.01)
@@ -306,7 +307,7 @@ topPbs=which(rownames(screenM)%in%c("clonec+:pepE6","clonec+:pepE7","clonec+:pep
 topPbsF=goodClones[topPbs[order(as.numeric(screenM[topPbs,"ctDiff"])<.1,as.numeric(screenM[topPbs,"pval"]),decreasing=F)]]
 
  # fullRes=data.frame(t(sapply(topPbsF,poisReg,mergedData=mergeDat,peptides=gps,control="NP",c.corr=1,screen=F,printDetail=T,outFile=of)))
- 
+
  fullRes=matrix(rep(NA,(length(topPbsF)+1)*(length(gps)+5)),nrow=length(topPbsF)+1)
  rownames(fullRes)=c("denominators",topPbsF)
  colnames(fullRes)=c("pep","OR","LCB","UCB","pval",gps)
@@ -320,14 +321,14 @@ topPbsF=goodClones[topPbs[order(as.numeric(screenM[topPbs,"ctDiff"])<.1,as.numer
     # wb=loadWorkbook(file=of)
    # sheets=getSheets(wb)
                                         # sumSheet=sheets[[1]]
-   
+
     writeData(wBook,sheet="summary",x=fullRes,colNames=T,rowNames=T)
     saveWorkbook(wBook, of,overwrite=T)
-    
+
    # write.xlsx(fullRes,file=of,col.names=T,row.names=T,sheetName="S",append=T)
 return(fullRes)
 
-  
+
 }
 
 
@@ -336,5 +337,5 @@ return(fullRes)
 # vdjFiles=list.files("RR_fest_Processed_data",full.name=T)
 # files003Wk11=grep("1_003_wk11",vdjFiles,value=T)
 # gp003Wk11=c("CEF","CEF","E6","E6","E6","E7","E7","E7","HIV","HIV","L2","L2","L2","NP","NP")
-# 
+#
 # out003=runRM(files003Wk11, gps=gp003Wk11,outF="Sample-1-003-Wk11")
