@@ -186,9 +186,13 @@ vResultPR=function(cts,groups){
 
 #####################################
 #### master function to perform analysis for one clone.
-#### pois in name here and PR elsewhere is legacy of earlier implementation using Poisson regression
+#### pois in name here and PR elsewhere is legacy of
+#### earlier implementation using Poisson regression.
 ####  should we change to NBR or the like for negative binomial?
-### has two modes, a screening mode which produces a simplified result for filtering promising probes
+
+### has two modes, a screening mode which produces
+#### a simplified result for filtering promising probes.
+
 ### a final mode
 ##### a little bit of a Frankenfunction in the end
 ##### should probably be broken down further
@@ -198,10 +202,13 @@ vResultPR=function(cts,groups){
 ######.   called mergeData elsewhere, change?
 ###### 2) peptides=vector of peptides corresponding to columns in merged data
 ###### 3) control=name of control peptide
+#### c.corr?
 
-poisReg=function(clone,mergedData,peptides,control="NPA",c.corr=1,screen=F,printDetail=F){
+poisReg=function(clone,mergedData,peptides,control="NPA",
+                 c.corr=1,screen=F,printDetail=F){
 
-#### peptides is a vector, equal in length to merged data indicating which peptide is represented in each rep.
+#### peptides is a vector, equal in length to merged data indicating
+####  which peptide is represented in each rep.
 #### could extend with a matrix of covariates, rows = length merged data
     require(lme4)
     require(contrast)
@@ -234,16 +241,17 @@ mhcMod <- glm.nb(cts ~ clone*pep, data = datPR)
     bRts=sort(bCts[,1]/apply(bCts,1,sum),decreasing=T)
     ctDisc=bRts[2]/bRts[1]
     names(ctDisc)=""
+    # if running in screening mode, return a simplified result
  if(screen==T){
     ans=c("pep"=rownames(coefs)[best],prepStatsPR(summary(mhcMod)$coef[best,]),"coef2"=summary(mhcMod)$coef[scnd,1],"p2"=summary(mhcMod)$coef[scnd,4],"ctDiff"=ctDisc)
     #names(ansP)=c("pep","OR","LCB","UCB","pval","coef2","p2","ctDiff")
 
- }else{
+ }else{ ### if running in final mode, return a detailed result
 
      detail=dfResultPR(ctsPR0,coefs[interact,])
-     if(printDetail){
-                                        #write.xlsx(detail,file=outFile,sheetName=clone,col.names=F,row.names=F,overwrite=F)
 
+     if(printDetail){
+     #write.xlsx(detail,file=outFile,sheetName=clone,col.names=F,row.names=F,overwrite=F)
 
      }
 
@@ -256,9 +264,12 @@ mhcMod <- glm.nb(cts ~ clone*pep, data = datPR)
 }
 
 #################
-#### this function does screening and final reporting using criteria developed for Cervical SPORE
-#### main arguments are filenames (full paths in current implementation) and a vector of peptide ids for each file.
-#### additional arguments include a minimal number of reads required to consider a clone
+#### this function does screening and final reporting using criteria
+#### developed for Cervical SPORE project.
+#### main arguments are filenames (full paths in current implementation)
+#### and a vector of peptide ids for each file.
+#### additional arguments include a minimal number of reads required
+#### to consider a clone
 #### the control peptide ID,
 #### and an identifying character string for the output file name.
 
