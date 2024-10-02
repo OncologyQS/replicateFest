@@ -92,20 +92,18 @@ cTabPR=function(clone,mergeData,correct=.5){
 }
 
 #### function to make the data frame for regression
-#### need to change this to explicitly make the control sample the intercept
-#### rather than implicitly using naming ("000")
 #### requires 3 inputs:
 ###### 1) cTab = counts object created by cTabPR
 ###### 2) peps = vector of peptides corresponding to columns in merged data
 ###### 3) control=name of control peptide
 cDfPR=function(cTab,peps,control="NPA"){
-   # if(!(control%in%peps)){ break("control peptide not found")}else{
-datPR=data.frame(as.vector(cTab),rep(c("c+","c-"),rep(nrow(cTab),2)),rep(peps,2))
-colnames(datPR)=c("cts","clone","pep")
-datPR$pep[which(datPR$pep==control)]=paste0("000",control)
-return(datPR)
+  # if(!(control%in%peps)){ break("control peptide not found")}else{
+  datPR=data.frame(as.vector(cTab),
+                   factor(rep(c("c+","c-"),rep(nrow(cTab),2)),levels=c("c-","c+")),
+                   factor(rep(peps,2),levels=c(control,sort(setdiff(peps,control)))))
+  colnames(datPR)=c("cts","clone","pep")
+  return(datPR)  
 }
-
 #### new function to make data frame for regression
 #### sets factor levels to make the control peptide and clone c- the null values
 #### rather than implicitly using naming ("000")
@@ -214,6 +212,9 @@ poisReg=function(clone,mergedData,peptides,control="NPA",
     require(contrast)
     require(multcomp)
     require(MASS)
+  require(dplyr)
+  
+#  print(clone)
 ### make the count matrix
     ctsPR=cTabPR(clone,mergedData,correct=c.corr)
     ctsPR0=ctsPR-c.corr
@@ -222,7 +223,19 @@ poisReg=function(clone,mergedData,peptides,control="NPA",
 
 ### perform the regression
     #mhcMod <- glm(cts ~ clone*pep, data = datPR, family = poisson(link = "log"))
-mhcMod <- glm.nb(cts ~ clone*pep, data = datPR)
+
+# if (clone == "CASSLNSNQPQHF") browser()
+    
+  # run negative binomial regression 
+  # if the model fails, return NULL
+   tryCatch({
+      mhcMod <- glm.nb(cts ~ clone*pep, data = datPR, maxit=1000)
+    }, error = function(e) {
+      print(clone)
+      print(e)
+      return(NULL)
+    })
+    # if the model doesn't fail, extract coefficients
     coefs=summary(mhcMod)$coef
 
     interact=grep(":",rownames(coefs),fixed=T)
@@ -305,15 +318,21 @@ runRM=function(files, gps,ctThresh=50,cont="NP",outF="manafest"){
 
     #cloneCts=table(clones)
     goodClones=names(sumCt)[which(sumCt>ctThresh)]
+# run model for "good" clones
+    screen=sapply(goodClones,poisReg,mergedData=mergeDat,
+                  peptides=gps,control=cont,c.corr=1,screen=T)
 
-    screen=sapply(goodClones,poisReg,mergedData=mergeDat,peptides=gps,control=cont,c.corr=1,screen=T)
-
+    
     screenM=matrix(as.numeric(t(screen[-1,])),ncol=nrow(screen)-1)
     rownames(screenM)=screen[1,]
 
     colnames(screenM)=rownames(screen)[-1]
-
-topPbs=which(rownames(screenM)%in%c("clonec+:pepE6","clonec+:pepE7","clonec+:pepL2") & as.numeric(screenM[,"OR"])>1 & p.adjust(as.numeric(screenM[,"pval"]))<0.001 & as.numeric(screenM[,"coef2"])>0 & as.numeric(screenM[,"p2"])>0.01)
+    # find results to include in the output
+topPbs=which(!rownames(screenM)%in%paste0("clonec+:",cont)&
+  as.numeric(screenM[,"OR"])>1 & 
+               p.adjust(as.numeric(screenM[,"pval"]))<0.001 & 
+               as.numeric(screenM[,"coef2"])>0 & 
+               as.numeric(screenM[,"p2"])>0.01)
 
 topPbsF=goodClones[topPbs[order(as.numeric(screenM[topPbs,"ctDiff"])<.1,as.numeric(screenM[topPbs,"pval"]),decreasing=F)]]
 
@@ -324,29 +343,17 @@ topPbsF=goodClones[topPbs[order(as.numeric(screenM[topPbs,"ctDiff"])<.1,as.numer
  colnames(fullRes)=c("pep","OR","LCB","UCB","pval",gps)
  fullRes[1,-(1:5)]=as.character(readSums)
  for(cln in topPbsF){
-     ans=poisReg(cln,mergedData=mergeDat,peptides=gps,control="NP",c.corr=1,screen=F,printDetail=T)
+     ans=poisReg(cln,mergedData=mergeDat,peptides=gps,control=cont,c.corr=1,screen=F,printDetail=T)
      fullRes[cln,]=ans[[1]]
-     addWorksheet(wBook,cln)
- writeData(wBook,sheet=cln,x=ans[[2]],colNames=F,rowNames=F)
+#     addWorksheet(wBook,cln)
+# writeData(wBook,sheet=cln,x=ans[[2]],colNames=F,rowNames=F)
      }
-    # wb=loadWorkbook(file=of)
-   # sheets=getSheets(wb)
-                                        # sumSheet=sheets[[1]]
 
     writeData(wBook,sheet="summary",x=fullRes,colNames=T,rowNames=T)
     saveWorkbook(wBook, of,overwrite=T)
 
    # write.xlsx(fullRes,file=of,col.names=T,row.names=T,sheetName="S",append=T)
-return(fullRes)
-
-
+  return(fullRes)
 }
 
 
-###################### usage
-
-# vdjFiles=list.files("RR_fest_Processed_data",full.name=T)
-# files003Wk11=grep("1_003_wk11",vdjFiles,value=T)
-# gp003Wk11=c("CEF","CEF","E6","E6","E6","E7","E7","E7","HIV","HIV","L2","L2","L2","NP","NP")
-#
-# out003=runRM(files003Wk11, gps=gp003Wk11,outF="Sample-1-003-Wk11")
