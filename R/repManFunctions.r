@@ -224,20 +224,19 @@ poisReg=function(clone,mergedData,peptides,control="NPA",
 ### perform the regression
     #mhcMod <- glm(cts ~ clone*pep, data = datPR, family = poisson(link = "log"))
 
-# if (clone == "CASSLNSNQPQHF") browser()
-    
   # run negative binomial regression 
   # if the model fails, return NULL
    tryCatch({
-      mhcMod <- glm.nb(cts ~ clone*pep, data = datPR, maxit=1000)
+      mhcMod <- glm.nb(cts ~ clone*pep, data = datPR)
     }, error = function(e) {
       print(clone)
       print(e)
       return(NULL)
     })
     # if the model doesn't fail, extract coefficients
+#browser()
     coefs=summary(mhcMod)$coef
-
+    # find interactions to include in the output
     interact=grep(":",rownames(coefs),fixed=T)
 
           #best=interact[which(coefs[interact, "z value"]==max(coefs[interact, "z value"]))][1]
@@ -254,9 +253,16 @@ poisReg=function(clone,mergedData,peptides,control="NPA",
     bRts=sort(bCts[,1]/apply(bCts,1,sum),decreasing=T)
     ctDisc=bRts[2]/bRts[1]
     names(ctDisc)=""
+#browser()    
     # if running in screening mode, return a simplified result
  if(screen==T){
-    ans=c("pep"=rownames(coefs)[best],prepStatsPR(summary(mhcMod)$coef[best,]),"coef2"=summary(mhcMod)$coef[scnd,1],"p2"=summary(mhcMod)$coef[scnd,4],"ctDiff"=ctDisc)
+   # summary of model fitting results
+   s = summary(mhcMod)
+    ans=c("pep"=rownames(coefs)[best],
+          prepStatsPR(s$coef[best,]),
+          "coef2"=s$coef[scnd,1],
+          "p2"=s$coef[scnd,4],
+          "ctDiff"=ctDisc)
     #names(ansP)=c("pep","OR","LCB","UCB","pval","coef2","p2","ctDiff")
 
  }else{ ### if running in final mode, return a detailed result
@@ -272,6 +278,17 @@ poisReg=function(clone,mergedData,peptides,control="NPA",
      res[1]=sub("clonec+:pep","",res[1],fixed=T)
      names(res)[1]="peptide"
     ans=list(res,detail)}
+    
+    # add frequencies to the output
+    # totalReadCountPerSample = sapply(mergedData, sum) # total read count per sample
+    # for (i in names(mergedData))
+    # {
+    #   rows = intersect(names(mergedData[[i]]),rownames(output_counts))
+    #   output_counts[rows,i] = mergedData[[i]][rows]
+    #   output_freq[rows,i] = round((mergedData[[i]][rows]/totalReadCountPerSample[i])*100,3)
+    # }	
+    
+    
     return(ans)
 
 }
@@ -290,7 +307,7 @@ poisReg=function(clone,mergedData,peptides,control="NPA",
 runRM=function(files, gps,ctThresh=50,cont="NP",outF="manafest"){
  require(openxlsx)
 #### initiate output file
-    of=paste("screen",outF,"Cands.xlsx",sep="_")
+    of=paste(outF,"Cands.xlsx",sep="_")
     if (file.exists(of))  file.remove(of)
 
 
@@ -329,22 +346,31 @@ runRM=function(files, gps,ctThresh=50,cont="NP",outF="manafest"){
     colnames(screenM)=rownames(screen)[-1]
     # find results to include in the output
 topPbs=which(!rownames(screenM)%in%paste0("clonec+:",cont)&
-  as.numeric(screenM[,"OR"])>1 & 
-               p.adjust(as.numeric(screenM[,"pval"]))<0.001 & 
-               as.numeric(screenM[,"coef2"])>0 & 
-               as.numeric(screenM[,"p2"])>0.01)
+               as.numeric(screenM[,"OR"])>1 &  # expanded
+               p.adjust(as.numeric(screenM[,"pval"]))<0.001 & # significant
+               (as.numeric(screenM[,"coef2"])<0 | as.numeric(screenM[,"p2"])>0.01))# and negative or not significant
+               
 
 topPbsF=goodClones[topPbs[order(as.numeric(screenM[topPbs,"ctDiff"])<.1,as.numeric(screenM[topPbs,"pval"]),decreasing=F)]]
 
  # fullRes=data.frame(t(sapply(topPbsF,poisReg,mergedData=mergeDat,peptides=gps,control="NP",c.corr=1,screen=F,printDetail=T,outFile=of)))
 
- fullRes=matrix(rep(NA,(length(topPbsF)+1)*(length(gps)+5)),nrow=length(topPbsF)+1)
+ fullRes=matrix(rep(NA,(length(topPbsF)+1)*(2*length(mergeDat)+5)),
+                nrow=length(topPbsF)+1)
  rownames(fullRes)=c("denominators",topPbsF)
- colnames(fullRes)=c("pep","OR","LCB","UCB","pval",gps)
+ colnames(fullRes)=c("pep","OR","LCB","UCB","pval",
+                     paste(names(mergeDat),"abundance", sep="_"),
+                     paste(names(mergeDat),"percent", sep="_"))
  fullRes[1,-(1:5)]=as.character(readSums)
+#browser() 
  for(cln in topPbsF){
      ans=poisReg(cln,mergedData=mergeDat,peptides=gps,control=cont,c.corr=1,screen=F,printDetail=T)
-     fullRes[cln,]=ans[[1]]
+    # results from the regression and abundances in all conditions
+     fullRes[cln,1:length(ans[[1]])]=ans[[1]]
+     # add percentage of that clone in each condition
+     fullRes[cln,(length(ans[[1]])+1):ncol(fullRes)]=
+       round((as.numeric(ans[[1]][6:(length(ans[[1]]))])/readSums)*100,3)
+     
 #     addWorksheet(wBook,cln)
 # writeData(wBook,sheet=cln,x=ans[[2]],colNames=F,rowNames=F)
      }
