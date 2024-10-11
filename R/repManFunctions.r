@@ -65,71 +65,41 @@ readMergeSave = function(files, filenames = NULL)
 }
 
 
-#############################
-#### replicate manafest uses negative binomial regression
-#### should one line of code even be a function?
-#### requires 1 input:
-###### 1) mergeData=merged data from readMergeSave
-readCount=function(mergeData){  ### calculate total read count for each sample, from merged data
-    reads=sapply(mergeData,function(x) return(sum(x)))
-    return(reads)
-    }
-
-
 #### function to make the count matrix for 1 clone, from merged data
 #### requires 1 input:
 ###### 1) mergeData=merged data from readMergeSave
+#### correct is a parameter to add to all counts to avoid 0s
 cTabPR=function(clone,mergeData,correct=.5){
+    # replace missing values with 0
      minna=function(x){  ### function to deal with missing values
         if(is.na(x)) x=0
         return(x)}
-
+    # get counts for a clone across all samples
      cts=sapply(mergeData,function(x) return(x[clone]))
+     # replace missing values with 0
      cts=sapply(cts,minna)
-     sms=readCount(mergeData)-cts
+     # get total read count for each sample minus the count for the clone
+     sms=sapply(mergeData,sum)-cts
      ans=cbind(cts,sms)+correct
      return(ans)
 }
 
 #### function to make the data frame for regression
 #### requires 3 inputs:
-###### 1) cTab = counts object created by cTabPR
+###### 1) cTab = counts object created by cTabPR, 
+###### a matrix with two columns: counts of a clone and sums minus counts of the clone in all samples
 ###### 2) peps = vector of peptides corresponding to columns in merged data
 ###### 3) control=name of control peptide
 cDfPR=function(cTab,peps,control="NPA"){
   # if(!(control%in%peps)){ break("control peptide not found")}else{
-  datPR=data.frame(as.vector(cTab),
+  datPR=data.frame(as.vector(cTab), ## convert matrix to vector: counts of a clone (c+) come first, then sums minus counts of the clone (c-)
+                                    ## then sums minus counts of the clone (c-)
                    factor(rep(c("c+","c-"),rep(nrow(cTab),2)),levels=c("c-","c+")),
-                   factor(rep(peps,2),levels=c(control,sort(setdiff(peps,control)))))
+                   factor(rep(peps,2),
+                          levels=c(control,sort(setdiff(peps,control)))))
   colnames(datPR)=c("cts","clone","pep")
   return(datPR)  
 }
-#### new function to make data frame for regression
-#### sets factor levels to make the control peptide and clone c- the null values
-#### rather than implicitly using naming ("000")
-#### not tested e.o.d. Aug 6, 2024
-#### requires 3 inputs:
-###### 1) cTab = counts object created by cTabPR
-###### 2) peps = vector of peptides corresponding to columns in merged data
-###### 3) control=name of control peptide
-cDfPRv2=function(cTab,peps,control="NPA"){
-  # if(!(control%in%peps)){ break("control peptide not found")}else{
-  datPR=data.frame(as.vector(cTab),
-                   factor(rep(c("c+","c-"),rep(nrow(cTab),2)),
-                          levels=c("c-","c+")),
-                   factor(rep(peps,2),levels=c(control,sort(setdiff(peps,control)))))
-  colnames(datPR)=c("cts","clone","pep")
-  return(datPR)
-}
-
-#### function to put the peptides into order from most expanded to least.
-#### requires 1 input:
-###### 1) coefs = model coefficeint matrix (mhcMod$coef)
-pepOrdPR=function(coefs){
-    intCoefLocs=grep("clonec+:",names(coefs),fixed=T)
-    names(intCoefLocs)=sub("clonec+:pep","",names(coefs)[intCoefLocs],fixed=T)
-    intCoefLocs=intCoefLocs[order(coefs[intCoefLocs],decreasing=T)]
-    return(intCoefLocs)}
 
 #### function to convert regression output to OR scale and format
 #### requires 1 input:
@@ -137,7 +107,7 @@ pepOrdPR=function(coefs){
 ######
 
 prepStatsPR=function(dt){  ## dt=row from coefficent matrix
-    ##dt=summary(mhcMod)$coef[pepOrd[pep],]
+
     names(dt)=c("Est","SE","Z","P")
     OR=round(exp(dt["Est"]),3)
     LCB=round(exp(dt["Est"]-1.96*dt["SE"]),3)
@@ -196,7 +166,7 @@ vResultPR=function(cts,groups){
 ##### should probably be broken down further
 #### evaluates model for one clone at a time, use sapply for a set of clones
 #### requires 3 inputs
-###### 1) mergedData=merged data from readMergeSave,
+###### 1) mergedData=merged data from readMergeSave, a list of clone counts per condition
 ######.   called mergeData elsewhere, change?
 ###### 2) peptides=vector of peptides corresponding to columns in merged data
 ###### 3) control=name of control peptide
@@ -239,20 +209,21 @@ poisReg=function(clone,mergedData,peptides,control="NPA",
     # find interactions to include in the output
     interact=grep(":",rownames(coefs),fixed=T)
 
-          #best=interact[which(coefs[interact, "z value"]==max(coefs[interact, "z value"]))][1]
+    # order coefficients by z value to find the best peptide
     pepOrd=interact[order(coefs[interact, "z value"],decreasing=T)]
+    # get best clone
     best=pepOrd[1]
+    # in what condition is the best peptide?
     bestPep=sub("clonec+:pep","",rownames(coefs)[best],fixed=T)
+    # find the second best peptide
     scnd=pepOrd[2]
-    cMat <- matrix(rep(0,length(mhcMod$coef)), 1) ## initialize contrast matrix
-    cMat[1,c(best,scnd)]=c(1,-1)   ### specify contrast top peptide to second
-    pepComp<- glht(mhcMod, linfct=cMat)  ### fit
-    compP=summary(pepComp)$test$pvalues
-
+    
+    # calculate the difference in counts between the two best peptides
     bCts=ctsPR[which(peptides==bestPep),,drop=F]
     bRts=sort(bCts[,1]/apply(bCts,1,sum),decreasing=T)
     ctDisc=bRts[2]/bRts[1]
     names(ctDisc)=""
+    
 #browser()    
     # if running in screening mode, return a simplified result
  if(screen==T){
@@ -278,16 +249,6 @@ poisReg=function(clone,mergedData,peptides,control="NPA",
      res[1]=sub("clonec+:pep","",res[1],fixed=T)
      names(res)[1]="peptide"
     ans=list(res,detail)}
-    
-    # add frequencies to the output
-    # totalReadCountPerSample = sapply(mergedData, sum) # total read count per sample
-    # for (i in names(mergedData))
-    # {
-    #   rows = intersect(names(mergedData[[i]]),rownames(output_counts))
-    #   output_counts[rows,i] = mergedData[[i]][rows]
-    #   output_freq[rows,i] = round((mergedData[[i]][rows]/totalReadCountPerSample[i])*100,3)
-    # }	
-    
     
     return(ans)
 
