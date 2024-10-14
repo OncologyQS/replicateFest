@@ -476,31 +476,44 @@ runExperiment=function(files, gps, ctThresh=50,cont="NP",outF="manafest"){
   res = res[order(as.numeric(res[,"ctDiff"])<.1,
                   as.numeric(res[,"pval"]),decreasing=F),]
 
+  
+  # add abundance and percentage of the top clones in each condition
+  # get abundance for the top clones
+  abundance = getAbundances(rownames(res), mergeDat)
+  # get total read count for each sample
+  totalReadCountPerSample = sapply(mergeDat, sum)
+  # calculate the percentage of each clone in each sample
+  percentage = round(sweep(abundance, 2, totalReadCountPerSample, "/")*100,3)
+  colnames(percentage) = paste(names(mergeDat),'percent', sep = '_')
+  
+  res = cbind(res, abundance[rownames(res),], percentage[rownames(res),])
+  
   return(res)
-  
-  fullRes=matrix(rep(NA,(length(topPbsF)+1)*(2*length(mergeDat)+5)),
-                 nrow=length(topPbsF)+1)
-  rownames(fullRes)=c("denominators",topPbsF)
-  colnames(fullRes)=c("pep","OR","LCB","UCB","FDR",
-                      paste(names(mergeDat),"abundance", sep="_"),
-                      paste(names(mergeDat),"percent", sep="_"))
-  fullRes[1,-(1:5)]=as.character(readSums)
-  #browser() 
-  # for(cln in topPbsF){
-  #   ans=poisReg(cln,mergedData=mergeDat,peptides=gps,control=cont,c.corr=1,screen=F,printDetail=T)
-  #   # results from the regression and abundances in all conditions
-  #   fullRes[cln,1:length(ans[[1]])]=ans[[1]]
-  #   # add percentage of that clone in each condition
-  #   fullRes[cln,(length(ans[[1]])+1):ncol(fullRes)]=
-  #     round((as.numeric(ans[[1]][6:(length(ans[[1]]))])/readSums)*100,3)
-  #   
-  #   #     addWorksheet(wBook,cln)
-  #   # writeData(wBook,sheet=cln,x=ans[[2]],colNames=F,rowNames=F)
-  # }
-  
+ 
 #  writeData(wBook,sheet="summary",x=fullRes,colNames=T,rowNames=T)
 #  saveWorkbook(wBook, of,overwrite=T)
   
   # write.xlsx(fullRes,file=of,col.names=T,row.names=T,sheetName="S",append=T)
+}
+
+
+# function that returns the read count for clones of interest in all samples
+# input: a list of merged data, a vector of clones of interest
+getAbundances = function(clones,mergedData)
+{
+  # create output matrices
+  output_counts = matrix(0,nrow = length(clones), ncol = length(mergedData)) 
+  rownames(output_counts) = clones
+  colnames(output_counts) = names(mergedData)
+  
+  # get the read count for clones in each sample
+  for (i in names(mergedData))
+  {
+    rows = intersect(names(mergedData[[i]]),rownames(output_counts))
+    output_counts[rows,i] = mergedData[[i]][rows]
+  }	
+  # update colnames to add "abundance"
+  colnames(output_counts) = paste(names(mergedData),'abundance', sep = '_')
+  return(output_counts)
 }
 
