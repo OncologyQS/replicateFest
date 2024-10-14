@@ -134,23 +134,6 @@ dfResultPR=function(cts,cfs){
     return(data)
 }
 
-#### function to export counts as a vector. Changed form a few times, this version is pretty pointless
-#### should one line of code even be a function?
-#### still includes code for reporting frequencies instead of or in addition to counts,
-## which should be reinstated as agreed in call with Kellie Smith
-#### requires 2 inputs
-###### 1) cts = counts object created by cTabPR
-###### 2) groups = vector of peptides corresponding to columns in merged data,
-######.   called 'peps' or 'peptides' in most functions, maybe change?
-vResultPR=function(cts,groups){
-
-    #freqs=cts[,1]/apply(cts,1,sum)
-    #freqs=paste(cts[,1],apply(cts,1,sum),sep="/")
-   # names(freqs)=groups
-    return(cts[,1])
-
-    }
-
 
 #####################################
 #### master function to perform analysis for one clone.
@@ -245,13 +228,93 @@ poisReg=function(clone,mergedData,peptides,control="NPA",
 
      }
 
-   res=c(rownames(coefs)[best],prepStatsPR(summary(mhcMod)$coef[best,]),vResultPR(ctsPR0,peptides))
+   res=c(rownames(coefs)[best],prepStatsPR(summary(mhcMod)$coef[best,]),
+         ctsPR0[,1])
      res[1]=sub("clonec+:pep","",res[1],fixed=T)
      names(res)[1]="peptide"
     ans=list(res,detail)}
     
     return(ans)
 
+}
+
+#####################################
+#### master function to perform analysis for one clone.
+#### adapted from Leslie's function
+#### returns results of regression for the best and the second best clone
+
+#### evaluates model for one clone at a time, use sapply for a set of clones
+#### requires the following inputs
+###### mergedData=merged data from readMergeSave, a list of clone counts per condition
+######.   called mergeData elsewhere, change?
+###### peptides=vector of peptides corresponding to columns in merged data
+###### control=name of control/reference condition
+#### c.corr is a parameter to add to all counts to avoid 0s
+
+fitModel = function(clone,mergedData,peptides,control="NPA",
+                 c.corr=1){
+  
+  #### peptides is a vector, equal in length to merged data indicating
+  ####  which peptide is represented in each rep.
+  #### could extend with a matrix of covariates, rows = length merged data
+  require(lme4)
+  require(contrast)
+  require(multcomp)
+  require(MASS)
+  require(dplyr)
+  
+  #  print(clone)
+  ### make the count matrix for a clone across all samples
+  ctsPR=cTabPR(clone,mergedData,correct=c.corr)
+  ctsPR0=ctsPR-c.corr
+  ### make the regression data
+  datPR=cDfPR(ctsPR,peps=peptides, control=control)
+  
+  ### perform the regression
+  #mhcMod <- glm(cts ~ clone*pep, data = datPR, family = poisson(link = "log"))
+  
+  # run negative binomial regression 
+  # if the model fails, return NULL
+  tryCatch({
+    mhcMod <- glm.nb(cts ~ clone*pep, data = datPR)
+  }, error = function(e) {
+    print(clone)
+    print(e)
+    return(NULL)
+  })
+  # if the model doesn't fail, extract coefficients
+  #browser()
+  coefs=summary(mhcMod)$coef
+  # find interactions to include in the output
+  interact=grep(":",rownames(coefs),fixed=T)
+  
+  # order coefficients by z value to find the best peptide
+  pepOrd=interact[order(coefs[interact, "z value"],decreasing=T)]
+  # get best clone
+  best=pepOrd[1]
+  # in what condition is the best peptide?
+  bestPep=sub("clonec+:pep","",rownames(coefs)[best],fixed=T)
+  # find the second best peptide
+  scnd=pepOrd[2]
+  
+  # calculate the difference in counts between the two best peptides
+  bCts=ctsPR[which(peptides==bestPep),,drop=F]
+  bRts=sort(bCts[,1]/apply(bCts,1,sum),decreasing=T)
+  ctDisc=bRts[2]/bRts[1]
+  names(ctDisc)=""
+  
+  #browser()    
+    # summary of model fitting results
+    s = summary(mhcMod)
+    ans=c("pep"=rownames(coefs)[best], # the name of the best peptide
+          prepStatsPR(s$coef[best,]), # OR, CI, p-values for the best
+          scnd = prepStatsPR(s$coef[scnd,])[c("OR","pval")], # OR and p-value for the second best
+          "coef2"=s$coef[scnd,1],
+          "p2"=s$coef[scnd,4],
+          "ctDiff"=ctDisc) # the difference in counts between the two best peptides
+
+  return(ans)
+  
 }
 
 #################
@@ -309,7 +372,8 @@ runRM=function(files, gps,ctThresh=50,cont="NP",outF="manafest"){
 topPbs=which(!rownames(screenM)%in%paste0("clonec+:",cont)&
                as.numeric(screenM[,"OR"])>1 &  # expanded
                p.adjust(as.numeric(screenM[,"pval"]))<0.001 & # significant
-               (as.numeric(screenM[,"coef2"])<0 | as.numeric(screenM[,"p2"])>0.01))# and negative or not significant
+               (as.numeric(screenM[,"coef2"])<0 | 
+                  as.numeric(screenM[,"p2"])>0.01))# and negative or not significant
                
 
 topPbsF=goodClones[topPbs[order(as.numeric(screenM[topPbs,"ctDiff"])<.1,as.numeric(screenM[topPbs,"pval"]),decreasing=F)]]
@@ -343,4 +407,100 @@ topPbsF=goodClones[topPbs[order(as.numeric(screenM[topPbs,"ctDiff"])<.1,as.numer
   return(fullRes)
 }
 
+#===========
+# new function for running the analysis
+#################
+#### this function runs all files in an experiment
+#### finds expanded clones and saves them in an excel file
+#### then finds unqiuely expanded clones and saves them in an excel file
+
+#### main arguments are filenames (full paths in current implementation)
+#### and a vector of peptide ids for each file.
+#### additional arguments include a minimal number of reads required
+#### to consider a clone
+#### the control peptide ID,
+#### and an identifying character string for the output file name.
+
+
+runExperiment=function(files, gps, ctThresh=50,cont="NP",outF="manafest"){
+  require(openxlsx)
+  #### initiate output file
+  of=paste(outF,"Cands.xlsx",sep="_")
+  if (file.exists(of))  file.remove(of)
+  
+  
+  #### initiate xlsx workbook
+#  wBook=createWorkbook()
+  
+  ### and main sheet for the workbook
+#  addWorksheet(wBook,"ref_comparison_only")
+  
+ #### save wBook for adding detail sheets later
+  
+  #### start algorithm read data
+  mergeDat=readMergeSave(files, filenames = NULL)$mergedDat
+  
+  
+  clones=unlist(sapply(mergeDat,function(x)  return(names(x))))
+  cts=unlist(sapply(mergeDat,function(x)  return(x)))
+  readSums=sapply(mergeDat,sum)
+  maxCt=tapply(cts,clones,max)
+  sumCt=tapply(cts,clones,sum)
+  
+  # clones that have more than ctThresh reads to run the analysis
+  goodClones=names(sumCt)[which(sumCt>ctThresh)]
+  # run model for "good" clones
+  screen=sapply(goodClones,fitModel,mergedData=mergeDat,
+                peptides=gps,control=cont,c.corr=1)
+  
+  
+  screenM=matrix(as.numeric(t(screen[-1,])),ncol=nrow(screen)-1)
+  # set clones as rownames
+  rownames(screenM) = colnames(screen)
+  # set colnames
+  colnames(screenM)=rownames(screen)[-1]
+  # add condition
+  screenM = cbind(condition = gsub("clonec+:pep","",screen["pep",], fixed = T), 
+                  screenM)
+#browser()
+  # add FDR adjustment
+  screenM = cbind(screenM, FDR =p.adjust(as.numeric(screenM[,"pval"]), method = "BH"))
+  # find results to include in the output
+  topPbs=which(as.numeric(screenM[,"OR"])>1 &  # expanded
+               as.numeric(screenM[,"FDR"])<0.001 & # significant
+               (as.numeric(screenM[,"scnd.OR"])<1 | 
+                  as.numeric(screenM[,"scnd.pval"])>0.01))# and negative or not significant
+  
+  res = screenM[topPbs,]
+  # order clones
+  res = res[order(as.numeric(res[,"ctDiff"])<.1,
+                  as.numeric(res[,"pval"]),decreasing=F),]
+
+  return(res)
+  
+  fullRes=matrix(rep(NA,(length(topPbsF)+1)*(2*length(mergeDat)+5)),
+                 nrow=length(topPbsF)+1)
+  rownames(fullRes)=c("denominators",topPbsF)
+  colnames(fullRes)=c("pep","OR","LCB","UCB","FDR",
+                      paste(names(mergeDat),"abundance", sep="_"),
+                      paste(names(mergeDat),"percent", sep="_"))
+  fullRes[1,-(1:5)]=as.character(readSums)
+  #browser() 
+  # for(cln in topPbsF){
+  #   ans=poisReg(cln,mergedData=mergeDat,peptides=gps,control=cont,c.corr=1,screen=F,printDetail=T)
+  #   # results from the regression and abundances in all conditions
+  #   fullRes[cln,1:length(ans[[1]])]=ans[[1]]
+  #   # add percentage of that clone in each condition
+  #   fullRes[cln,(length(ans[[1]])+1):ncol(fullRes)]=
+  #     round((as.numeric(ans[[1]][6:(length(ans[[1]]))])/readSums)*100,3)
+  #   
+  #   #     addWorksheet(wBook,cln)
+  #   # writeData(wBook,sheet=cln,x=ans[[2]],colNames=F,rowNames=F)
+  # }
+  
+#  writeData(wBook,sheet="summary",x=fullRes,colNames=T,rowNames=T)
+#  saveWorkbook(wBook, of,overwrite=T)
+  
+  # write.xlsx(fullRes,file=of,col.names=T,row.names=T,sheetName="S",append=T)
+}
 
