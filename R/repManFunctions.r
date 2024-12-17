@@ -223,98 +223,28 @@ runExperiment=function(files, peptides, ctThresh=50,cont="NP",
 
   #### start algorithm read data
   mergeDat=readMergeSave(files, filenames = NULL)$mergedDat
-
-  # all clones from all samples
-  clones=unlist(sapply(mergeDat,function(x)  return(names(x))))
-  # the corresponding counts
-  cts=unlist(sapply(mergeDat,function(x)  return(x)))
-  #
-  sumCt=tapply(cts,clones,sum)
-
-  # clones that have more than ctThresh reads to run the analysis
-  goodClones=names(sumCt)[which(sumCt>ctThresh)]
+  # get clones to test
+  goodClones = getClonesToTest(mergeDat, ctThresh = ctThresh)
   print(c("good clones #",length(goodClones)))
-  # run model for "good" clones
-  if (!is.na(excludeCond))
-  {
-    # get indexes of conditions to include in the analysis
-    incl = which(!(gps %in% excludeCond))
-    print(gps[incl])
-    screen=lapply(goodClones,fitModel,mergedData=mergeDat[incl],
-                  peptides=peptides[incl],control=cont,c.corr=1,screen=T)
-  }else{
-    screen=lapply(goodClones,fitModel,mergedData=mergeDat,
-                  peptides=peptides,control=cont,c.corr=1)
-  }
 
-  browser()
+  # run the analysis for selected clones
+  screen = fitModelSet(goodClones, mergeDat, peptides,
+                       excludeCond = excludeCond,control=cont,c.corr=1)
 
-  # transpose to have clones in rows
-#  screen = data.frame(t(screen), check.names = F)
-  # remove enties with NULL
-  screen = screen[!sapply(screen, is.null)]
-  # convert list to a data.frame
-  screen = as.data.frame(bind_rows(screen))
-
-  #browser()
-  # add FDR adjustment
-  # find columns with p-values
-  pvalCol = grep("pval",colnames(screen), value = T)
-  fdrs = c()
-  for(i in pvalCol)
-  {
-    fdrs = cbind(fdrs,p.adjust(as.numeric(screen[,i]), method = "BH"))
-  }
-  # add colnames for fdrs and add to the screen matrix
-  colnames(fdrs) = paste0("FDR:",gsub("pval:","",pvalCol))
-  screen = cbind(screen, fdrs)
-
-#  browser()
-  #=============
-  # find all significantly expanded clones
-  # find comparison names
-  comp = grep("OR",colnames(screen), value = T)
-  comp = gsub("OR: ","",comp)
-
-  expandedClones = c()
-  for (i in comp){
-    #print(i)
-    expandedClones = union(expandedClones,
-                   rownames(screen)[which(as.numeric(screen[,paste0("OR: ",i)]) >= ORthr & # expanded
-                                            as.numeric(screen[,paste0("FDR: ",i)]) < FDRthr)])# significant
-  }
-  # get the results for expanded clones only
-  res_exp = screen[expandedClones,]
-  # add a column that indicates how many comparisons were significant
-  res_exp = cbind(res_exp, significant_comparisons = rowSums((res_exp[,paste0("FDR: ",comp)] < FDRthr &
-                                     res_exp[,paste0("OR: ",comp)] > ORthr),na.rm = T))
-#  return(res_exp)
-
-  # order clones
-  # res = res[order(as.numeric(res[,"ctDiff"])<.1,
-  #                 as.numeric(res[,"pval"]),decreasing=F),]
-  # add abundance and percentage of the top clones in each condition
-  # get abundance for the top clones
-  abundance = getAbundances(rownames(res_exp), mergeDat)
-  # get total read count for each sample
-  totalReadCountPerSample = sapply(mergeDat, sum)
-  # calculate the percentage of each clone in each sample
-  percentage = round(sweep(abundance, 2, totalReadCountPerSample, "/")*100,3)
-  colnames(percentage) = paste(names(mergeDat),'percent', sep = '_')
-
-  res_exp = cbind(res_exp,
-                  abundance[rownames(res_exp),],
-                  percentage[rownames(res_exp),])
-
+  # get all expanded clones
+  res_exp = getExpanded(screen, mergeDat,
+                        ORthr = ORthr, FDRthr = FDRthr)
   #======
   # find uniquely expanded clones by checking the second best clone
   res_uniq = res_exp %>% filter(significant_comparisons == 1)
 
-  # save parameters of the run
+  # get parameters of the run
   # total reads for each sample
+  # get total read count for each sample
+  totalReadCountPerSample = sapply(mergedData, sum)
   totalReads = data.frame(parameter = paste(names(totalReadCountPerSample), "total_reads", sep = "_"),
                           value = totalReadCountPerSample)
-  # write the parameters to the sheet
+  # the parameters
   params = data.frame(parameter = c("reference","read_threshold",
                                     "FDR_threshold","exclude_conditions"),
                       value = c(cont,ctThresh,FDRthr,excludeCond))
@@ -346,3 +276,108 @@ getAbundances = function(clones,mergedData)
   return(output_counts)
 }
 
+# function that returns the read count for clones of interest in all samples
+# input: a list of merged data, a vector of clones of interest
+# all clones from all samples
+getClonesToTest = function(mergeDat, ctThresh = 50)
+{
+  # all clones
+  clones=unlist(sapply(mergeDat,function(x)  return(names(x))))
+  # the corresponding counts
+  cts=unlist(sapply(mergeDat,function(x)  return(x)))
+  #
+  sumCt=tapply(cts,clones,sum)
+
+  # clones that have more than ctThresh reads to run the analysis
+  goodClones=names(sumCt)[which(sumCt>ctThresh)]
+
+  return(goodClones)
+}
+
+# fit model for a set of clones and
+# return a matrix with all ORs, p-values and FDRs
+# input: a list of clones, merged data, peptides,
+
+fitModelSet = function(clones, mergedData, peptides, excludeCond = NA,...)
+{
+    # run model for "good" clones
+  if (!is.na(excludeCond))
+  {
+    # get indexes of conditions to include in the analysis
+    incl = which(!(peptides %in% excludeCond))
+    print(gps[incl])
+    screen=lapply(clones,fitModel,mergedData=mergedData[incl],
+                  peptides=peptides[incl],...)
+  }else{
+    screen=lapply(clones,fitModel,mergedData=mergedData,
+                  peptides=peptides,...)
+  }
+
+  #  browser()
+
+  # transpose to have clones in rows
+  #  screen = data.frame(t(screen), check.names = F)
+  # remove enties with NULL
+  screen = screen[!sapply(screen, is.null)]
+  # convert list to a data.frame
+  screen = as.data.frame(bind_rows(screen))
+
+  # add FDR adjustment
+  # find columns with p-values
+  pvalCol = grep("pval",colnames(screen), value = T)
+  fdrs = c()
+  for(i in pvalCol)
+  {
+    fdrs = cbind(fdrs,p.adjust(as.numeric(screen[,i]), method = "BH"))
+  }
+  # add colnames for fdrs and add to the screen matrix
+  colnames(fdrs) = paste0("FDR:",gsub("pval:","",pvalCol))
+  screen = cbind(screen, fdrs)
+
+
+  return(screen)
+}
+
+# function that returns the expanded clones
+# input: a data frame with ORs, p-values and FDRs
+# output: a data frame with expanded clones
+getExpanded = function(screen, mergedData, ORthr = 1, FDRthr = 0.05)
+{
+  # find all significantly expanded clones
+  # find comparison names
+  comp = grep("OR",colnames(screen), value = T)
+  comp = gsub("OR: ","",comp)
+
+  expandedClones = c()
+  for (i in comp){
+    #print(i)
+    expandedClones = union(expandedClones,
+                           rownames(screen)[which(as.numeric(screen[,paste0("OR: ",i)]) >= ORthr & # expanded
+                                                    as.numeric(screen[,paste0("FDR: ",i)]) < FDRthr)])# significant
+  }
+  # get the results for expanded clones only
+  res_exp = screen[expandedClones,]
+  # add a column that indicates how many comparisons were significant
+  res_exp = cbind(res_exp, significant_comparisons = rowSums((res_exp[,paste0("FDR: ",comp)] < FDRthr &
+                                                              res_exp[,paste0("OR: ",comp)] > ORthr),na.rm = T))
+  #  return(res_exp)
+
+  # order clones
+  # res = res[order(as.numeric(res[,"ctDiff"])<.1,
+  #                 as.numeric(res[,"pval"]),decreasing=F),]
+  # add abundance and percentage of the top clones in each condition
+  # get abundance for the top clones
+  abundance = getAbundances(rownames(res_exp), mergedData)
+  # get total read count for each sample
+  totalReadCountPerSample = sapply(mergedData, sum)
+  # calculate the percentage of each clone in each sample
+  percentage = round(sweep(abundance, 2, totalReadCountPerSample, "/")*100,3)
+  colnames(percentage) = paste(names(mergedData),'percent', sep = '_')
+
+  res_exp = cbind(res_exp,
+                  abundance[rownames(res_exp),],
+                  percentage[rownames(res_exp),])
+
+  return(res_exp)
+
+}
