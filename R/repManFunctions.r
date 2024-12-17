@@ -215,11 +215,15 @@ fitModel = function(clone,mergedData,peptides,control="NPA",
 #### to consider a clone
 #### the control peptide ID,
 #### a vector of conditions to exclude from the analysis
+#### a threshold for OR and FDR to consider a clone expanded
+#### a vector of cross-reactive conditions
 
-#### TODO add option for cross-reactivity
+#### TODO add an option for cross-reactivity
 
 runExperiment=function(files, peptides, ctThresh=50,cont="NP",
-                       ORthr=1, FDRthr = 0.05, excludeCond = NA){
+                       ORthr=1, FDRthr = 0.05, excludeCond = NA,
+                       xrCond = NA, outputFile = "output.xlsx",
+                       saveToFile = T){
 
 
   #### start algorithm read data
@@ -230,15 +234,24 @@ runExperiment=function(files, peptides, ctThresh=50,cont="NP",
 
   # run the analysis for selected clones
   screen = fitModelSet(goodClones, mergeDat, peptides,
-                       excludeCond = excludeCond,control=cont,c.corr=1)
-
+                       excludeCond = excludeCond,
+                       control=cont,c.corr=1)
+  rownames(screen) = screen$clone
   # get all expanded clones
   res_exp = getExpanded(screen, mergeDat,
                         ORthr = ORthr, FDRthr = FDRthr)
   #======
   # find uniquely expanded clones by checking the second best clone
-  res_uniq = res_exp %>% filter(significant_comparisons == 1)
+  res_uniq = res_exp %>% filter(n_significant_comparisons == 1)
 
+  #=====
+  # find cross-reactive clones
+  if(length(xrCond)>0)
+  {
+    res_xr = getXR(res_exp, xrCond = xrCond)
+    res_uniq = rbind(res_uniq,res_xr)
+  }
+  #=====
   # get parameters of the run
   # total reads for each sample
   # get total read count for each sample
@@ -247,13 +260,20 @@ runExperiment=function(files, peptides, ctThresh=50,cont="NP",
                           value = totalReadCountPerSample)
   # the parameters
   params = data.frame(parameter = c("reference","read_threshold",
-                                    "FDR_threshold","exclude_conditions"),
-                      value = c(cont,ctThresh,FDRthr,excludeCond))
+                                    "FDR_threshold","exclude_conditions",
+                                    "cross_reactive_conditions"),
+                      value = c(cont,ctThresh,FDRthr,
+                                paste(excludeCond,collapse = ","),
+                                paste(xrCond,collapse = ",")))
 
-  return(list(ref_only = res_exp,
-              uniquely_exp = res_uniq,
-              params = rbind(params,totalReads)))
-
+  output = list(ref_only = res_exp,
+                uniquely_exp = res_uniq,
+                params = rbind(params,totalReads))
+  # save into Excel file
+  if(saveToFile)
+  {
+    saveResults(output, outputFile = outputFile)
+  } else return(output)
 }
 
 
@@ -302,11 +322,11 @@ getClonesToTest = function(mergeDat, ctThresh = 50)
 fitModelSet = function(clones, mergedData, peptides, excludeCond = NA,...)
 {
     # run model for "good" clones
-  if (!is.na(excludeCond))
+  if (length(excludeCond)>0)
   {
     # get indexes of conditions to include in the analysis
     incl = which(!(peptides %in% excludeCond))
-    print(gps[incl])
+    cat("Conditions to include:", peptides[incl],"\n")
     screen=lapply(clones,fitModel,mergedData=mergedData[incl],
                   peptides=peptides[incl],...)
   }else{
@@ -358,15 +378,23 @@ getExpanded = function(screen, mergedData, ORthr = 1, FDRthr = 0.05)
   }
   # get the results for expanded clones only
   res_exp = screen[expandedClones,]
-  # add a column that indicates how many comparisons were significant
-  res_exp = cbind(res_exp, significant_comparisons = rowSums((res_exp[,paste0("FDR: ",comp)] < FDRthr &
-                                                              res_exp[,paste0("OR: ",comp)] > ORthr),na.rm = T))
-  #  return(res_exp)
-
-  # order clones
-  # res = res[order(as.numeric(res[,"ctDiff"])<.1,
-  #                 as.numeric(res[,"pval"]),decreasing=F),]
-  # add abundance and percentage of the top clones in each condition
+  # add columns that indicates how many and what comparisons were significant
+  # get T/F matrix for significant comparisons
+  sig = (res_exp[,paste0("FDR: ",comp)] < FDRthr &
+           res_exp[,paste0("OR: ",comp)] > ORthr)
+ # browser()
+  # list significant comparisons
+  sigComp = apply(sig, 1, function(x){
+    # select significant comparisons and get first condition before "vs"
+    s = sapply(strsplit(comp[x], split = "_vs_"), geti, 1)
+    # list significant comparisons using comma
+    paste(s, collapse = ",")
+    })
+  # add the number and the list to the results
+  res_exp = cbind(res_exp,
+                  n_significant_comparisons = rowSums(sig, na.rm = T),
+                  significant_comparisons = sigComp)
+   # add abundance and percentage of the top clones in each condition
   # get abundance for the top clones
   abundance = getAbundances(rownames(res_exp), mergedData)
   # get total read count for each sample
@@ -381,4 +409,47 @@ getExpanded = function(screen, mergedData, ORthr = 1, FDRthr = 0.05)
 
   return(res_exp)
 
+}
+
+# function that returns the cross-reactive clones
+# input: a data frame with expanded clones
+# and a vector of cross-reactive conditions
+# output: a data frame with cross-reactive clones
+
+getXR = function(res, xrCond = xrCond)
+{
+  # a vector of conditions that shouldn't be cross-reactive
+  # find all and take difference
+  allCond = res %>% filter(n_significant_comparisons == 1) %>%
+    dplyr::select(significant_comparisons) %>% unlist() %>% unique()
+
+  excludeCond = setdiff(unique(timeSamples$Condition), xrCond)
+
+  # find cross-reactive clones
+  res_xr = res %>% filter(n_significant_comparisons > 1)
+  # find clone that are cross-reactive fo xrCond
+  inclXR = res_xr %>% filter(grepl(paste(xrCond,collapse = "|"),significant_comparisons))
+
+  # exclude conditions that are not in xrCond
+  excl = inclXR %>% filter(!grepl(paste(excludeCond,collapse = "|"),significant_comparisons))
+  return(excl)
+}
+
+# function that saves the results to an excel file
+# input: a list of data frames with results
+
+saveResults = function(results, outputFile = "output.xlsx")
+{
+  # create a workbook
+  wb = createWorkbook()
+  # add sheets
+  addWorksheet(wb, "expanded")
+  addWorksheet(wb, "uniquely_expanded")
+  addWorksheet(wb, "parameters")
+  # add data to sheets
+  writeData(wb, "expanded", results$ref_only)
+  writeData(wb, "uniquely_expanded", results$uniquely_exp)
+  writeData(wb, "parameters", results$params)
+  # save the workbook
+  saveWorkbook(wb, outputFile, overwrite = TRUE)
 }
