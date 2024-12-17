@@ -202,7 +202,7 @@ fitModel = function(clone,mergedData,peptides,control="NPA",
 
 
 #===========
-# new function for running the analysis
+# wrapper for running the full analysis from reading files to output all results
 #################
 #### this function runs all files in an experiment
 #### returns a list of all expanded clones, uniquely expanded clones
@@ -214,8 +214,9 @@ fitModel = function(clone,mergedData,peptides,control="NPA",
 #### additional arguments include a minimal number of reads required
 #### to consider a clone
 #### the control peptide ID,
-#### and an identifying character string for the output file name.
+#### a vector of conditions to exclude from the analysis
 
+#### TODO add option for cross-reactivity
 
 runExperiment=function(files, peptides, ctThresh=50,cont="NP",
                        ORthr=1, FDRthr = 0.05, excludeCond = NA){
