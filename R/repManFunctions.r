@@ -217,17 +217,30 @@ fitModel = function(clone,mergedData,peptides,control="NPA",
 #### a vector of conditions to exclude from the analysis
 #### a threshold for OR and FDR to consider a clone expanded
 #### a vector of cross-reactive conditions
+#### added option for permuting labels to answer to Kellie's request. Need to remove for the app and package
 
-#### TODO add an option for cross-reactivity
+#### TODO add frequency threshold for clones to be analysed
 
 runExperiment=function(files, peptides, ctThresh=50,cont="NP",
                        ORthr=1, FDRthr = 0.05, excludeCond = NA,
-                       xrCond = NA, outputFile = "output.xlsx",
-                       saveToFile = T){
+                       xrCond = NA, percentThr = 0, outputFile = "output.xlsx",
+                       saveToFile = T, permute = FALSE){
 
 
   #### start algorithm read data
   mergeDat=readMergeSave(files, filenames = NULL)$mergedDat
+
+  # permute sample labels in mergeDat to run permutation test
+  if (permute){
+    set.seed(123456)
+    # create sampling
+    s = sample(1:length(mergeDat),size = length(mergeDat), replace = F)
+    # update sample names
+    names(mergeDat) = names(mergeDat)[s]
+    # update peptides
+    peptides = peptides[s]
+  }
+
   # get clones to test
   goodClones = getClonesToTest(mergeDat, ctThresh = ctThresh)
   print(c("good clones #",length(goodClones)))
@@ -240,29 +253,46 @@ runExperiment=function(files, peptides, ctThresh=50,cont="NP",
   # get all expanded clones
   res_exp = getExpanded(screen, mergeDat,
                         ORthr = ORthr, FDRthr = FDRthr)
+
+  #=================
+  # keep clones with maximum percentage across
+  # all analyzed samples higher that a specified threshold
+  # TODO do this before running the analysis
+  # for now add this as a filtration step at the output
+  #=================
+  # grep columns with percentage
+  percCol = grep("percent",colnames(res_exp), value = T)
+#browser()
+  # exclude columns with excludeCond
+  percCol = percCol[!grepl(paste(excludeCond,collapse = "|"),percCol)]
+  # get clones with maximum percentage higher than specified threshold
+  res_exp05 = res_exp[apply(res_exp[,percCol],1,max) >percentThr,]
+
   #======
   # find uniquely expanded clones by checking the second best clone
-  res_uniq = res_exp %>% filter(n_significant_comparisons == 1)
+  res_uniq = res_exp05 %>% filter(n_significant_comparisons == 1)
 
   #=====
   # find cross-reactive clones
   if(length(xrCond)>0)
   {
-    res_xr = getXR(res_exp, xrCond = xrCond)
+    res_xr = getXR(res_exp05, xrCond = xrCond)
     res_uniq = rbind(res_uniq,res_xr)
   }
   #=====
   # get parameters of the run
   # total reads for each sample
   # get total read count for each sample
-  totalReadCountPerSample = sapply(mergedData, sum)
+  totalReadCountPerSample = sapply(mergeDat, sum)
   totalReads = data.frame(parameter = paste(names(totalReadCountPerSample), "total_reads", sep = "_"),
                           value = totalReadCountPerSample)
   # the parameters
   params = data.frame(parameter = c("reference","read_threshold",
-                                    "FDR_threshold","exclude_conditions",
+                                    "FDR_threshold",
+                                    "percent_threshold",
+                                    "exclude_conditions",
                                     "cross_reactive_conditions"),
-                      value = c(cont,ctThresh,FDRthr,
+                      value = c(cont,ctThresh,FDRthr,percentThr,
                                 paste(excludeCond,collapse = ","),
                                 paste(xrCond,collapse = ",")))
 
@@ -440,6 +470,7 @@ getXR = function(res, xrCond = xrCond)
 
 saveResults = function(results, outputFile = "output.xlsx")
 {
+  library(openxlsx)
   # create a workbook
   wb = createWorkbook()
   # add sheets
