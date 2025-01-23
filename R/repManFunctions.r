@@ -1,5 +1,6 @@
 # Functions for analysis of Manafest data in shiny app
-#
+# using input with replicates
+# based on Leslie's development for the Cervical SPORE
 #
 geti = function(x,i){return(x[i])}
 
@@ -34,10 +35,8 @@ readMergeSave = function(files, filenames = NULL)
 #			print(i)
 		  dat = repertoire$data[[i]]
 				#count reads of productive sequences only
-				#mergedData[[i]] = tapply(dat[[,'Clones']], dat[[,'CDR3.aa']], sum, na.rm = T)
 				mergedData[[i]] = tapply(dat$Clones, dat$CDR3.aa, sum, na.rm = T)
 				# nucleotide level data
-				#ntData[[i]] = tapply(dat[,'Clones'], dat[,'CDR3.nt'], sum, na.rm = T)
 				ntData[[i]] =tapply(dat$Clones, dat$CDR3.aa, sum, na.rm = T)
 				readFiles = c(readFiles, i)
 		}
@@ -181,6 +180,8 @@ fitModel = function(clone,mergedData,peptides,control="NPA",
   # if the model doesn't fail, extract coefficients
   #browser()
   if(!exists("mhcMod")){return(NULL)}
+
+  # if the model fits fine, extract coefficients
   coefs=summary(mhcMod)$coef
   # find interactions to include in the output
   interact=grep(":",rownames(coefs),fixed=T)
@@ -219,7 +220,7 @@ fitModel = function(clone,mergedData,peptides,control="NPA",
 #### a vector of cross-reactive conditions
 #### added option for permuting labels to answer to Kellie's request. Need to remove for the app and package
 
-#### TODO add frequency threshold for clones to be analysed
+#### TODO 2025-01-16 add comparison to the second best to find unique clones
 
 runExperiment=function(files, peptides, ctThresh=50,cont="NP",
                        ORthr=1, FDRthr = 0.05, excludeCond = NA,
@@ -257,8 +258,6 @@ runExperiment=function(files, peptides, ctThresh=50,cont="NP",
   #=================
   # keep clones with maximum percentage across
   # all analyzed samples higher that a specified threshold
-  # TODO do this before running the analysis
-  # for now add this as a filtration step at the output
   #=================
   # grep columns with percentage
   percCol = grep("percent",colnames(res_exp), value = T)
