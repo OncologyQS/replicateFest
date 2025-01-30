@@ -16,7 +16,7 @@
 # using input with replicates
 # based on Leslie's development for the Cervical SPORE project
 
-# an auxiliary function
+# an auxiliary function for index
 geti = function(x,i){return(x[i])}
 
 
