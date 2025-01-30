@@ -6,15 +6,16 @@
 #' @import MASS
 #' @import dplyr
 #' @import openxlsx
-#' @import stats 
-#' 
+#' @import stats
+#'
 #import description end
 0
 
 
-# Functions for analysis of Manafest data in shiny app
+# Functions for analysis of FEST data in shiny app
 # using input with replicates
-# based on Leslie's development for the Cervical SPORE
+# based on Leslie's development for the Cervical SPORE project
+
 # an auxiliary function
 geti = function(x,i){return(x[i])}
 
