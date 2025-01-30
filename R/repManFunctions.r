@@ -185,17 +185,56 @@ fitModel = function(clone,mergedData,peptides,control="NPA",
   coefs=summary(mhcMod)$coef
   # find interactions to include in the output
   interact=grep(":",rownames(coefs),fixed=T)
-  # subset coefficients for interactions
-  coefs = coefs[interact,]
+  # subset coefficients for interactions that represents results of comparison to control
+  coefs_int = coefs[interact,]
   # add condition from which coefficients were extracted
   # and convert coefficients to OR
-  condition = gsub("clonec+:pep","",rownames(coefs), fixed = T)
-  OR = setNames(round(exp(coefs[,"Estimate"]),3),
+  condition = gsub("clonec+:pep","",rownames(coefs_int), fixed = T)
+  OR = setNames(round(exp(coefs_int[,"Estimate"]),3),
                 paste0("OR: ", condition, "_vs_",control))
-  pval = setNames(coefs[,"Pr(>|z|)"],
+  pval = setNames(coefs_int[,"Pr(>|z|)"],
                 paste0("pval: ", condition, "_vs_",control))
 
-  res = c(clone = clone,OR,pval)
+#browser()
+  # compare with the second best clone and output OR and p-value
+  ### order conditions and find the best and second best interaction coefficients
+  pepOrd=coefs_int[order(coefs_int[, "z value"],decreasing=T),]
+  # names of the best and the second best conditions
+  best=rownames(pepOrd)[1]
+  scnd=rownames(pepOrd)[2]
+
+  ### make a contrast matrix “cMat” with columns matching model coefficients,
+  # and 1 row
+  ### initialize with 0 for all irrelevant conditions,
+  # and use the value 1 for the most expanded condition,
+  # and -1 for the second most expanded condition
+  cMat <- matrix(rep(0,length(mhcMod$coef)), 1) ## initialize contrast matrix
+  # set colnames as names of coefficients
+  colnames(cMat) = rownames(coefs)
+  ### specify contrast top peptide to second
+  cMat[1,c(best,scnd)]=c(1,-1)
+
+  ### fit the contrast using glht function, requires the original model,
+  # “mhcMod” and the new contrast matrix
+  # get an estimate
+  pepComp<- glht(mhcMod, linfct=cMat)  ### fit
+
+  ### extract statistics from the contrast result,
+  # in this instance just p-value,
+  # but OR between those conditions
+  bestCond = gsub("clonec+:pep","",best, fixed = T)
+  scndCond = gsub("clonec+:pep","",scnd, fixed = T)
+  # convert an estimate to OR
+  OR_scnd = setNames(round(exp(summary(pepComp)$test$coeff),3),
+                "OR: best_vs_second")
+  # p-value
+  pval_scnd = setNames(summary(pepComp)$test$pvalues,
+                  "pval: best_vs_second")
+  # names of the best and the second best conditions
+  best_vs_second = setNames(paste0(bestCond,"_vs_",scndCond), "second_comparison")
+
+  # combine output and return it
+  res = c(clone = clone,OR,pval, OR_scnd, pval_scnd, best_vs_second)
 
   return(res)
 
@@ -220,7 +259,7 @@ fitModel = function(clone,mergedData,peptides,control="NPA",
 #### a vector of cross-reactive conditions
 #### added option for permuting labels to answer to Kellie's request. Need to remove for the app and package
 
-#### TODO 2025-01-16 add comparison to the second best to find unique clones
+#### 2025-01-29 add comparison to the second best to find unique expansions
 
 runExperiment=function(files, peptides, ctThresh=50,cont="NP",
                        ORthr=1, FDRthr = 0.05, excludeCond = NA,
@@ -251,8 +290,12 @@ runExperiment=function(files, peptides, ctThresh=50,cont="NP",
                        excludeCond = excludeCond,
                        control=cont,c.corr=1)
   rownames(screen) = screen$clone
-  # get all expanded clones
-  res_exp = getExpanded(screen, mergeDat,
+
+#browser()
+  # get all expanded clones relative to the control
+  # find colunms with control
+  contCol = grep(cont,colnames(screen), value = T)
+  res_exp = getExpanded(screen[,c("clone",contCol)], mergeDat,
                         ORthr = ORthr, FDRthr = FDRthr)
 
   #=================
@@ -261,17 +304,34 @@ runExperiment=function(files, peptides, ctThresh=50,cont="NP",
   #=================
   # grep columns with percentage
   percCol = grep("percent",colnames(res_exp), value = T)
-#browser()
+  #browser()
   # exclude columns with excludeCond
   percCol = percCol[!grepl(paste(excludeCond,collapse = "|"),percCol)]
   # get clones with maximum percentage higher than specified threshold
   res_exp05 = res_exp[apply(res_exp[,percCol],1,max) >percentThr,]
 
-  #======
+   #======
   # find uniquely expanded clones by checking the second best clone
-  res_uniq = res_exp05 %>% filter(n_significant_comparisons == 1)
+  # save the second best comparison results
+  screen_scndBest = screen[rownames(res_exp05), setdiff(colnames(screen),contCol)]
+  # check for uniqueness. it should be expanded and significant in comparison to the second best as well
+  unique_exp = (screen_scndBest[,grep("OR", colnames(screen_scndBest))]>1 &
+    screen_scndBest[,grep("FDR", colnames(screen_scndBest))]<FDRthr)
+  # merge the results
+  # add columns that indicates how many and what comparisons were significant
+  # get T/F matrix for uniqueness comparisons
+  # results for the second best comparison
+  # the rest of info
+  sigComCol = c("clone","n_significant_comparisons","significant_comparisons")
+  screen_scndBest = cbind(res_exp05[,sigComCol],
+                          unique_exp,
+                          res_exp05[,setdiff(colnames(res_exp),sigComCol)],
+                          screen_scndBest)
 
-  #=====
+
+  # get clones expanded in one condiiton comparing to the control
+   res_uniq = res_exp05 %>% filter(n_significant_comparisons == 1)
+ #=====
   # find cross-reactive clones
   if(length(xrCond)>0)
   {
@@ -297,6 +357,7 @@ runExperiment=function(files, peptides, ctThresh=50,cont="NP",
 
   output = list(ref_only = res_exp,
                 uniquely_exp = res_uniq,
+                second_best = screen_scndBest,
                 params = rbind(params,totalReads))
   # save into Excel file
   if(saveToFile)
@@ -363,7 +424,7 @@ fitModelSet = function(clones, mergedData, peptides, excludeCond = NA,...)
                   peptides=peptides,...)
   }
 
-  #  browser()
+ #  browser()
 
   # transpose to have clones in rows
   #  screen = data.frame(t(screen), check.names = F)
@@ -420,9 +481,10 @@ getExpanded = function(screen, mergedData, ORthr = 1, FDRthr = 0.05)
     paste(s, collapse = ",")
     })
   # add the number and the list to the results
-  res_exp = cbind(res_exp,
+  res_exp = cbind(clone = res_exp[,"clone"],
                   n_significant_comparisons = rowSums(sig, na.rm = T),
-                  significant_comparisons = sigComp)
+                  significant_comparisons = sigComp,
+                  res_exp[,setdiff(colnames(res_exp),c("clone"))])
    # add abundance and percentage of the top clones in each condition
   # get abundance for the top clones
   abundance = getAbundances(rownames(res_exp), mergedData)
@@ -475,10 +537,12 @@ saveResults = function(results, outputFile = "output.xlsx")
   # add sheets
   addWorksheet(wb, "expanded")
   addWorksheet(wb, "uniquely_expanded")
+  addWorksheet(wb, "second_best_result")
   addWorksheet(wb, "parameters")
   # add data to sheets
   writeData(wb, "expanded", results$ref_only)
   writeData(wb, "uniquely_expanded", results$uniquely_exp)
+  writeData(wb, "second_best_result", results$second_best)
   writeData(wb, "parameters", results$params)
   # save the workbook
   saveWorkbook(wb, outputFile, overwrite = TRUE)
