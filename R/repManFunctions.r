@@ -1,12 +1,34 @@
+#' @import tools
+#' @import immunarch
+#' @import lme4
+#' @import contrast
+#' @import multcomp
+#' @import MASS
+#' @import dplyr
+#' @import openxlsx
+#' @import stats 
+#' 
+#import description end
+0
+
+
 # Functions for analysis of Manafest data in shiny app
 # using input with replicates
 # based on Leslie's development for the Cervical SPORE
-#
+# an auxiliary function
 geti = function(x,i){return(x[i])}
 
 
-# reads files, removes non-productive sequencies, extracts counts,
-# creates all necessary objects, and saves them
+#' readMergeSave
+#' Reads files, removes non-productive sequences, extracts counts,
+#' creates all necessary objects for further analysis
+#' @export
+#' @param files a list of filenames with full paths
+#' @param filenames a vector of filenames
+#' @return a list of AA level counts, nucleotide level counts, and total number of reads
+#' @examples
+#' readMergeSave(files = c("data/0.csv","data/1.csv","data/2.csv"))
+#'
 # input: a path to folder with input files
 # output:
 # countData is AA level counts (merged by AA sequences)
@@ -63,6 +85,7 @@ readMergeSave = function(files, filenames = NULL)
 		return(list(aaData = aaData,ntData = ntData))
 }
 
+#' cTabPR
 #' function to make the count matrix for 1 clone, from merged data
 #' @param clone a clone to get counts for
 #' @param countData a list of per clone counts for all samples from readMergeSave
@@ -140,8 +163,10 @@ dfResultPR=function(cts,cfs){
 
 
 #####################################
-#' function to perform analysis for one clone.
-#' It fits negative binomial regression
+#' fitModel
+#' Perform analysis for one clone
+#' @description  The function fits negative binomial regression model for a clone
+#' @export
 #' @param clone a clone to get counts for
 #' @param countData a list of per clone counts for all samples from readMergeSave
 #' @param peptides a vector of peptides corresponding to columns in merged data
@@ -249,7 +274,9 @@ fitModel = function(clone,countData,peptides,control,
 #===========
 # wrapper for running the full analysis from reading files to output all results
 #################
-#' this function runs all files in an expansion experiment
+#' @export
+#' @title runExperiment
+#' @description runs all files in an expansion experiment
 #' @param files a list of filenames with full paths
 #' @param peptides a vector of peptides corresponding to columns in merged data
 #' @param ctThresh minimal number of reads required to consider a clone
@@ -279,7 +306,7 @@ fitModel = function(clone,countData,peptides,control,
 #### a vector of cross-reactive conditions
 #### added option for permuting labels to answer to Kellie's request. Need to remove for the app and package
 
-#### 2025-01-29 add comparison to the second best to find unique expansions
+#### 2025-01-29 added comparison to the second best to find unique expansions
 
 runExperiment=function(files, peptides, ctThresh=50,control,
                        ORthr=1, FDRthr = 0.05, excludeCond = NA,
@@ -289,7 +316,7 @@ runExperiment=function(files, peptides, ctThresh=50,control,
 
 
   #### start algorithm read data
-  mergeDat=readMergeSave(files, filenames = NULL)$mergedDat
+  mergeDat=readMergeSave(files, filenames = NULL)$aaData
 
   # permute sample labels in mergeDat to run permutation test
   if (permute){
@@ -387,10 +414,12 @@ runExperiment=function(files, peptides, ctThresh=50,control,
   } else return(output)
 }
 
-
-#' function that returns the read count for clones of interest in all samples
+#' @export
+#' @title getAbundances
+#' @description returns the read count for clones of interest in all samples
 #' @param clones a vector of clones of interest
 #' @param countData a list of counts for all samples
+#' @return a matrix of clone abundances across samples in `countData`
 # input: a list of merged data, a vector of clones of interest
 getAbundances = function(clones,countData)
 {
@@ -410,15 +439,20 @@ getAbundances = function(clones,countData)
   return(output_counts)
 }
 
+#' @title getClonesToTest
+#' @description function that returns the read counts for clones of interest in all samples
+#' @param countDat a list of merged data
+#' @param ctThresh a minimal number of reads required to consider a clone
+#' @return a vector of clones of interest
 # function that returns the read counts for clones of interest in all samples
 # input: a list of merged data, a vector of clones of interest
 # all clones from all samples
-getClonesToTest = function(mergeDat, ctThresh = 50)
+getClonesToTest = function(countDat, ctThresh = 50)
 {
   # all clones
-  clones=unlist(sapply(mergeDat,function(x)  return(names(x))))
+  clones=unlist(sapply(countDat,function(x)  return(names(x))))
   # the corresponding counts
-  cts=unlist(sapply(mergeDat,function(x)  return(x)))
+  cts=unlist(sapply(countDat,function(x)  return(x)))
   #
   sumCt=tapply(cts,clones,sum)
 
