@@ -44,7 +44,11 @@
 # 2023-12-01
 # switched to immunarch
 
-# 2025-02-05 Adding a version for an experiment with replicates
+# 2025-02-05
+# Adding a version for an experiment with replicates
+# making a package out of functions for both versions
+# (with and without replicates)
+
 
 server <- function(input, output,session) {
 
@@ -56,7 +60,8 @@ server <- function(input, output,session) {
   library("Matrix")
  if(!require(immunarch)) install.packages("immunarch")
 
-	source('manafest_shiny_functions.r')
+	source('../R/manafest_shiny_functions.r')
+  source('../R/repManFunctions.r')
 
 # read source files
 observeEvent(input$sourceFiles,{  output$message = renderUI({
@@ -200,9 +205,9 @@ observeEvent(input$runAnalysis,{
 				# run Fisher's test
 				if(nrow(compPairs) == 1)
 				{
-					res = list(runFisher(compPairs,obj,productiveReadCounts, clones = clonesToTest, nReadFilter = c(as.numeric(input$nReads),0)))
+					res = list(runFisher(compPairs,obj, clones = clonesToTest, nReadFilter = c(as.numeric(input$nReads),0)))
 				}else{
-					res = apply(compPairs,1,runFisher,obj,productiveReadCounts, clones = clonesToTest, nReadFilter = c(as.numeric(input$nReads),0))
+					res = apply(compPairs,1,runFisher,obj, clones = clonesToTest, nReadFilter = c(as.numeric(input$nReads),0))
 				}
 		#			browser()
 				if (!is.null(res))
@@ -235,7 +240,7 @@ observeEvent(input$runAnalysis,{
 })
 
 
- 	# save results with selected thresholds when the Download Results button is clicked
+ # save results with selected thresholds when the Download Results button is clicked
 output$saveResults <- downloadHandler(
 		filename=function() {
 			paste0('analysisRes_',Sys.Date(),'.xlsx')
@@ -253,7 +258,7 @@ output$saveResults <- downloadHandler(
 			posClones = NULL
 			if(input$compareToRef) #if there is comparison to the ref sample
 			{
-			posClones = getPositiveClones(analysisRes, obj, productiveReadCounts, samp = sampForAnalysis,
+			posClones = getPositiveClones(analysisRes, obj, samp = sampForAnalysis,
 				orThr = as.numeric(input$orThr), fdrThr=as.numeric(input$fdrThr), nReads = as.numeric(input$nReads))
 			}else{ # if there is no comparison to ref sample
 				posClones = getPositiveClonesFromTopConditions(analysisRes, orThr = as.numeric(input$orThr), fdrThr=as.numeric(input$fdrThr))
@@ -280,7 +285,7 @@ output$saveResults <- downloadHandler(
 			}else{
 			# if there are positive clones, save them in to Excel file
 				# create table with results
-				tablesToXls = createPosClonesOutput(posClones, obj, productiveReadCounts, refSamp, baselineSamp, addDiff = F)
+				tablesToXls = createPosClonesOutput(posClones, obj, refSamp, baselineSamp, addDiff = F)
 			}
 
 			#===================
@@ -457,7 +462,8 @@ tabsetPanel(
 
 	 #===========
 	 # the tab with manual
-	 tabPanel("User\'s manual", includeHTML('userManual.html'))
+	 tabPanel("User\'s manual",
+	          includeHTML('userManual.html'))
 
  ) # end tabsetPanel
 )

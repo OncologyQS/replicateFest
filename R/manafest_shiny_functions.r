@@ -312,9 +312,10 @@ makeHeatmaps = function(listOfclones, mergedData,
 	dev.off()
 }
 
-runSingleFisher = function(clone, pair, mergedData,totalReadCounts)
+runSingleFisher = function(clone, pair, mergedData)
 {
-	samp1 = pair[1]
+  totalReadCounts = sapply(mergedData, sum)
+  samp1 = pair[1]
 	samp2 = pair[2]
 	counts1 = mergedData[[samp1]][clone]
 	counts2 = mergedData[[samp2]][clone]
@@ -324,24 +325,12 @@ runSingleFisher = function(clone, pair, mergedData,totalReadCounts)
 	return(c(fres$p.value,fres$estimate,fres$conf.int))
 }
 
-getUniqSignClones = function(tab, FDR_threshold = 0.05)
-{
-	clones = rownames(tab)[which(tab[,'significant_comparisons'] == 1)]
-	n = grep('FDR:',colnames(tab), fixed = T, value= T)
-	if(length(n) == 1)
-	{
-		return(rownames(tab)[which(as.numeric(tab[,n]) < FDR_threshold)])
-	}else{
-		fdrs = t(apply(tab[clones,n],1,function(x){as.numeric(x)< FDR_threshold}))
-		colnames(fdrs) = n
-		return(apply(fdrs,2,function(x){res = names(x)[x];return(res[!is.na(res)])}))
-	}
-}
-
+#' @title getPositiveClones
 # returns a vector with positive clones as names and conditions, in which a clone is significant, as values
-getPositiveClones = function(analysisRes, mergedData, totalReadCounts, samp = names(mergedData), orThr = 1, fdrThr = 0.05, nReads = 10)
+getPositiveClones = function(analysisRes, mergedData, samp = names(mergedData), orThr = 1, fdrThr = 0.05, nReads = 10)
 {
-	resTable = createResTable(analysisRes, mergedData,totalReadCounts, orThr = orThr,
+  totalReadCounts = sapply(mergedData, sum)
+  resTable = createResTable(analysisRes, mergedData, orThr = orThr,
 				FDR_threshold=fdrThr, saveCI =F)
 	if(is.null(resTable)) return(NULL)
 
@@ -380,9 +369,9 @@ getPositiveClones = function(analysisRes, mergedData, totalReadCounts, samp = na
 #	freqMatrix[countMatrix<nReads] = 0 # removed this filter in v12
 
 	# compare with the second highest
-	fishRes1 = getFisherForNclone(freqMatrix, rownames(freqMatrix),2,mergedData,totalReadCounts)
+	fishRes1 = getFisherForNclone(freqMatrix, rownames(freqMatrix),2,mergedData)
 	# compare with the third highest
-	fishRes2 = getFisherForNclone(freqMatrix, rownames(freqMatrix),3,mergedData,totalReadCounts)
+	fishRes2 = getFisherForNclone(freqMatrix, rownames(freqMatrix),3,mergedData)
 	# combine results
 	fishResComb = cbind(fishRes1[,'FDR'],fishRes2[,'FDR'], fishRes1[,'odds.ratio'],fishRes2[,'odds.ratio'])
 #print(fishResComb)
@@ -401,16 +390,23 @@ getPositiveClones = function(analysisRes, mergedData, totalReadCounts, samp = na
 		return(signCond[posClones])
 	}else{return(NULL)}
 }
+
 # runs Fisher's test for the nth clone with the highest frequency/the number of reads
-getFisherForNclone = function(freq, clones, n = 2,mergedData,productiveReadCounts)
+getFisherForNclone = function(freq, clones, n = 2,mergedData)
 {
+  productiveReadCounts = sapply(mergedData, sum)
 	fishRes = c()
 	freq[freq==0] = NA
 	for( i in clones)
 	{
 		r = unlist(freq[i,])
 		r = r[order(r,decreasing = T)]
-		if (!is.na(r[n])) res = runSingleFisher(i,names(r)[c(1,n)],mergedData,productiveReadCounts) else res = rep(NA,4)
+		if (!is.na(r[n]))
+		  {
+		    res = runSingleFisher(i,names(r)[c(1,n)],mergedData)
+		    }else {
+		    res = rep(NA,4)
+		    }
 		fishRes = rbind(fishRes,c(names(r)[1],res, n, names(r)[n]))
 	}
 	rownames(fishRes) = clones
@@ -421,11 +417,13 @@ getFisherForNclone = function(freq, clones, n = 2,mergedData,productiveReadCount
 	return(fishResMatrix)
 }
 
-
+#' @title getPositiveClonesFromTopConditions
+#'
 # create output tables to be saved in Excel
-createPosClonesOutput = function(posClones,  mergedData,totalReadCounts, refSamp = NULL, baselineSamp = NULL, addDiff = T)
+createPosClonesOutput = function(posClones, mergedData, refSamp = NULL, baselineSamp = NULL, addDiff = T)
 {
-	output = vector(mode = 'list')
+  totalReadCounts = sapply(mergedData, sum)
+  output = vector(mode = 'list')
 	clones = names(posClones)
 	# write peptide summary of positive clones
 	freqMatrix = getFreq(clones,mergedData,names(mergedData), colSuf = '')
@@ -472,6 +470,7 @@ createPosClonesOutput = function(posClones,  mergedData,totalReadCounts, refSamp
 	return(output)
 }
 
+#' getFreqThreshold
 # calculate frequency threshold using the number of cells and probability
 # (1-((1-p)^(1/n)))
 # where n=number of cells per well and p=selected probability
@@ -480,12 +479,13 @@ getFreqThreshold = function(n, p)
 	return (1-((1-p)^(1/n)))
 }
 
-
+#' @title compareWithOtherTopConditions
 # selects clones that pass the nReads threshold and compare top conditions with the second and third top conditions
 # and returns a table with FDRs and ORs for those comparisons that will be used to select positive clones using FDR and OR threshold later
-compareWithOtherTopConditions = function(mergedData, productiveReadCounts, sampForAnalysis, nReads = 10, clones = NULL)
+compareWithOtherTopConditions = function(mergedData, sampForAnalysis, nReads = 10, clones = NULL)
 {
-	# combine clones from all conditions that have the number of clones more than nReads
+  productiveReadCounts = sapply(mergedData, sum)
+  # combine clones from all conditions that have the number of clones more than nReads
 	allClones = sapply(mergedData[sampForAnalysis], function(x) setdiff(names(x)[which(x >= nReads)],""))
 	clonesToTest = c()
 	for(i in names(allClones))
@@ -506,15 +506,17 @@ compareWithOtherTopConditions = function(mergedData, productiveReadCounts, sampF
 	freqMatrix = getFreqOrCount(clonesToTest,mergedData,sampForAnalysis, colSuf = '', returnFreq = T)
 	#print(countMatrix)
 	# compare with the second highest
-	fishRes1 = getFisherForNclone(freqMatrix, rownames(freqMatrix),2,mergedData,productiveReadCounts)
+	fishRes1 = getFisherForNclone(freqMatrix, rownames(freqMatrix),2,mergedData)
 	# compare with the third highest
-	fishRes2 = getFisherForNclone(freqMatrix, rownames(freqMatrix),3,mergedData,productiveReadCounts)
+	fishRes2 = getFisherForNclone(freqMatrix, rownames(freqMatrix),3,mergedData)
 	# combine results
 	fishResComb = cbind(FDR1 = fishRes1[,'FDR'], FDR2 = fishRes2[,'FDR'], OR1 = fishRes1[,'odds.ratio'], OR2 = fishRes2[,'odds.ratio'], condition = fishRes1[,'condition'])
 
 	return(fishResComb)
 }
 
+
+#' @title getPositiveClonesFromTopConditions
 # select clones that have significant FDRs and OR higher than threshold meaning that a clone is significant and unique expansion
 # also select clones that have NAs in FDR and OR, which means that this clone appears in only one condition and there is nothing to compare
 # check if there is a condition that is also significantly expanded
