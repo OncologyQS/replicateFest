@@ -44,7 +44,7 @@
 # 2023-12-01
 # switched to immunarch
 
-# 2025-02-05 Adding a version for an experiment with repicates
+# 2025-02-05 Adding a version for an experiment with replicates
 
 server <- function(input, output,session) {
 

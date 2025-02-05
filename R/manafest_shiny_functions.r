@@ -187,10 +187,12 @@ getCountsPercent = function(clones, mergedData, samp = names(mergedData))
 	return(tab)
 }
 
+
 # returns difference in percent for selected clones and samples
-getDiff = function(clones, mergedData, totalReadCountPerSample, samp = names(mergedData), refSamp)
+getDiff = function(clones, mergedData, samp = names(mergedData), refSamp)
 {
-	output_freq = matrix(0,nrow = length(clones), ncol = length(samp)+1, dimnames = list(clones, c(samp,refSamp)))
+  totalReadCountPerSample = sapply(mergedData, sum)
+  output_freq = matrix(0,nrow = length(clones), ncol = length(samp)+1, dimnames = list(clones, c(samp,refSamp)))
 	# get frequincies for all samples
 	for (i in c(samp,refSamp))
 	{
@@ -208,10 +210,12 @@ getDiff = function(clones, mergedData, totalReadCountPerSample, samp = names(mer
 	return(output_diff)
 }
 
+
 # return frequencies in percent for selected clones and samples
-getFreq = function(clones, mergedData,totalReadCountPerSample, samp = names(mergedData), colSuf = 'percent', minRead = 0)
+getFreq = function(clones, mergedData, samp = names(mergedData), colSuf = 'percent', minRead = 0)
 {
-	output_freq = matrix(minRead,nrow = length(clones), ncol = length(samp))
+  totalReadCountPerSample = sapply(mergedData, sum)
+  output_freq = matrix(minRead,nrow = length(clones), ncol = length(samp))
 	rownames(output_freq) = clones
 	colnames(output_freq) = samp
 	for (i in samp)
@@ -225,9 +229,10 @@ getFreq = function(clones, mergedData,totalReadCountPerSample, samp = names(merg
 	return(data.frame(output_freq,check.names = F))
 }
 # return frequencies or abundancies in percent for selected clones and samples
-getFreqOrCount = function(clones, mergedData,totalReadCountPerSample, samp = names(mergedData), colSuf = 'percent', minRead = 0, returnFreq = T)
+getFreqOrCount = function(clones, mergedData, samp = names(mergedData), colSuf = 'percent', minRead = 0, returnFreq = T)
 {
-	output_freq = matrix(minRead,nrow = length(clones), ncol = length(samp))
+  totalReadCountPerSample = sapply(mergedData, sum)
+  output_freq = matrix(minRead,nrow = length(clones), ncol = length(samp))
 	rownames(output_freq) = clones
 	colnames(output_freq) = samp
 	for (i in samp)
@@ -242,10 +247,11 @@ getFreqOrCount = function(clones, mergedData,totalReadCountPerSample, samp = nam
 }
 
 # return fold change of frequencies for selected clones and samples
-getFC = function(clones, mergedData, totalReadCountPerSample, refSamp, samp = names(mergedData), colSuf = 'FC:')
+getFC = function(clones, mergedData, refSamp, samp = names(mergedData), colSuf = 'FC:')
 {
-	samp = setdiff(samp,refSamp)
-	freq = getFreq(clones, mergedData, totalReadCountPerSample, union(refSamp,samp), colSuf = '', minRead = 1)
+  totalReadCountPerSample = sapply(mergedData, sum)
+  samp = setdiff(samp,refSamp)
+	freq = getFreq(clones, mergedData, union(refSamp,samp), colSuf = '', minRead = 1)
 	# reference samples frequencies
 	ref = freq[,refSamp]
 	# divide to reference samples frequencies
@@ -263,11 +269,22 @@ getUniqueClones = function(samp, mergedData, readCountThr = 0)
 	return(res)
 }
 
+#' @title makeHeatmaps
+#' @description Makes heatmaps of frequencies of each element
+#' of input list of clones and samples
+#' and plots fold change if refSamp is specified
+#' @param listOfclones a list of clones to plot
+#' @param mergedData a list of data frames with read counts for each sample
+#' @param samp a vector with sample IDs
+#' @param refSamp a reference sample ID
+#' @param fileName a name of the output file
+#' @param size a height and width of heatmap in the output PDF file
 # make heatmaps of frequencies (if refSamp is not specified) of each element of input list of clones and samples and plot FC if refSamp is specified
-makeHeatmaps = function(listOfclones, mergedData, totalReadCountPerSample,
+makeHeatmaps = function(listOfclones, mergedData,
                         samp = names(mergedData), refSamp = NULL,
                         fileName = 'heatmap.pdf',size = 7)
 {
+  totalReadCountPerSample = sapply(mergedData, sum)
 	if (length(listOfclones)==0)
 	{
 		print('There are no clones to plots')
@@ -280,10 +297,10 @@ makeHeatmaps = function(listOfclones, mergedData, totalReadCountPerSample,
 	{
 		clones = listOfclones[[i]]
 		if(length(clones)< 2) next;
-		plotData = getFreq(clones, mergedData,totalReadCountPerSample, samp)
+		plotData = getFreq(clones, mergedData, samp)
 		if (!is.null(refSamp))
 		{
-			freqRef = getFreq(clones, mergedData,totalReadCountPerSample, refSamp)
+			freqRef = getFreq(clones, mergedData, refSamp)
 			freqRef[freqRef == 0] = min(plotData[plotData > 0]) - 1e-10
 			plotData = sweep(plotData,1,unlist(freqRef),'/')
 		}
@@ -357,8 +374,7 @@ getPositiveClones = function(analysisRes, mergedData, totalReadCounts, samp = na
 	}
 	#=====================
 	# check if they are unique by checking top two conditions with the highest number of reads
-#	countMatrix = getFreqOrCount(clones,mergedData,totalReadCounts,samp, colSuf = '', returnFreq = F)
-	freqMatrix = getFreqOrCount(clones,mergedData,totalReadCounts,samp, colSuf = '', returnFreq = T)
+	freqMatrix = getFreqOrCount(clones,mergedData,samp, colSuf = '', returnFreq = T)
 #print(countMatrix)
 	# remove conditions with less than nReads reads from analysis
 #	freqMatrix[countMatrix<nReads] = 0 # removed this filter in v12
@@ -412,7 +428,7 @@ createPosClonesOutput = function(posClones,  mergedData,totalReadCounts, refSamp
 	output = vector(mode = 'list')
 	clones = names(posClones)
 	# write peptide summary of positive clones
-	freqMatrix = getFreq(clones,mergedData,totalReadCounts,names(mergedData), colSuf = '')
+	freqMatrix = getFreq(clones,mergedData,names(mergedData), colSuf = '')
 	peptLevelList = tapply(clones,posClones, FUN = function(x)return(x))
 	peptideTab = matrix(nrow = length(peptLevelList), ncol = 2,
 		dimnames = list(names(peptLevelList),c('positive_clones','sum_freq')))
@@ -423,20 +439,20 @@ createPosClonesOutput = function(posClones,  mergedData,totalReadCounts, refSamp
 	# write clone-level summary
 	if(!is.null(baselineSamp) && !is.null(refSamp))
 	{
-		fc_ref = getFC(clones,mergedData,totalReadCounts,refSamp, unique(posClones), "")
-		fc_bl = getFC(clones,mergedData,totalReadCounts,baselineSamp, unique(posClones), "")
+		fc_ref = getFC(clones,mergedData,refSamp, unique(posClones), "")
+		fc_bl = getFC(clones,mergedData,baselineSamp, unique(posClones), "")
 		tab = data.frame(condition = posClones,
-			getFreq(clones,mergedData,totalReadCounts,baselineSamp),
+			getFreq(clones,mergedData,baselineSamp),
 			sapply(clones,function(x) fc_bl[x,posClones[x]]),
-			getFreq(clones,mergedData,totalReadCounts,refSamp),
+			getFreq(clones,mergedData,refSamp),
 			sapply(clones,function(x) fc_ref[x,posClones[x]]),check.names = F)
 		colnames(tab)[c(3,5)] = paste0('FC:', c(baselineSamp,refSamp))
 	} else {
 		if(!is.null(refSamp))
 		{
-			fc_ref = getFC(clones,mergedData,totalReadCounts,refSamp, unique(posClones), "")
+			fc_ref = getFC(clones,mergedData,refSamp, unique(posClones), "")
 			tab = data.frame(condition = posClones,
-				getFreq(clones,mergedData,totalReadCounts,refSamp),
+				getFreq(clones,mergedData,refSamp),
 				sapply(clones,function(x) fc_ref[x,posClones[x]]),check.names = F)
 			colnames(tab)[3] = paste0('FC:', refSamp)
 		}else{
@@ -449,7 +465,7 @@ createPosClonesOutput = function(posClones,  mergedData,totalReadCounts, refSamp
 	tab = getCountsPercent(clones, mergedData, samp = names(mergedData))
 	if (addDiff)
 	{
-		tab = cbind(tab, getDiff(clones, mergedData,totalReadCounts, samp = setdiff(names(mergedData),c(refSamp, baselineSamp)), refSamp))
+		tab = cbind(tab, getDiff(clones, mergedData, samp = setdiff(names(mergedData),c(refSamp, baselineSamp)), refSamp))
 	}
 #browser()
 	output$positive_clones_all_data = data.frame(condition = posClones,tab,check.names = F)
@@ -487,7 +503,7 @@ compareWithOtherTopConditions = function(mergedData, productiveReadCounts, sampF
 	}
 
 	# get frequency matrix
-	freqMatrix = getFreqOrCount(clonesToTest,mergedData,productiveReadCounts,sampForAnalysis, colSuf = '', returnFreq = T)
+	freqMatrix = getFreqOrCount(clonesToTest,mergedData,sampForAnalysis, colSuf = '', returnFreq = T)
 	#print(countMatrix)
 	# compare with the second highest
 	fishRes1 = getFisherForNclone(freqMatrix, rownames(freqMatrix),2,mergedData,productiveReadCounts)
