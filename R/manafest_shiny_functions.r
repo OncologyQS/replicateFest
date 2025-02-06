@@ -1,4 +1,3 @@
-#'
 
 
 # Functions for analysis of Manafest data in shiny app
@@ -338,7 +337,7 @@ getPositiveClones = function(analysisRes, mergedData, samp = names(mergedData), 
 	clones = rownames(resTable)[which(resTable[,'significant_comparisons'] == 1)]
 	#================
 	# find condition in which it's expanded
-	signTable = createResTable(analysisRes, mergedData,totalReadCounts, orThr = orThr,
+	signTable = createResTable(analysisRes, mergedData, orThr = orThr,
 				FDR_threshold=fdrThr, saveCI =F, significanceTable = T)
 #	signTable = data.frame(signTable[clones,])
 	signMatrix = matrix(signTable[clones,],

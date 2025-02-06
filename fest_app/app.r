@@ -20,7 +20,7 @@
 # Added baseline percent and the corresponding number of templates in baseline to output parameter sheet
 
 # 2018-06-07 (v9)
-# switch to the parser from the tcR package to eliminate sequensing error on 5' end of the nt sequence
+# switch to the parser from the tcR package to eliminate sequencing error on 5' end of the nt sequence
 
 # 2018-07-20 (v10)
 # fixed reading function. It doesn't save mergedData and ntData to the disc;
@@ -56,12 +56,13 @@ server <- function(input, output,session) {
 	options(shiny.maxRequestSize=100*1024^2, java.parameters = "-Xmx8000m")
 	library(shiny)
   library(tools)
-	if (!require(WriteXLS)) install.packages("WriteXLS")
   library("Matrix")
- if(!require(immunarch)) install.packages("immunarch")
-
-	source('../R/manafest_shiny_functions.r')
-  source('../R/repManFunctions.r')
+  if (!require(WriteXLS)) install.packages("WriteXLS")
+  if(!require(immunarch)) install.packages("immunarch")
+  if (!require(devtools)) install.packages("devtools")
+  if (!require(replicateFest)) install_github("OncologyQS/replicateFest")
+  library(devtools)
+  library(replicateFest)
 
 # read source files
 observeEvent(input$sourceFiles,{  output$message = renderUI({
