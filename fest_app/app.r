@@ -60,8 +60,7 @@ server <- function(input, output,session) {
   if (!require(WriteXLS)) install.packages("WriteXLS")
   if(!require(immunarch)) install.packages("immunarch")
   if (!require(devtools)) install.packages("devtools")
-  if (!require(replicateFest)) install_github("OncologyQS/replicateFest")
-  library(devtools)
+  if (!require(replicateFest)) devtools::install_github("OncologyQS/replicateFest")
   library(replicateFest)
 
 # read source files
@@ -187,7 +186,7 @@ observeEvent(input$runAnalysis,{
 		clonesToTest = NULL
 		if(!input$ignoreBaseline)
 		{
-			baselineFreq = getFreq(clones = names(obj[[baselineSamp]]),obj,productiveReadCounts,samp=baselineSamp)
+			baselineFreq = getFreq(clones = names(obj[[baselineSamp]]),obj,samp=baselineSamp)
 			clonesToTest = rownames(baselineFreq)[which(baselineFreq[,1] > getFreqThreshold(as.numeric(input$nCells),input$prob)*100)] #
 		}
 
@@ -250,7 +249,7 @@ output$saveResults <- downloadHandler(
 		content=function(file){
 		if (exists('analysisRes', envir = .GlobalEnv))
 		{
-			# check if analysis was done on aa or nt level
+		  # check if analysis was done on aa or nt level
 			if (input$nuctleotideFlag) obj = ntData else obj = mergedData
 			sampForAnalysis = setdiff(names(obj), c(input$excludeSamp,input$refSamp, input$baselineSamp))
 
@@ -295,7 +294,7 @@ output$saveResults <- downloadHandler(
 			if(input$compareToRef) #if there is comparison to the ref sample
 			{
 				# create a table with results
-				resTable = createResTable(analysisRes,obj,productiveReadCounts, orThr = as.numeric(input$orThr),
+				resTable = createResTable(analysisRes,obj, orThr = as.numeric(input$orThr),
 					FDR_threshold = as.numeric(input$fdrThr), saveCI = F)
 				if (!is.null(resTable))
 				{
