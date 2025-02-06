@@ -356,7 +356,7 @@ output$saveResults <- downloadHandler(
 			# check if analysis was done on aa or nt level
 			if (input$nuctleotideFlag) obj = ntData else obj = mergedData
 			sampForAnalysis = setdiff(names(obj), c(input$excludeSamp,input$refSamp, input$baselineSamp))
-			posClones = getPositiveClones(analysisRes, obj, productiveReadCounts, samp = sampForAnalysis,
+			posClones = getPositiveClones(analysisRes, obj, samp = sampForAnalysis,
 				orThr = as.numeric(input$orThr), fdrThr=as.numeric(input$fdrThr))
 			# if there is no positive clones, do nothing
 			if (length(posClones)==0)
@@ -370,14 +370,15 @@ output$saveResults <- downloadHandler(
 			if (length(posClones)>1)
 			{
   			# create a table with results
-  			resTable = createResTable(analysisRes,mergedData,productiveReadCounts, orThr = as.numeric(input$orThr),
+  			resTable = createResTable(analysisRes,mergedData, orThr = as.numeric(input$orThr),
   				FDR_threshold = as.numeric(input$fdrThr), saveCI = F)
   			# make heatmap with all significant clones
   			posClones = list(rownames(resTable))
   			names(posClones) = 'All_significant'
 
-  			makeHeatmaps(posClones, obj, productiveReadCounts,
-  			             samp = sampForAnalysis, refSamp = input$refSamp,
+  			makeHeatmaps(posClones, obj,
+  			             samp = sampForAnalysis,
+  			             refSamp = input$refSamp,
   				           fileName = file, size = 7)
   			output$message = renderText('The heat map is saved')
 			}
