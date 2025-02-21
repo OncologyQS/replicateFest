@@ -71,7 +71,7 @@ observeEvent(input$sourceFiles,{  output$message = renderUI({
 		HTML('There are no files to analyze. Please upload files')
 	}else if(length(input$sourceFiles$name) == 1){
 		HTML('There should be at least two files to analyze')
-	}else if (length(input$sourceFiles$name) > 1){
+	}else if(length(input$sourceFiles$name) > 1){
 		# read loaded files in and save into inputData object
 
 		# if there are previously loaded data, remove it

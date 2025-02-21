@@ -305,7 +305,8 @@ makeHeatmaps = function(listOfclones, mergedData,
 			plotData = sweep(plotData,1,unlist(freqRef),'/')
 		}
 #		par(oma = c(.1,.1,.1,3))
-		heatmap(as.matrix(plotData), col = bluered(100),labCol = lapply(strsplit(colnames(plotData),'_percent'),geti,1),
+		heatmap(as.matrix(plotData), col = bluered(100),
+		        labCol = lapply(strsplit(colnames(plotData),'_percent'),getElement,1),
 			scale = 'row', cexCol = .5, cexRow = .3)
 		title(main = names(listOfclones)[[i]], cex=0.2)
 	}

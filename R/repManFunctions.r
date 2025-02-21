@@ -16,9 +16,6 @@
 # using input with replicates
 # based on Leslie's development for the Cervical SPORE project
 
-# an auxiliary function for index
-geti = function(x,i){return(x[i])}
-
 
 #' readMergeSave
 #' Reads files, removes non-productive sequences, extracts counts,
@@ -544,7 +541,7 @@ getExpanded = function(fitResults, countData, ORthr = 1, FDRthr = 0.05)
   # list significant comparisons
   sigComp = apply(sig, 1, function(x){
     # select significant comparisons and get first condition before "vs"
-    s = sapply(strsplit(comp[x], split = "_vs_"), geti, 1)
+    s = sapply(strsplit(comp[x], split = "_vs_"), getElement, 1)
     # list significant comparisons using comma
     paste(s, collapse = ",")
     })
