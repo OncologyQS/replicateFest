@@ -46,7 +46,7 @@ readMergeSave = function(files, filenames = NULL)
 		require(immunarch)
 
   # output objects
-		aaData = ntData = list()
+		mergedData = ntData = list()
 
 		# read all files with immunarch functionality
 		repertoire = repLoad(.path = files)
@@ -58,12 +58,12 @@ readMergeSave = function(files, filenames = NULL)
 #			print(i)
 		  dat = repertoire$data[[i]]
 				#count reads of productive sequences only
-				aaData[[i]] = tapply(dat$Clones, dat$CDR3.aa, sum, na.rm = T)
+				mergedData[[i]] = tapply(dat$Clones, dat$CDR3.aa, sum, na.rm = T)
 				# nucleotide level data
 				ntData[[i]] =tapply(dat$Clones, dat$CDR3.aa, sum, na.rm = T)
 				readFiles = c(readFiles, i)
 		}
-		if (length(aaData) == 0)
+		if (length(mergedData) == 0)
 		{
 			print(paste('There are no data to read'))
 			return(NULL)
@@ -82,8 +82,8 @@ readMergeSave = function(files, filenames = NULL)
 		# assign file names as names to objects
 #		browser()
 		# if not all loaded files
-		names(aaData) = names(ntData) = filenames
-		return(list(aaData = aaData,ntData = ntData))
+		names(mergedData) = names(ntData) = filenames
+		return(list(mergedData = mergedData,ntData = ntData))
 }
 
 #' cTabPR
@@ -309,7 +309,7 @@ fitModel = function(clone,countData,peptides,control,
 
 #### 2025-01-29 added comparison to the second best to find unique expansions
 
-runExperiment=function(files, peptides, ctThresh=50,control,
+runExperiment=function(files, peptides, ctThresh=50, control,
                        ORthr=1, FDRthr = 0.05, excludeCond = NA,
                        xrCond = NA, percentThr = 0,
                        outputFile = "output.xlsx",
@@ -317,7 +317,7 @@ runExperiment=function(files, peptides, ctThresh=50,control,
 
 
   #### start algorithm read data
-  mergeDat=readMergeSave(files, filenames = NULL)$aaData
+  mergeDat=readMergeSave(files, filenames = NULL)$mergedData
 
   # permute sample labels in mergeDat to run permutation test
   if (permute){

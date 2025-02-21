@@ -92,9 +92,9 @@ observeEvent(input$sourceFiles,{  output$message = renderUI({
 
 		if(!is.null(res))
 		{
-			assign('mergedData', res$aaData, envir = .GlobalEnv)
+		  assign('mergedData', res$mergedData, envir = .GlobalEnv)
 			assign('ntData', res$ntData, envir = .GlobalEnv)
-			assign('productiveReadCounts', sapply(res$aaData,sum), envir = .GlobalEnv)
+			assign('productiveReadCounts', sapply(res$mergedData,sum), envir = .GlobalEnv)
 
 			if(file.exists('inputData.rda')) file.remove('inputData.rda')
 			updateSelectInput(session, "refSamp", choices=c('None',names(mergedData)))
@@ -183,13 +183,16 @@ observeEvent(input$runAnalysis,{
 		if(input$baselineSamp == 'None') baselineSamp = input$refSamp
 
 		#===================
+		# select clones to test
+		# if the Ignore baseline flag is on,
+		#then all clones will be tested
 		clonesToTest = NULL
 		if(!input$ignoreBaseline)
 		{
 			baselineFreq = getFreq(clones = names(obj[[baselineSamp]]),obj,samp=baselineSamp)
 			clonesToTest = rownames(baselineFreq)[which(baselineFreq[,1] > getFreqThreshold(as.numeric(input$nCells),input$prob)*100)] #
 		}
-
+  #===================
 		# if the comparison to reference should be included in the analysis
 		if(input$compareToRef)
 		{

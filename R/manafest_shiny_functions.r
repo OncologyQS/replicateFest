@@ -12,9 +12,10 @@
 #' (suggesting expansion compare to the reference and
 #' corresponding OR > 1)
 #' @param mergedData a list of data frames with read counts for each sample
-#' @param nReadFilter a vector with the number of reads for each sample
+#' @param nReadFilter a vector with the number of reads for each sample in the pair
 #' @param dir a logical value indicating the direction of comparison
-#' @param clones a vector with clones to analyze
+#' @param clones a vector with clones to analyze. If NULL, all clones
+#' with the number of reads >= nReadFilter[1] are analyzed
 #' @return a data frame with p-value, FDR, odds ratio, and confidence interval
 #'
 # Use filter for the number of reads (nReadFilter) if a set of clones to analyze is not provided
@@ -479,9 +480,13 @@ getFreqThreshold = function(n, p)
 }
 
 #' @title compareWithOtherTopConditions
-# selects clones that pass the nReads threshold and compare top conditions with the second and third top conditions
-# and returns a table with FDRs and ORs for those comparisons that will be used to select positive clones using FDR and OR threshold later
-compareWithOtherTopConditions = function(mergedData, sampForAnalysis, nReads = 10, clones = NULL)
+# selects clones that pass the nReads threshold and compares top conditions
+# with the second and third top conditions
+# and returns a table with FDRs and ORs for those comparisons
+# that will be used to select positive clones using FDR and OR threshold later
+# there is no comparison to the reference condition
+compareWithOtherTopConditions = function(mergedData, sampForAnalysis,
+                                         nReads = 10, clones = NULL)
 {
   productiveReadCounts = sapply(mergedData, sum)
   # combine clones from all conditions that have the number of clones more than nReads
