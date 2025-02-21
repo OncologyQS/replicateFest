@@ -268,6 +268,7 @@ output$saveResults <- downloadHandler(
 			}
 
 			#===============================
+			# change "None" to NULL for baseline and reference samples
 			baselineSamp = input$baselineSamp
 			if(input$baselineSamp == 'None') baselineSamp = NULL
 			refSamp = input$refSamp
@@ -312,26 +313,40 @@ output$saveResults <- downloadHandler(
 					# table with results of comparison to the reference sample only
 					tablesToXls$ref_comparison_only = data.frame(refCompRes,check.names = F)
 				}else{
-					tablesToXls$ref_comparison_only = data.frame(res = 'There is no significant clones')
+					tablesToXls$ref_comparison_only = data.frame(res = 'There are no significant clones')
 				}
 			}
 			#============
 			# add a sheet with parameters
 			#============
 			s = c(refSamp, baselineSamp,sampForAnalysis)
-			# add the baseline threshold percentage and the corresponding number of templates in baseline sample
+			# add the baseline threshold percentage and
+			# the corresponding number of templates in baseline sample
 			baselineThrNames = baselineThrVal = NULL
 			if(!input$ignoreBaseline)
 			{
-				 baselineThrNames =c('confidence','nCells','baseline_threshold_percent','baseline_threshold_templates')
+				 baselineThrNames =c('confidence','nCells',
+				                     'baseline_threshold_percent',
+				                     'baseline_threshold_templates')
 				 freq = getFreqThreshold(as.numeric(input$nCells),input$prob)
-				if(input$baselineSamp == 'None') baselineSamp = input$refSamp
-				 baselineThrVal = c(input$prob,input$nCells,freq*100,floor(round(freq*productiveReadCounts[baselineSamp])))
+				if(input$baselineSamp == 'None')
+				  baselineSamp = input$refSamp
+				 baselineThrVal = c(input$prob,input$nCells,freq*100,
+				                    floor(round(freq*productiveReadCounts[baselineSamp])))
 			}
-			param = c('Reference_samp','Baseline_sample','Excluded samples','Compare to reference','nTemplates_threshold','FDR_threshold','OR_threshold','Ignore_baseline_threshold',
-				'Nucleotide_level',baselineThrNames,'nAnalyzedSamples',paste(s, 'nTemplates',sep = '_'))
-			value = c(toString(refSamp), toString(baselineSamp),paste(input$excludeSamp, collapse = ', '),input$compareToRef, input$nReads,input$fdrThr, input$orThr,input$ignoreBaseline,
-				input$nuctleotideFlag, baselineThrVal, length(sampForAnalysis),productiveReadCounts[s])
+			param = c('Reference_samp','Baseline_sample',
+			          'Excluded samples','Compare to reference',
+			          'nTemplates_threshold','FDR_threshold',
+			          'OR_threshold','Ignore_baseline_threshold',
+			          'Nucleotide_level', baselineThrNames,
+			          'nAnalyzedSamples',
+			          paste(s, 'nTemplates',sep = '_'))
+			value = c(toString(refSamp), toString(baselineSamp),
+			          paste(input$excludeSamp, collapse = ', '),
+			          input$compareToRef, input$nReads,input$fdrThr,
+			          input$orThr, input$ignoreBaseline,
+			          input$nuctleotideFlag, baselineThrVal,
+			          length(sampForAnalysis), productiveReadCounts[s])
 
 			tablesToXls$parameters = data.frame(param, value)
 
