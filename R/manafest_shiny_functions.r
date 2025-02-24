@@ -23,12 +23,12 @@ runFisher = function(pair, mergedData,
                      nReadFilter = c(10,0), dir = T,
                      clones = NULL)
 {
+#  browser()
   # calculate the number of reads for each sample
   totalReadCounts = sapply(mergedData, sum)
   # get sample IDs to compare
 	sampID1 = pair[1]
 	sampID2 = pair[2]
-
 	# get clones to test
 	if (dir) {
 	  clonesToTest = setdiff(names(mergedData[[sampID1]])[which(mergedData[[sampID1]] >= nReadFilter[1])],"")
@@ -67,6 +67,7 @@ runFisher = function(pair, mergedData,
 #print(clone)
 		counts1 = dat[clone,sampID1]
 		counts2 = dat[clone,sampID2]
+#		browser()
 		tab = rbind(c(counts1,counts2),c(totalReadCounts[sampID1]-counts1, totalReadCounts[sampID2]-counts2))
 		fres = fisher.test(tab)
 #print(fres)
@@ -538,4 +539,156 @@ getPositiveClonesFromTopConditions = function(fisherResTable, orThr = 1, fdrThr 
 	# return conditions of positive clones
 		return(fisherResTable[posClones,'condition'])
 	}else{return(NULL)}
+}
+
+runExperimentFisher=function(files,
+                             refSamp,
+                             baselineSamp = NULL,
+                             ignoreBaseline = TRUE,
+                             nCells = 100000,
+                             prob = .99,
+                             nReads = 50,
+                             fdrThr = .05,
+                             orThr = 5,
+                             percentThr = 0,
+                             excludeSamp = '',
+                             compareToRef = TRUE,
+                             outputFile = "output.xlsx",
+                             saveToFile = T)
+{
+  #### start algorithm read data
+  mergedData = readMergeSave(files, filenames = NULL)$mergedData
+  # specify samples to analyze
+  sampForAnalysis = setdiff(names(mergedData),
+                            c(excludeSamp,refSamp,
+                              baselineSamp))
+  productiveReadCounts = sapply(mergedData, sum)
+
+  #======================
+  # run the analysis
+  posClones = NULL
+  # with reference
+  if(compareToRef) #if there is comparison to the ref sample
+  {
+    #============================================
+    # run the analysis with reference
+    #===================
+    # select clones to test
+    # if the Ignore baseline flag is on,
+    #then all clones will be tested
+    clonesToTest = NULL
+    fisherRes = NULL
+    if(!ignoreBaseline)
+    {
+      baselineFreq = getFreq(clones = names(mergedData[[baselineSamp]]),
+                             mergedData,samp=baselineSamp)
+      clonesToTest = rownames(baselineFreq)[which(baselineFreq[,1] >
+                                                    getFreqThreshold(as.numeric(nCells),prob)*100)] #
+    }
+    # create comparing pairs (to refSamp)
+    compPairs = cbind(sampForAnalysis,rep(refSamp,
+                                          length(sampForAnalysis)))
+    # run pair-wise Fisher's test
+#browser()
+      fisherRes = apply(compPairs,1,runFisher,mergedData,
+                          clones = clonesToTest,
+                          nReadFilter = c(nReads,0))
+    if (!is.null(fisherRes))
+    {
+     # add names of compared conditions
+      names(fisherRes) = apply(compPairs,1,paste,collapse = '_vs_')
+      # select positive clones with specified thresholds
+      posClones = getPositiveClones(fisherRes, mergedData,
+                                    samp = sampForAnalysis,
+                                    orThr = orThr,
+                                    fdrThr=fdrThr,
+                                    nReads = nReads)
+    }	else{
+      print('There are no clones to analyze. Try to reduce confidence or the number of templates 1')
+      return(NULL)
+    }
+
+
+  }else{ # if there is no comparison to ref sample
+
+    fisherRes = compareWithOtherTopConditions(mergedData,
+                                              sampForAnalysis,
+                                              nReads = nReads,
+                                              clones = NULL)
+
+    # select positive clones with specified thresholds
+    posClones = getPositiveClonesFromTopConditions(fisherRes,
+                                                   orThr = orThr,
+                                                   fdrThr = fdrThr)
+  }
+
+
+  # create  output
+  tablesToXls = createPosClonesOutput(posClones, mergedData,
+                                      refSamp,
+                                      baselineSamp, addDiff = F)
+  #===================
+  # add the ref_comparison_only sheet
+  #===================
+  if(compareToRef) #if there is comparison to the ref sample
+  {
+    # create a table with results
+    resTable = createResTable(fisherRes,mergedData,
+                              orThr = orThr,
+                              FDR_threshold = fdrThr, saveCI = F)
+    if (!is.null(resTable))
+    {
+      # make a numeric table to save in an Excel spreadsheet
+      refCompRes = resTable[,2:ncol(resTable)]
+      refCompRes = t(do.call('rbind',refCompRes))
+      rownames(refCompRes) = rownames(resTable)
+
+      # table with results of comparison to the reference sample only
+      tablesToXls$ref_comparison_only = data.frame(refCompRes,check.names = F)
+    }else{
+      tablesToXls$ref_comparison_only = data.frame(res = 'There are no significant clones')
+    }
+  }
+
+  #============
+  # add a sheet with parameters
+  #============
+  s = c(refSamp, baselineSamp,sampForAnalysis)
+  # add the baseline threshold percentage and
+  # the corresponding number of templates in baseline sample
+  baselineThrNames = baselineThrVal = NULL
+  if(!ignoreBaseline)
+  {
+    baselineThrNames =c('confidence','nCells',
+                        'baseline_threshold_percent',
+                        'baseline_threshold_templates')
+    freq = getFreqThreshold(nCells,prob)
+    if(baselineSamp == 'None')
+      baselineSamp = refSamp
+    baselineThrVal = c(prob,nCells,freq*100,
+                       floor(round(freq*productiveReadCounts[baselineSamp])))
+  }
+
+  # create a table with input parameters to save into output
+  param = c('Reference_samp','Baseline_sample',
+            'Excluded samples','Compare to reference',
+            'nTemplates_threshold','FDR_threshold',
+            'OR_threshold','Ignore_baseline_threshold',
+            baselineThrNames,'nAnalyzedSamples',
+            paste(s, 'nTemplates',sep = '_'))
+  value = c(toString(refSamp), toString(baselineSamp),
+            paste(excludeSamp, collapse = ', '),
+            compareToRef, nReads,fdrThr,
+            orThr, ignoreBaseline, baselineThrVal,
+            length(sampForAnalysis), productiveReadCounts[s])
+
+  tablesToXls$parameters = data.frame(param, value)
+
+  # save into Excel file
+  if(saveToFile)
+  {
+    WriteXLS('tablesToXls', outputFile,
+             SheetNames = names(tablesToXls), row.names = T)
+  } else return(tablesToXls)
+
 }
