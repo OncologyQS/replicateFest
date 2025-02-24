@@ -2,7 +2,12 @@
 % Please edit documentation in R/manafest_shiny_functions.r
 \name{compareWithOtherTopConditions}
 \alias{compareWithOtherTopConditions}
-\title{compareWithOtherTopConditions}
+\title{compareWithOtherTopConditions
+selects clones that pass the nReads threshold and compares top conditions
+with the second and third top conditions
+and returns a table with FDRs and ORs for those comparisons
+that will be used to select positive clones using FDR and OR threshold later
+there is no comparison to the reference condition}
 \usage{
 compareWithOtherTopConditions(
   mergedData,
@@ -11,6 +16,24 @@ compareWithOtherTopConditions(
   clones = NULL
 )
 }
+\arguments{
+\item{mergedData}{a list of data frames with read counts for each sample}
+
+\item{sampForAnalysis}{a vector with sample IDs}
+
+\item{nReads}{a threshold for the number of reads. Default is 10}
+
+\item{clones}{an optional vector with clones to analyze.
+Default is NULL, which means that all clones with the number of reads more than nReads will be analyzed}
+}
+\value{
+a table with FDRs and ORs for comparisons with the second and third top conditions
+}
 \description{
 compareWithOtherTopConditions
+selects clones that pass the nReads threshold and compares top conditions
+with the second and third top conditions
+and returns a table with FDRs and ORs for those comparisons
+that will be used to select positive clones using FDR and OR threshold later
+there is no comparison to the reference condition
 }

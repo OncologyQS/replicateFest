@@ -270,11 +270,17 @@ fitModel = function(clone,countData,peptides,control,
 
 
 #===========
-# wrapper for running the full analysis from reading files to output all results
+# wrapper for running the full analysis using negative binomial
+# from reading files to output all results
 #################
 #' @export
 #' @title runExperiment
-#' @description runs all files in an expansion experiment
+#' @description Reads in files with TCR repertoires from
+#' a FEST experiment with replicate samples per condition (stimulating peptide).
+#' It fits negative binomial model to find expanded clones
+#' comparing to a reference samples.
+#' It also compares top conditions to find unique expansions.
+#' The results are return and saved in an Excel file.
 #' @param files a list of filenames with full paths
 #' @param peptides a vector of peptides corresponding to columns in merged data
 #' @param ctThresh minimal number of reads required to consider a clone

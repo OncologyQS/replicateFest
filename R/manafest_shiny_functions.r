@@ -17,7 +17,7 @@
 #' @param clones a vector with clones to analyze. If NULL, all clones
 #' with the number of reads >= nReadFilter[1] are analyzed
 #' @return a data frame with p-value, FDR, odds ratio, and confidence interval
-#'
+#' @export
 # Use filter for the number of reads (nReadFilter) if a set of clones to analyze is not provided
 runFisher = function(pair, mergedData,
                      nReadFilter = c(10,0), dir = T,
@@ -97,7 +97,7 @@ runFisher = function(pair, mergedData,
 #' @param significanceTable a logical value indicating if a table with significant clones should be returned
 #' @return a data frame with significant clones and the corresponding
 #'  OR, FDR, counts, and percentages for all conditions
-#'
+#' @export
 # write output
 # p-value, OR from fisher test + abundance + frequency
 createResTable = function(res,mergedData, orThr = 1, FDR_threshold = 0.05,
@@ -166,7 +166,7 @@ createResTable = function(res,mergedData, orThr = 1, FDR_threshold = 0.05,
 #' @param mergedData a list of data frames with read counts for each sample
 #' @param samp a vector with sample IDs
 #' @return a data frame with read counts and frequencies for selected clones and samples
-#'
+#' @export
 # returns read counts and frequencies for selected clones and samples
 getCountsPercent = function(clones, mergedData, samp = names(mergedData))
 {
@@ -229,7 +229,17 @@ getFreq = function(clones, mergedData, samp = names(mergedData), colSuf = 'perce
 	else colnames(output_freq) = samp
 	return(data.frame(output_freq,check.names = F))
 }
-# return frequencies or abundancies in percent for selected clones and samples
+
+#' @title getFreqOrCount
+#' Returns frequencies or abundances in percent for selected clones and samples
+#' @param clones a vector with clones, for which frequencies should be calculated
+#' @param mergedData a list of data frames with read counts for each sample
+#' @param samp a vector with sample IDs
+#' @param colSuf a suffix for column names
+#' @param minRead a threshold for the number of reads
+#' @param returnFreq a logical value indicating if frequencies should be returned
+#' @return a data frame with frequencies or abundances in percent for selected clones and samples
+#' @export
 getFreqOrCount = function(clones, mergedData, samp = names(mergedData), colSuf = 'percent', minRead = 0, returnFreq = T)
 {
   totalReadCountPerSample = sapply(mergedData, sum)
@@ -328,7 +338,20 @@ runSingleFisher = function(clone, pair, mergedData)
 }
 
 #' @title getPositiveClones
-# returns a vector with positive clones as names and conditions, in which a clone is significant, as values
+#' returns a vector with positive clones as names and conditions,
+#' in which a clone is significant, as values
+#' @param analysisRes a list with results of Fisher's test
+#' for pairwise comparisons
+#' @param mergedData a list of data frames with read counts
+#' for each sample
+#' @param samp a vector with sample IDs to analyze
+#' @param orThr a threshold for odds ratio
+#' @param fdrThr a threshold for FDR
+#' @param nReads a threshold for the number of reads
+#' @return a vector with positive clones as names and conditions,
+#' in which a clone is significant, as values
+#' @export
+#'
 getPositiveClones = function(analysisRes, mergedData, samp = names(mergedData), orThr = 1, fdrThr = 0.05, nReads = 10)
 {
   totalReadCounts = sapply(mergedData, sum)
@@ -419,8 +442,7 @@ getFisherForNclone = function(freq, clones, n = 2,mergedData)
 	return(fishResMatrix)
 }
 
-#' @title getPositiveClonesFromTopConditions
-#'
+#
 # create output tables to be saved in Excel
 createPosClonesOutput = function(posClones, mergedData, refSamp = NULL, baselineSamp = NULL, addDiff = T)
 {
@@ -482,11 +504,17 @@ getFreqThreshold = function(n, p)
 }
 
 #' @title compareWithOtherTopConditions
-# selects clones that pass the nReads threshold and compares top conditions
-# with the second and third top conditions
-# and returns a table with FDRs and ORs for those comparisons
-# that will be used to select positive clones using FDR and OR threshold later
-# there is no comparison to the reference condition
+#' selects clones that pass the nReads threshold and compares top conditions
+#' with the second and third top conditions
+#' and returns a table with FDRs and ORs for those comparisons
+#' that will be used to select positive clones using FDR and OR threshold later
+#' there is no comparison to the reference condition
+#' @param mergedData a list of data frames with read counts for each sample
+#' @param sampForAnalysis a vector with sample IDs
+#' @param nReads a threshold for the number of reads. Default is 10
+#' @param clones an optional vector with clones to analyze.
+#' Default is NULL, which means that all clones with the number of reads more than nReads will be analyzed
+#' @return a table with FDRs and ORs for comparisons with the second and third top conditions
 compareWithOtherTopConditions = function(mergedData, sampForAnalysis,
                                          nReads = 10, clones = NULL)
 {
@@ -523,11 +551,18 @@ compareWithOtherTopConditions = function(mergedData, sampForAnalysis,
 
 
 #' @title getPositiveClonesFromTopConditions
-# select clones that have significant FDRs and OR higher than threshold meaning that a clone is significant and unique expansion
-# also select clones that have NAs in FDR and OR, which means that this clone appears in only one condition and there is nothing to compare
-# check if there is a condition that is also significantly expanded
-# This function takes a table with FDRs, ORs, and condition in which the clone is the most abundant
-# Column 1 and 2 are FDRs, 3 and 4 - ORs, and 5 is condition
+#' Selects clones that have significant FDRs and OR higher than threshold meaning that a clone is significant and unique expansion
+#' also select clones that have NAs in FDR and OR, which means that this clone appears in only one condition and there is nothing to compare
+#' check if there is a condition that is also significantly expanded
+#' This function takes a table with FDRs, ORs, and condition in which the clone is the most abundant
+#' Column 1 and 2 are FDRs, 3 and 4 - ORs, and 5 is condition
+#' It returns a vector with positive clones as names and conditions, in which a clone is significant, as values
+#' @param fisherResTable a table with FDRs, ORs, and condition in which the clone is the most abundant.
+#' This table is an output from compareWithOtherTopConditions function
+#' @param orThr a threshold for odds ratio
+#' @param fdrThr a threshold for FDR
+#' @return a vector with positive clones as names and conditions, in which a clone is significant, as values
+#' @export
 getPositiveClonesFromTopConditions = function(fisherResTable, orThr = 1, fdrThr = 0.05)
 {
 	# apply FDR and OR thresholds
@@ -540,6 +575,34 @@ getPositiveClonesFromTopConditions = function(fisherResTable, orThr = 1, fdrThr 
 		return(fisherResTable[posClones,'condition'])
 	}else{return(NULL)}
 }
+
+#===========
+# wrapper for running the full analysis using Fisher's test
+# from reading files to output all results
+#################
+#' @title runExperimentFisher
+#' @description Reads in files with TCR repertoires from
+#' a FEST experiment without replicate samples. It
+#' performs pairwise Fisher's test find expanded clones
+#' comparing to a reference samples.
+#' It also compares top conditions to find unique expansions.
+#' The results are return and saved in an Excel file.
+#' @param files a list of file names with read counts
+#' @param refSamp a reference sample ID
+#' @param baselineSamp a baseline sample ID
+#' @param ignoreBaseline a logical value indicating if the baseline sample should be ignored
+#' @param nCells a number of cells
+#' @param prob a probability
+#' @param nReads a threshold for the number of reads
+#' @param fdrThr a threshold for FDR
+#' @param orThr a threshold for OR
+#' @param percentThr a threshold for percentage
+#' @param excludeSamp a sample ID to exclude from analysis
+#' @param compareToRef a logical value indicating if the comparison to the reference sample should be performed
+#' @param outputFile a name of the output file
+#' @param saveToFile a logical value indicating if the output should be saved to a file
+#' @return a list with output tables
+#' @export
 
 runExperimentFisher=function(files,
                              refSamp,

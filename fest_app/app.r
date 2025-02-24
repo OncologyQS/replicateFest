@@ -51,7 +51,7 @@
 
 
 server <- function(input, output,session) {
-
+  #rm(list = ls())
 	# increase file upload limit to 100M
 	options(shiny.maxRequestSize=100*1024^2, java.parameters = "-Xmx8000m")
 	library(shiny)
@@ -63,7 +63,7 @@ server <- function(input, output,session) {
   if (!require(replicateFest)) devtools::install_github("OncologyQS/replicateFest")
   library(replicateFest)
 
-# read source files
+# read input files
 observeEvent(input$sourceFiles,{  output$message = renderUI({
    # check if there is file to analyze
 	if (length(input$sourceFiles) == 0)
@@ -406,10 +406,12 @@ output$saveResults <- downloadHandler(
 }
 
 ui <- fluidPage(
+#  title = "FEST data analysis",
+headerPanel("FEST data analysis"),
 # layout with tabs
 tabsetPanel(
 	# tab with FEST analysis
-	tabPanel("FEST data analysis",
+	tabPanel("Data without replicates",
 	# headerPanel("FEST data analysis"),
 	 sidebarLayout(
 	   # the left side panel

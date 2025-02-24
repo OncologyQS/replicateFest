@@ -2,7 +2,9 @@
 % Please edit documentation in R/manafest_shiny_functions.r
 \name{getPositiveClones}
 \alias{getPositiveClones}
-\title{getPositiveClones}
+\title{getPositiveClones
+returns a vector with positive clones as names and conditions,
+in which a clone is significant, as values}
 \usage{
 getPositiveClones(
   analysisRes,
@@ -13,6 +15,27 @@ getPositiveClones(
   nReads = 10
 )
 }
+\arguments{
+\item{analysisRes}{a list with results of Fisher's test
+for pairwise comparisons}
+
+\item{mergedData}{a list of data frames with read counts
+for each sample}
+
+\item{samp}{a vector with sample IDs to analyze}
+
+\item{orThr}{a threshold for odds ratio}
+
+\item{fdrThr}{a threshold for FDR}
+
+\item{nReads}{a threshold for the number of reads}
+}
+\value{
+a vector with positive clones as names and conditions,
+in which a clone is significant, as values
+}
 \description{
 getPositiveClones
+returns a vector with positive clones as names and conditions,
+in which a clone is significant, as values
 }

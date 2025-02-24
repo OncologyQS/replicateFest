@@ -14,11 +14,12 @@ corresponding OR > 1)}
 
 \item{mergedData}{a list of data frames with read counts for each sample}
 
-\item{nReadFilter}{a vector with the number of reads for each sample}
+\item{nReadFilter}{a vector with the number of reads for each sample in the pair}
 
 \item{dir}{a logical value indicating the direction of comparison}
 
-\item{clones}{a vector with clones to analyze}
+\item{clones}{a vector with clones to analyze. If NULL, all clones
+with the number of reads >= nReadFilter[1] are analyzed}
 }
 \value{
 a data frame with p-value, FDR, odds ratio, and confidence interval

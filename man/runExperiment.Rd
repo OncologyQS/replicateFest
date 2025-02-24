@@ -49,5 +49,10 @@ a list of all expanded clones, uniquely expanded clones
 and parameters of the run
 }
 \description{
-runs all files in an expansion experiment
+Reads in files with TCR repertoires from
+a FEST experiment with replicate samples per condition (stimulating peptide).
+It fits negative binomial model to find expanded clones
+comparing to a reference samples.
+It also compares top conditions to find unique expansions.
+The results are return and saved in an Excel file.
 }
