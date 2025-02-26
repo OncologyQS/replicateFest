@@ -410,36 +410,53 @@ ui <- fluidPage(
 headerPanel("FEST data analysis"),
 # layout with tabs
 tabsetPanel(
-	# tab with FEST analysis
-	tabPanel("Data without replicates",
+  #============================
+  # tab for loading the data
+  tabPanel("Load data",
+           sidebarLayout(
+             # the left side panel
+             sidebarPanel(
+               # select the format of input files
+               selectInput('inputFiles', 'Select an input format',
+                           choices = c('FEST files','an R object with data'),
+                           selected = NULL, multiple = FALSE,selectize = TRUE,
+                           width = NULL, size = NULL),
+
+               # if a previously saved R object with the input data will be uploaded
+               conditionalPanel(
+                 condition = "input.inputFiles == 'an R object with data'",
+                 fileInput('inputObj', 'Upload an R object with data (.rda)',
+                           multiple = FALSE,
+                           accept=c('rda', '.rda'))
+               ),
+               # show the fileInput control depending on the selected values of inputFiles
+               # if files with raw data will be uploaded
+               conditionalPanel(
+                 condition = "input.inputFiles == 'FEST files'",
+                 fileInput('sourceFiles', 'Upload FEST files (.tsv)',
+                           multiple = TRUE,
+                           accept=c('text/tsv', 'text/comma-separated-values,text/plain', '.tsv')),
+                 downloadButton('saveInputObj', 'Save Input Object')
+               ), # end conditionalPanel
+            ), # end sidebarPanel
+
+            # the main panel
+            mainPanel(
+              # textOutput('contents'),
+              htmlOutput("message")
+            )
+
+        ) # end sidebarLayout
+  ), # end tabPanel with loading data
+
+  #==============================
+  # tab for analysis without replicates
+	tabPanel("Analysis without replicates",
 	# headerPanel("FEST data analysis"),
 	 sidebarLayout(
 	   # the left side panel
 		sidebarPanel(
-		# select the format of input files
-		selectInput('inputFiles', 'Select an input format',
-		            choices = c('FEST files','an R object with data'),
-		            selected = NULL, multiple = FALSE,selectize = TRUE,
-		            width = NULL, size = NULL),
 
-		# if a previously saved R object with the input data will be uploaded
-		 conditionalPanel(
-			  condition = "input.inputFiles == 'an R object with data'",
-			  fileInput('inputObj', 'Upload an R object with data (.rda)',
-			            multiple = FALSE,
-					  accept=c('rda', '.rda'))
-		 ),
-		# show the fileInput control depending on the selected values of inputFiles
-		# if files with raw data will be uploaded
-		 conditionalPanel(
-			  condition = "input.inputFiles == 'FEST files'",
-			  fileInput('sourceFiles', 'Upload FEST files (.tsv)',
-			            multiple = TRUE,
-					 accept=c('text/tsv', 'text/comma-separated-values,text/plain', '.tsv')),
-			 downloadButton('saveInputObj', 'Save Input Object')
-		 ),
-
-		tags$hr(),
 		# check box that controls the type of analysis - if the comparison with a reference should be performed or not
 		checkboxInput('compareToRef','Compare to reference', value = TRUE),
 

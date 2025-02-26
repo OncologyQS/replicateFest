@@ -211,8 +211,16 @@ getDiff = function(clones, mergedData, samp = names(mergedData), refSamp)
 	return(output_diff)
 }
 
-
-# return frequencies in percent for selected clones and samples
+#' @title getFreq
+#' @description Returns frequencies in percent for selected clones and samples
+#' @param clones a vector with clones, for which frequencies should be calculated
+#' @param mergedData a list of data frames with read counts for each sample
+#' @param samp a vector with sample IDs
+#' @param colSuf a suffix for column names
+#' @param minRead a threshold for the number of reads
+#' @return a data frame with frequencies in percent for selected clones and samples
+#' @export
+#'
 getFreq = function(clones, mergedData, samp = names(mergedData), colSuf = 'percent', minRead = 0)
 {
   totalReadCountPerSample = sapply(mergedData, sum)
