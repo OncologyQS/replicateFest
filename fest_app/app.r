@@ -64,7 +64,7 @@ server <- function(input, output,session) {
   library(replicateFest)
 
 # read input files
-observeEvent(input$sourceFiles,{  output$message = renderUI({
+observeEvent(input$sourceFiles,{  output$message_load = renderUI({
    # check if there is file to analyze
 	if (length(input$sourceFiles) == 0)
 	{
@@ -111,7 +111,8 @@ observeEvent(input$sourceFiles,{  output$message = renderUI({
 })
 
 # load RDA file with the input data
-observeEvent(input$inputObj,{  output$message = renderUI({
+observeEvent(input$inputObj,{
+  output$message_load = renderUI({
    # check if there is a file to analyze
 	if (length(input$inputObj) == 0)
 	{
@@ -153,7 +154,7 @@ output$saveInputObj <- downloadHandler(
 			save(mergedData,productiveReadCounts,ntData,file=file)
 		}else{
 			print('No data to save')
-			output$message = renderText('No data to save')
+			output$message_load = renderText('No data to save')
 			emptyObj = NULL
 			save(emptyObj,file=file)
 		}
@@ -161,7 +162,7 @@ output$saveInputObj <- downloadHandler(
 
 	# run analysis with the Run Analysis button is clicked
 observeEvent(input$runAnalysis,{
-	output$message = renderText('Analysis is running...')
+	output$message_fisher = renderText('Analysis is running...')
 	# remove results of the previous analysis
 	if(exists('analysisRes', envir = .GlobalEnv)) rm('analysisRes', envir = .GlobalEnv)
 	# check if there are objects to run analysis
@@ -198,7 +199,7 @@ observeEvent(input$runAnalysis,{
 		{
 			if (input$refSamp == 'None')
 			{
-				output$message = renderText('There is no reference. Please select a reference sample')
+				output$message_fisher = renderText('There is no reference. Please select a reference sample')
 			}else{
 
 				# create comparing pairs (to refSamp)
@@ -216,10 +217,10 @@ observeEvent(input$runAnalysis,{
 				if (!is.null(res))
 				{
 					names(res) = apply(compPairs,1,paste,collapse = '_vs_')
-					output$message = renderText('Analysis is done. Click Download Results to save the results')
+					output$message_fisher = renderText('Analysis is done. Click Download Results to save the results')
 					assign('analysisRes',res, envir = .GlobalEnv)
 				}	else{
-					output$message = renderText('There are no clones to analyze. Try to reduce confidence or the number of templates 1')
+					output$message_fisher = renderText('There are no clones to analyze. Try to reduce confidence or the number of templates 1')
 				}
 			}
 		}else{
@@ -230,14 +231,14 @@ observeEvent(input$runAnalysis,{
 				nReads = as.numeric(input$nReads), clones = clonesToTest)
 			if (!is.null(fisherRes))
 			{
-				output$message = renderText('Analysis is done. Click Download Results to save the results')
+				output$message_fisher = renderText('Analysis is done. Click Download Results to save the results')
 				assign('analysisRes',fisherRes, envir = .GlobalEnv)
 			}	else{
-				output$message = renderText('There are no clones to analyze. Try to reduce the number of templates')
+				output$message_fisher = renderText('There are no clones to analyze. Try to reduce the number of templates')
 			}
 		}
 	}else{
-		output$message = renderText('There are no data to analyze. Please load files')
+		output$message_fisher = renderText('There are no data to analyze. Please load files')
 	}
 
 })
@@ -282,7 +283,7 @@ output$saveResults <- downloadHandler(
 			# if there is no positive clones
 			if (length(posClones)==0)
 			{
-				output$message = renderText('There are no positive clones. Try to adjust thresholds')
+				output$message_fisher = renderText('There are no positive clones. Try to adjust thresholds')
 				# add a sheet to the output with significant clones comparing to reference
 				#clones = rownames(resTable)[which(resTable[,'significant_comparisons'] == 1)]
 				tablesToXls$summary = data.frame('There are no positive clones', row.names = NULL, check.names = F)
@@ -355,10 +356,10 @@ output$saveResults <- downloadHandler(
 #			tablesToXls$input = data.frame(isolate(reactiveValuesToList(input)))
 			WriteXLS('tablesToXls', file, SheetNames = names(tablesToXls), row.names = T)
 
-			output$message = renderText('The results are saved')
+			output$message_fisher = renderText('The results are saved')
 		}else{
 
-			output$message = renderText('Please click the Run Analysis button')
+			output$message_fisher = renderText('Please click the Run Analysis button')
 
 		}
 	})
@@ -379,11 +380,11 @@ output$saveResults <- downloadHandler(
 			# if there is no positive clones, do nothing
 			if (length(posClones)==0)
 			{
-			  output$message = renderText('There are no positive clones. Try to adjust thresholds')
+			  output$message_fisher = renderText('There are no positive clones. Try to adjust thresholds')
 			}
 			if(length(posClones)==1)
 			{
-			  output$message = renderText('There is only one positive clone. Try to adjust thresholds to get more clones to plot')
+			  output$message_fisher = renderText('There is only one positive clone. Try to adjust thresholds to get more clones to plot')
 			}
 			if (length(posClones)>1)
 			{
@@ -398,7 +399,7 @@ output$saveResults <- downloadHandler(
   			             samp = sampForAnalysis,
   			             refSamp = input$refSamp,
   				           fileName = file, size = 7)
-  			output$message = renderText('The heat map is saved')
+  			output$message_fisher = renderText('The heat map is saved')
 			}
 
 		}
@@ -408,6 +409,35 @@ output$saveResults <- downloadHandler(
 ui <- fluidPage(
 #  title = "FEST data analysis",
 headerPanel("FEST data analysis"),
+# add description of the app and steps
+tags$div(
+  tags$p("The FEST (Functional Expansion of Specific T-cells)
+         application for analysis of TCR sequencing data of short-term,
+         peptide-stimulated cultures to identify antigen-specific
+         clonotypic amplifications. The app loads TCR sequencing data
+         in the tab-delimited format, performs the analysis, and
+         visualizes and saves results. For analysis, we use only
+         productive clones and summarize template counts for
+         nucleotide sequences that translated into the same amino acid
+         sequence."),
+  tags$h3("Steps"),
+  tags$ol(
+    tags$li(HTML("<b>Load data</b>: upload FEST files or a previously saved R
+            object with data")),
+    tags$li("After the data is successfully loaded,
+            select a tab that corresponds to design of
+            your experiment:"),
+    tags$ol(
+      tags$li(HTML("<b>Analysis with replicates</b>
+      uses negative binomial model")),
+      tags$li(HTML("<b>Analysis without replicates</b>
+                   uses Fisher's exact test"))
+    )
+  ),
+  tags$p(HTML("For more details, please refer to the
+              <b>User's manual</b> tab"))
+),
+
 # layout with tabs
 tabsetPanel(
   #============================
@@ -442,8 +472,7 @@ tabsetPanel(
 
             # the main panel
             mainPanel(
-              # textOutput('contents'),
-              htmlOutput("message")
+              htmlOutput("message_load")
             )
 
         ) # end sidebarLayout
@@ -493,7 +522,7 @@ tabsetPanel(
 		# the main panel
 		mainPanel(
 		 # textOutput('contents'),
-		  htmlOutput("message")
+		  htmlOutput("message_fisher")
 		)
 	 )
 	 ),# end tabPanel with FEST analysis
