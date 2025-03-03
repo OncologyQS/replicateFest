@@ -385,7 +385,6 @@ runExperiment=function(files, peptides, ctThresh=50, control,
    res_uniq = res_exp05 %>% filter(n_significant_comparisons == 1)
  #=====
   # find cross-reactive clones
-   browser()
   if(!is.na(xrCond))
   {
     res_xr = getXR(res_exp05, peptides, xrCond = xrCond)
