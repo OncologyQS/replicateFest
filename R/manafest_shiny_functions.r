@@ -248,7 +248,11 @@ getFreq = function(clones, mergedData, samp = names(mergedData), colSuf = 'perce
 #' @param returnFreq a logical value indicating if frequencies should be returned
 #' @return a data frame with frequencies or abundances in percent for selected clones and samples
 #' @export
-getFreqOrCount = function(clones, mergedData, samp = names(mergedData), colSuf = 'percent', minRead = 0, returnFreq = T)
+getFreqOrCount = function(clones, mergedData,
+                          samp = names(mergedData),
+                          colSuf = 'percent',
+                          minRead = 0,
+                          returnFreq = T)
 {
   totalReadCountPerSample = sapply(mergedData, sum)
   output_freq = matrix(minRead,nrow = length(clones), ncol = length(samp))
@@ -258,7 +262,8 @@ getFreqOrCount = function(clones, mergedData, samp = names(mergedData), colSuf =
 	{
 		rows = intersect(names(mergedData[[i]]),clones)
 		output_freq[rows,i] = mergedData[[i]][rows]
-		if (returnFreq) output_freq[,i] = (output_freq[,i]/totalReadCountPerSample[i])*100
+		if (returnFreq) output_freq[,i] =
+		  (output_freq[,i]/totalReadCountPerSample[i])*100
 	}
 	if (colSuf != '') colnames(output_freq) = paste(samp,colSuf, sep = '_')
 	else colnames(output_freq) = samp
@@ -360,7 +365,12 @@ runSingleFisher = function(clone, pair, mergedData)
 #' in which a clone is significant, as values
 #' @export
 #'
-getPositiveClones = function(analysisRes, mergedData, samp = names(mergedData), orThr = 1, fdrThr = 0.05, nReads = 10)
+getPositiveClones = function(analysisRes, mergedData,
+                             samp = names(mergedData),
+                             orThr = 1,
+                             fdrThr = 0.05,
+                             nReads = 10,
+                             percentThr = 0)
 {
   totalReadCounts = sapply(mergedData, sum)
   resTable = createResTable(analysisRes, mergedData, orThr = orThr,
@@ -377,9 +387,7 @@ getPositiveClones = function(analysisRes, mergedData, samp = names(mergedData), 
 	signMatrix = matrix(signTable[clones,],
 			nrow = length(clones), ncol = ncol(signTable), dimnames = list(clones,sapply(strsplit(colnames(signTable),'_vs_'), function(x)x[1])))
 
-	# fix column names
-#	colnames(signTable) = sapply(strsplit(colnames(signTable),'_vs_'), function(x)x[1])
-	# returns condition in which a clone is significant
+		# returns condition in which a clone is significant
 
 	signCond = apply(signMatrix,1,function(x) colnames(signMatrix)[which(x)])
 	#=====================
@@ -396,8 +404,10 @@ getPositiveClones = function(analysisRes, mergedData, samp = names(mergedData), 
 	}
 	#=====================
 	# check if they are unique by checking top two conditions with the highest number of reads
-	freqMatrix = getFreqOrCount(clones,mergedData,samp, colSuf = '', returnFreq = T)
-#print(countMatrix)
+	freqMatrix = getFreqOrCount(clones,mergedData,samp,
+	                            colSuf = '',
+	                            returnFreq = T)
+
 	# remove conditions with less than nReads reads from analysis
 #	freqMatrix[countMatrix<nReads] = 0 # removed this filter in v12
 
@@ -407,15 +417,20 @@ getPositiveClones = function(analysisRes, mergedData, samp = names(mergedData), 
 	fishRes2 = getFisherForNclone(freqMatrix, rownames(freqMatrix),3,mergedData)
 	# combine results
 	fishResComb = cbind(fishRes1[,'FDR'],fishRes2[,'FDR'], fishRes1[,'odds.ratio'],fishRes2[,'odds.ratio'])
-#print(fishResComb)
-#print(dim(fishResComb))
-#	print(fishRes1)
-#	print(fishRes2)
-	# select clones that have significant FDRs and OR higher than threshold meaning that a clone is significant and unique expansion
-	# also select clones that have NAs in FDR and OR, which means that this clone appears in only one condition and there is nothing to compare
+
+	# select clones that have significant FDRs and OR higher than threshold
+	# meaning that a clone is significant and unique expansion
+	# also select clones that have NAs in FDR and OR, which means
+	# that this clone appears in only one condition and
+	# there is nothing to compare
 	# check if there is a condition that is also significantly expanded
 	fdrClones2 = apply(fishResComb,1,function(x) any(as.numeric(x[1:2])>fdrThr|as.numeric(x[3:4])<orThr))
-#print(cbind(fishResComb,fdrClones2))
+
+	# select clones that have maximum frequency across conditions
+	# more than the threshold
+
+
+	#print(cbind(fishResComb,fdrClones2))
 	posClones = names(fdrClones2)[which(!fdrClones2|is.na(fdrClones2))]
 	if(length(posClones)>0)
 	{

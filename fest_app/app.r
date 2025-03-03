@@ -45,10 +45,8 @@
 # switched to immunarch
 
 # 2025-02-05
-# Adding a version for an experiment with replicates
-# making a package out of functions for both versions
-# (with and without replicates)
-
+# Split loading the data and analysis to different tabs
+# added percentage threshold to the Fisher's test version
 
 server <- function(input, output,session) {
   #rm(list = ls())
@@ -262,10 +260,16 @@ output$saveResults <- downloadHandler(
 			posClones = NULL
 			if(input$compareToRef) #if there is comparison to the ref sample
 			{
-			posClones = getPositiveClones(analysisRes, obj, samp = sampForAnalysis,
-				orThr = as.numeric(input$orThr), fdrThr=as.numeric(input$fdrThr), nReads = as.numeric(input$nReads))
+  			posClones = getPositiveClones(analysisRes, obj,
+    			                            samp = sampForAnalysis,
+  			                              orThr = as.numeric(input$orThr),
+  			                              fdrThr = as.numeric(input$fdrThr),
+  			                              nReads = as.numeric(input$nReads),
+  			                              percentThr = as.numeric(input$percentThr))
 			}else{ # if there is no comparison to ref sample
-				posClones = getPositiveClonesFromTopConditions(analysisRes, orThr = as.numeric(input$orThr), fdrThr=as.numeric(input$fdrThr))
+				posClones = getPositiveClonesFromTopConditions(analysisRes,
+				                                               orThr = as.numeric(input$orThr),
+				                                               fdrThr=as.numeric(input$fdrThr))
 			}
 
 			#===============================
@@ -424,15 +428,15 @@ tags$div(
   tags$ol(
     tags$li(HTML("<b>Load data</b>: upload FEST files or a previously saved R
             object with data")),
-    tags$li("After the data is successfully loaded,
-            select a tab that corresponds to design of
-            your experiment:"),
-    tags$ol(
-      tags$li(HTML("<b>Analysis with replicates</b>
-      uses negative binomial model")),
-      tags$li(HTML("<b>Analysis without replicates</b>
-                   uses Fisher's exact test"))
-    )
+    tags$li(HTML("After the data is successfully loaded,
+            select the <b>Analysis without replicates</b>
+                 tab to run the analysis and save the results")),
+    # tags$ol(<b>Analysis with replicates</b>
+    #   uses negative binom
+    #   tags$li(HTML("ial model")),
+    #   tags$li(HTML("<b>Analysis without replicates</b>
+    #                uses Fisher's exact test"))
+    # )
   ),
   tags$p(HTML("For more details, please refer to the
               <b>User's manual</b> tab"))
@@ -510,10 +514,18 @@ tabsetPanel(
 		# specify if analysis should be performed on nucleotide level data
 		checkboxInput('nuctleotideFlag','Use nucleotide level data'),
 		actionButton('runAnalysis', 'Run Analysis', width = '60%'),
-		tags$hr(),
-		numericInput('fdrThr', 'Specify FDR threshold', value = 0.05, max = 1, step= 0.01),
-		textInput('orThr', 'Specify odds ratio threshold', value = "5", width = NULL, placeholder = NULL),
- 		downloadButton('saveResults', 'Download Results'),
+
+#========================
+# set thresholds and save results
+    tags$hr(),
+		tags$p(HTML("<b>Specify thresholds:</b>")),
+		numericInput('fdrThr', 'for FDR ', value = 0.05,
+		             max = 1, step= 0.01),
+		textInput('orThr', 'for odds ratio', value = "5",
+		          width = NULL, placeholder = NULL),
+    textInput('percentThr', 'for percentage',
+                          value = "0"),
+    downloadButton('saveResults', 'Download Results'),
 		downloadButton('saveHeatmaps', 'Create heatmaps')
 	#		downloadLink("downloadData", "Download Results")
 		),

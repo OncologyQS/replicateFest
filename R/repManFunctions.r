@@ -385,9 +385,10 @@ runExperiment=function(files, peptides, ctThresh=50, control,
    res_uniq = res_exp05 %>% filter(n_significant_comparisons == 1)
  #=====
   # find cross-reactive clones
-  if(length(xrCond)>0)
+   browser()
+  if(!is.na(xrCond))
   {
-    res_xr = getXR(res_exp05, xrCond = xrCond)
+    res_xr = getXR(res_exp05, peptides, xrCond = xrCond)
     res_uniq = rbind(res_uniq,res_xr)
   }
   #=====
@@ -578,14 +579,15 @@ getExpanded = function(fitResults, countData, ORthr = 1, FDRthr = 0.05)
 # and a vector of cross-reactive conditions
 # output: a data frame with cross-reactive clones
 
-getXR = function(res, xrCond = xrCond)
+getXR = function(res, conditions, xrCond = xrCond)
 {
   # a vector of conditions that shouldn't be cross-reactive
   # find all and take difference
   allCond = res %>% filter(n_significant_comparisons == 1) %>%
     dplyr::select(significant_comparisons) %>% unlist() %>% unique()
 
-  excludeCond = setdiff(unique(timeSamples$Condition), xrCond)
+  # conditions that shouldn't be cross-reactive
+  excludeCond = setdiff(conditions, xrCond)
 
   # find cross-reactive clones
   res_xr = res %>% filter(n_significant_comparisons > 1)
