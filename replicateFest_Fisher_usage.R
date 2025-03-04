@@ -13,7 +13,8 @@ library(WriteXLS)
 # usage of replicateFest on experimental data without replicates
 #================================================================
 # load previously saved data
-load("C:/Users/Luda/OneDrive - Johns Hopkins/JHU/Manafest/20200429_v13/Ny016-014Input.rda")
+load("C:/Users/ldanilo1/OneDrive - Johns Hopkins/JHU/Manafest/20200429_v13/Ny016-014Input.rda")
+#load("C:/Users/Luda/OneDrive - Johns Hopkins/JHU/Manafest/20200429_v13/Ny016-014Input.rda")
 
 # set parameters for the analysis
 input = list()
@@ -27,6 +28,7 @@ input$prob = .99
 input$nReads = 500
 input$fdrThr = .05
 input$orThr = 5
+input$percentThr = 0
 
 # specify samples to analyze
 sampForAnalysis = setdiff(names(mergedData),
@@ -44,12 +46,13 @@ fisherRes = apply(compPairs,1,runFisher,mergedData,
 # add names of compared conditions
 names(fisherRes) = apply(compPairs,1,paste,collapse = '_vs_')
 
-
+source("R/manafest_shiny_functions.r")
 # select positive clones with specified thresholds
 posClones = getPositiveClones(fisherRes, mergedData, samp = sampForAnalysis,
                               orThr = as.numeric(input$orThr),
                               fdrThr=as.numeric(input$fdrThr),
-                              nReads = as.numeric(input$nReads))
+                              nReads = as.numeric(input$nReads),
+                              percentThr = as.numeric(input$percentThr))
 
 
 #============================================
@@ -60,13 +63,15 @@ fisherRes = compareWithOtherTopConditions(mergedData,
                                           clones = NULL)
 
 posClones = getPositiveClonesFromTopConditions(fisherRes,
-                                         orThr = as.numeric(input$orThr),
-                                         fdrThr=as.numeric(input$fdrThr))
+                                               orThr = as.numeric(input$orThr),
+                                         fdrThr=as.numeric(input$fdrThr),
+                                         percentThr = as.numeric(input$percentThr),
+                                         mergedData, samp = sampForAnalysis)
 
 
 #==============
 # create and save output
-tablesToXls1 = createPosClonesOutput(pos, mergedData,
+tablesToXls1 = createPosClonesOutput(posClones, mergedData,
                                     input$refSamp,
                                     input$baselineSamp, addDiff = F)
 

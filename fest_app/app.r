@@ -269,7 +269,10 @@ output$saveResults <- downloadHandler(
 			}else{ # if there is no comparison to ref sample
 				posClones = getPositiveClonesFromTopConditions(analysisRes,
 				                                               orThr = as.numeric(input$orThr),
-				                                               fdrThr=as.numeric(input$fdrThr))
+				                                               fdrThr=as.numeric(input$fdrThr),
+				                                               percentThr = as.numeric(input$percentThr),
+				                                               mergedData = obj,
+				                                               samp = sampForAnalysis)
 			}
 
 			#===============================

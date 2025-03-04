@@ -361,6 +361,7 @@ runSingleFisher = function(clone, pair, mergedData)
 #' @param orThr a threshold for odds ratio
 #' @param fdrThr a threshold for FDR
 #' @param nReads a threshold for the number of reads
+#' @param percentThr a threshold for the percentage of reads
 #' @return a vector with positive clones as names and conditions,
 #' in which a clone is significant, as values
 #' @export
@@ -402,15 +403,18 @@ getPositiveClones = function(analysisRes, mergedData,
 		names(res) = clones
 		return(res)
 	}
-	#=====================
+	#=============================
 	# check if they are unique by checking top two conditions with the highest number of reads
 	freqMatrix = getFreqOrCount(clones,mergedData,samp,
 	                            colSuf = '',
 	                            returnFreq = T)
 
-	# remove conditions with less than nReads reads from analysis
+	#==============================
+	# select clones with max percentage more than percentThr
+	 freqMatrix = freqMatrix[apply(freqMatrix,1,max) > percentThr,]
 #	freqMatrix[countMatrix<nReads] = 0 # removed this filter in v12
 
+	#===============================
 	# compare with the second highest
 	fishRes1 = getFisherForNclone(freqMatrix, rownames(freqMatrix),2,mergedData)
 	# compare with the third highest
@@ -584,14 +588,31 @@ compareWithOtherTopConditions = function(mergedData, sampForAnalysis,
 #' This table is an output from compareWithOtherTopConditions function
 #' @param orThr a threshold for odds ratio
 #' @param fdrThr a threshold for FDR
+#' @param percentThr a threshold for percentage
 #' @return a vector with positive clones as names and conditions, in which a clone is significant, as values
 #' @export
-getPositiveClonesFromTopConditions = function(fisherResTable, orThr = 1, fdrThr = 0.05)
+getPositiveClonesFromTopConditions = function(fisherResTable,
+                                              orThr = 1,
+                                              fdrThr = 0.05,
+                                              percentThr = 0, ...)
 {
 	# apply FDR and OR thresholds
 	fdrClones2 = apply(fisherResTable,1,function(x) any(as.numeric(x[1:2])>fdrThr|as.numeric(x[3:4])<orThr))
 	# find positive clones
 	posClones = names(fdrClones2)[which(!fdrClones2|is.na(fdrClones2))]
+
+	browser()
+	#=============================
+	# check if they are unique by checking top two conditions with the highest number of reads
+	freqMatrix = getFreqOrCount(posClones,
+	                            colSuf = '',
+	                            returnFreq = T, ...)
+
+	#==============================
+	# select clones with max percentage more than percentThr
+	freqMatrix = freqMatrix[apply(freqMatrix,1,max) > percentThr,]
+	posClones = rownames(freqMatrix)
+
 	if(length(posClones)>0)
 	{
 	# return conditions of positive clones
