@@ -54,6 +54,7 @@ server <- function(input, output,session) {
 	options(shiny.maxRequestSize=100*1024^2, java.parameters = "-Xmx8000m")
 	library(shiny)
   library(tools)
+  library(gplots)
   library("Matrix")
   if (!require(WriteXLS)) install.packages("WriteXLS")
   if(!require(immunarch)) install.packages("immunarch")
@@ -314,25 +315,32 @@ output$saveResults <- downloadHandler(
 				if (!is.null(resTable))
 				{
 					# make a numeric table to save in an Excel spreadsheet
+				  refCompRes = data.frame(resTable[,2:ncol(resTable)], check.names = F)
 
-					refCompRes = resTable[,2:ncol(resTable)]
-					refCompRes = t(do.call('rbind',refCompRes))
-					rownames(refCompRes) = rownames(resTable)
-					# find clones that are significant in one comparison only
-					#clones = rownames(resTable)[which(resTable[,'significant_comparisons'] == 1)]
-
-					# apply percentange threshold
+					#=================
+					# apply percentage threshold
 					if(as.numeric(input$percentThr) > 0)
 					{
 					  # find columns with "percent"
 					  percCol = grep("percent",colnames(refCompRes), value = T)
-
-						refCompRes = refCompRes[apply(refCompRes[,percCol],1,max) > input$percentThr,]
+            # find max percentage for each clone
+					  m = apply(refCompRes[,percCol],1,max)
+					  # find clones that have percentage above the threshold
+					  cl = rownames(refCompRes)[m > input$percentThr]
+						refCompRes = refCompRes[cl,]
 
 					}
+					#===========================
+					# check if there are no clones to save
+					if (is.null(refCompRes))
+					{
+					  tablesToXls$ref_comparison_only = data.frame(res = 'There are no significant clones')
 
-					# table with results of comparison to the reference sample only
-					tablesToXls$ref_comparison_only = data.frame(refCompRes,check.names = F)
+					}
+					# if there are more clones
+					if(nrow(refCompRes) > 0)
+					  tablesToXls$ref_comparison_only =
+					  data.frame(refCompRes,check.names = F)
 				}else{
 					tablesToXls$ref_comparison_only = data.frame(res = 'There are no significant clones')
 				}
@@ -358,14 +366,16 @@ output$saveResults <- downloadHandler(
 			param = c('Reference_samp','Baseline_sample',
 			          'Excluded samples','Compare to reference',
 			          'nTemplates_threshold','FDR_threshold',
-			          'OR_threshold','Ignore_baseline_threshold',
+			          'OR_threshold','percent_threshold',
+			          'Ignore_baseline_threshold',
 			          'Nucleotide_level', baselineThrNames,
 			          'nAnalyzedSamples',
 			          paste(s, 'nTemplates',sep = '_'))
 			value = c(toString(refSamp), toString(baselineSamp),
 			          paste(input$excludeSamp, collapse = ', '),
 			          input$compareToRef, input$nReads,input$fdrThr,
-			          input$orThr, input$ignoreBaseline,
+			          input$orThr, input$percentThr,
+			          input$ignoreBaseline,
 			          input$nuctleotideFlag, baselineThrVal,
 			          length(sampForAnalysis), productiveReadCounts[s])
 
