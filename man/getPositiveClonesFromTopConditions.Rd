@@ -2,13 +2,7 @@
 % Please edit documentation in R/manafest_shiny_functions.r
 \name{getPositiveClonesFromTopConditions}
 \alias{getPositiveClonesFromTopConditions}
-\title{getPositiveClonesFromTopConditions
-Selects clones that have significant FDRs and OR higher than threshold meaning that a clone is significant and unique expansion
-also select clones that have NAs in FDR and OR, which means that this clone appears in only one condition and there is nothing to compare
-check if there is a condition that is also significantly expanded
-This function takes a table with FDRs, ORs, and condition in which the clone is the most abundant
-Column 1 and 2 are FDRs, 3 and 4 - ORs, and 5 is condition
-It returns a vector with positive clones as names and conditions, in which a clone is significant, as values}
+\title{getPositiveClonesFromTopConditions}
 \usage{
 getPositiveClonesFromTopConditions(
   fisherResTable,
@@ -32,7 +26,6 @@ This table is an output from compareWithOtherTopConditions function}
 a vector with positive clones as names and conditions, in which a clone is significant, as values
 }
 \description{
-getPositiveClonesFromTopConditions
 Selects clones that have significant FDRs and OR higher than threshold meaning that a clone is significant and unique expansion
 also select clones that have NAs in FDR and OR, which means that this clone appears in only one condition and there is nothing to compare
 check if there is a condition that is also significantly expanded
