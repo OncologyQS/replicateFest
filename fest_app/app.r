@@ -254,7 +254,6 @@ output$saveResults <- downloadHandler(
 		  # check if analysis was done on aa or nt level
 			if (input$nuctleotideFlag) obj = ntData else obj = mergedData
 			sampForAnalysis = setdiff(names(obj), c(input$excludeSamp,input$refSamp, input$baselineSamp))
-
 			#======================
 			# get positive clones
 			posClones = NULL

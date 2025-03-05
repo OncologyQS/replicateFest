@@ -709,7 +709,8 @@ runExperimentFisher=function(files,
                                     samp = sampForAnalysis,
                                     orThr = orThr,
                                     fdrThr=fdrThr,
-                                    nReads = nReads)
+                                    nReads = nReads,
+                                    percentThr = percentThr)
     }	else{
       print('There are no clones to analyze. Try to reduce confidence or the number of templates 1')
       return(NULL)
@@ -721,12 +722,16 @@ runExperimentFisher=function(files,
     fisherRes = compareWithOtherTopConditions(mergedData,
                                               sampForAnalysis,
                                               nReads = nReads,
-                                              clones = NULL)
+                                              clones = NULL,
+                                              percentThr = percentThr)
 
     # select positive clones with specified thresholds
     posClones = getPositiveClonesFromTopConditions(fisherRes,
                                                    orThr = orThr,
-                                                   fdrThr = fdrThr)
+                                                   fdrThr = fdrThr,
+                                                   percentThr = percentThr,
+                                                   mergedData,
+                                                   sampForAnalysis)
   }
 
 
