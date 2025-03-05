@@ -1,2 +1,2 @@
 # replicateFest
-an R package for analysis of FEST assay with replicates
+an R package and shiny app for analysis of FEST assay with and without replicates.
