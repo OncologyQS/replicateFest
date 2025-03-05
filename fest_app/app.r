@@ -410,14 +410,30 @@ output$saveResults <- downloadHandler(
 			                              orThr = as.numeric(input$orThr),
 			                              fdrThr=as.numeric(input$fdrThr),
 			                              percentThr = as.numeric(input$percentThr))
-			# if there is no positive clones, do nothing
+			# if there is no positive clones,
+			# with a message about that
 			if (length(posClones)==0)
 			{
-			  output$message_fisher = renderText('There are no positive clones. Try to adjust thresholds')
+			  # message
+			  m = 'There are no positive clones. Try to adjust thresholds'
+			  # show in the app
+			  output$message_fisher = renderText(m)
+			  # save in pdf
+			  pdf(file)
+  			  plot.new()
+  			  text(0.5,0.5,m)
+			  dev.off()
 			}
-			if(length(posClones)==1)
-			{
-			  output$message_fisher = renderText('There is only one positive clone. Try to adjust thresholds to get more clones to plot')
+			 if(length(posClones)==1)
+			 {
+			   m = 'There is only one positive clone. Try to adjust thresholds to get more clones to plot'
+			   # show in the app
+			   output$message_fisher = renderText(m)
+			   # save in pdf
+			   pdf(file)
+			   plot.new()
+			   text(0.5,0.5,m)
+			   dev.off()
 			}
 			if (length(posClones)>1)
 			{
@@ -426,7 +442,7 @@ output$saveResults <- downloadHandler(
   				FDR_threshold = as.numeric(input$fdrThr), saveCI = F)
   			# make heatmap with all significant clones
   			posClones = list(rownames(resTable))
-  			names(posClones) = 'All_significant'
+  			names(posClones) = 'Positive_clones'
 
   			makeHeatmaps(posClones, obj,
   			             samp = sampForAnalysis,
