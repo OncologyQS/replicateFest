@@ -350,7 +350,8 @@ runSingleFisher = function(clone, pair, mergedData)
 	return(c(fres$p.value,fres$estimate,fres$conf.int))
 }
 
-#' @title getPositiveClones
+#' getPositiveClones
+#' @description
 #' returns a vector with positive clones as names and conditions,
 #' in which a clone is significant, as values
 #' @param analysisRes a list with results of Fisher's test

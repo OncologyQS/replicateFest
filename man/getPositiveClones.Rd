@@ -2,9 +2,7 @@
 % Please edit documentation in R/manafest_shiny_functions.r
 \name{getPositiveClones}
 \alias{getPositiveClones}
-\title{getPositiveClones
-returns a vector with positive clones as names and conditions,
-in which a clone is significant, as values}
+\title{getPositiveClones}
 \usage{
 getPositiveClones(
   analysisRes,
@@ -38,7 +36,6 @@ a vector with positive clones as names and conditions,
 in which a clone is significant, as values
 }
 \description{
-getPositiveClones
 returns a vector with positive clones as names and conditions,
 in which a clone is significant, as values
 }
