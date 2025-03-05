@@ -10,7 +10,13 @@ This function takes a table with FDRs, ORs, and condition in which the clone is 
 Column 1 and 2 are FDRs, 3 and 4 - ORs, and 5 is condition
 It returns a vector with positive clones as names and conditions, in which a clone is significant, as values}
 \usage{
-getPositiveClonesFromTopConditions(fisherResTable, orThr = 1, fdrThr = 0.05)
+getPositiveClonesFromTopConditions(
+  fisherResTable,
+  orThr = 1,
+  fdrThr = 0.05,
+  percentThr = 0,
+  ...
+)
 }
 \arguments{
 \item{fisherResTable}{a table with FDRs, ORs, and condition in which the clone is the most abundant.
@@ -19,6 +25,8 @@ This table is an output from compareWithOtherTopConditions function}
 \item{orThr}{a threshold for odds ratio}
 
 \item{fdrThr}{a threshold for FDR}
+
+\item{percentThr}{a threshold for percentage}
 }
 \value{
 a vector with positive clones as names and conditions, in which a clone is significant, as values

@@ -12,7 +12,8 @@ getPositiveClones(
   samp = names(mergedData),
   orThr = 1,
   fdrThr = 0.05,
-  nReads = 10
+  nReads = 10,
+  percentThr = 0
 )
 }
 \arguments{
@@ -29,6 +30,8 @@ for each sample}
 \item{fdrThr}{a threshold for FDR}
 
 \item{nReads}{a threshold for the number of reads}
+
+\item{percentThr}{a threshold for the percentage of reads}
 }
 \value{
 a vector with positive clones as names and conditions,

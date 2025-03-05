@@ -297,7 +297,11 @@ output$saveResults <- downloadHandler(
 			}else{
 			# if there are positive clones, save them in to Excel file
 				# create table with results
-				tablesToXls = createPosClonesOutput(posClones, obj, refSamp, baselineSamp, addDiff = F)
+				tablesToXls = createPosClonesOutput(posClones,
+				                                    obj,
+				                                    refSamp,
+				                                    baselineSamp,
+				                                    addDiff = F)
 			}
 
 			#===================
@@ -317,6 +321,16 @@ output$saveResults <- downloadHandler(
 					rownames(refCompRes) = rownames(resTable)
 					# find clones that are significant in one comparison only
 					#clones = rownames(resTable)[which(resTable[,'significant_comparisons'] == 1)]
+
+					# apply percentange threshold
+					if(as.numeric(input$percentThr) > 0)
+					{
+					  # find columns with "percent"
+					  percCol = grep("percent",colnames(refCompRes), value = T)
+
+						refCompRes = refCompRes[apply(refCompRes[,percCol],1,max) > input$percentThr,]
+
+					}
 
 					# table with results of comparison to the reference sample only
 					tablesToXls$ref_comparison_only = data.frame(refCompRes,check.names = F)
@@ -382,8 +396,11 @@ output$saveResults <- downloadHandler(
 			# check if analysis was done on aa or nt level
 			if (input$nuctleotideFlag) obj = ntData else obj = mergedData
 			sampForAnalysis = setdiff(names(obj), c(input$excludeSamp,input$refSamp, input$baselineSamp))
-			posClones = getPositiveClones(analysisRes, obj, samp = sampForAnalysis,
-				orThr = as.numeric(input$orThr), fdrThr=as.numeric(input$fdrThr))
+			posClones = getPositiveClones(analysisRes, obj,
+			                              samp = sampForAnalysis,
+			                              orThr = as.numeric(input$orThr),
+			                              fdrThr=as.numeric(input$fdrThr),
+			                              percentThr = as.numeric(input$percentThr))
 			# if there is no positive clones, do nothing
 			if (length(posClones)==0)
 			{
