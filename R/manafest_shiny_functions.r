@@ -239,6 +239,7 @@ getFreq = function(clones, mergedData, samp = names(mergedData), colSuf = 'perce
 }
 
 #' @title getFreqOrCount
+#' @description
 #' Returns frequencies or abundances in percent for selected clones and samples
 #' @param clones a vector with clones, for which frequencies should be calculated
 #' @param mergedData a list of data frames with read counts for each sample
@@ -532,6 +533,7 @@ getFreqThreshold = function(n, p)
 }
 
 #' @title compareWithOtherTopConditions
+#' @description
 #' selects clones that pass the nReads threshold and compares top conditions
 #' with the second and third top conditions
 #' and returns a table with FDRs and ORs for those comparisons
@@ -579,6 +581,7 @@ compareWithOtherTopConditions = function(mergedData, sampForAnalysis,
 
 
 #' @title getPositiveClonesFromTopConditions
+#' @description
 #' Selects clones that have significant FDRs and OR higher than threshold meaning that a clone is significant and unique expansion
 #' also select clones that have NAs in FDR and OR, which means that this clone appears in only one condition and there is nothing to compare
 #' check if there is a condition that is also significantly expanded
