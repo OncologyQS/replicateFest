@@ -44,9 +44,11 @@
 # 2023-12-01
 # switched to immunarch
 
-# 2025-02-05
+# 2025-02-05 (v14)
 # Split loading the data and analysis to different tabs
 # added percentage threshold to the Fisher's test version
+# fixed output to heatmap when there are no or one clone
+# added all functions to the replicateFest package
 
 server <- function(input, output,session) {
   #rm(list = ls())
