@@ -191,7 +191,7 @@ tabsetPanel(
         sidebarLayout(
         # the left side panel
           sidebarPanel(
-            # input of replicate information
+            # parse the file names and output of replicate information
 
                ),
 
@@ -234,7 +234,8 @@ server <- function(input, output,session) {
   library(replicateFest)
 
   # read input files
-  observeEvent(input$sourceFiles,{  output$message_load = renderUI({
+  observeEvent(input$sourceFiles,{
+    output$message_load = renderUI({
     # check if there is file to analyze
     if (length(input$sourceFiles) == 0)
     {
