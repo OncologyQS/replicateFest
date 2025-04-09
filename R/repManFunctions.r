@@ -619,3 +619,22 @@ saveResults = function(results, outputFile = "output.xlsx")
   # save the workbook
   saveWorkbook(wb, outputFile, overwrite = TRUE)
 }
+
+#' function that extracts condition and replicate information
+#' from the file names. The condition and replicate should
+#' be separated by "_" and be the last two elements.
+#' @param filenames a vector of file names
+#' @return a data frame with condition and replicate information
+
+splitFileName = function(filenames)
+{
+  # split the file names by "_"
+  splitNames = strsplit(filenames, "_")
+  # get the last two elements
+  condRep = sapply(splitNames, function(x) x[(length(x)-2):length(x)])
+  # create a data frame with condition and replicate information
+  condRep = data.frame(sample = condRep[1,],
+                       condition = condRep[2,],
+                       replicate = condRep[3,])
+  return(condRep)
+}
