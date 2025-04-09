@@ -34,6 +34,8 @@ files=list.files("Data/",pattern = ".txt", full.name=T, recursive=T)
 # parse file names to exptract patient ID, time point, condition, and replicate
 # extract file names without extension
 filenames = file_path_sans_ext(basename(files))
+sampAnnot = splitFileName(filenames)
+
 # create a data frame with sample annotations
 sampAnnot = do.call(rbind,strsplit(filenames,"_"))
 colnames(sampAnnot)=c("Patient","Time","Condition","Replicate")

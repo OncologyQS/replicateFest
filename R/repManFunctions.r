@@ -636,5 +636,6 @@ splitFileName = function(filenames)
   condRep = data.frame(sample = condRep[1,],
                        condition = condRep[2,],
                        replicate = condRep[3,])
+  rownames(condRep) = filenames
   return(condRep)
 }
