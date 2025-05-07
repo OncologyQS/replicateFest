@@ -45,46 +45,57 @@
 # switched to immunarch
 
 # 2025-02-05 (v14)
-# Split loading the data and analysis to different tabs
+# Split loading the data and analysis to the different tabs
 # added percentage threshold to the Fisher's test version
 # fixed output to heatmap when there are no or one clone
 # added all functions to the replicateFest package
+
+# 2025-05-06 (v15)
+# split analysis and save the results to the different tabs
+# added analysis with replicates
+#
 
 #==============================
 # User interface
 #==============================
 ui <- fluidPage(
-#  title = "FEST data analysis",
-headerPanel("FEST data analysis"),
-# add description of the app and steps
-tags$div(
-  tags$p("The FEST (Functional Expansion of Specific T-cells)
-         application for analysis of TCR sequencing data of short-term,
-         peptide-stimulated cultures to identify antigen-specific
-         clonotypic amplifications. The app loads TCR sequencing data
-         in the tab-delimited format, performs the analysis, and
-         visualizes and saves results. For analysis, we use only
-         productive clones and summarize template counts for
-         nucleotide sequences that translated into the same amino acid
-         sequence."),
-  tags$h3("Steps"),
-  tags$ol(
-    tags$li(HTML("<b>Load data</b>: upload FEST files or a previously saved R
-            object with data")),
-    tags$li(HTML("After the data is successfully loaded,
-            select the <b>Analysis without replicates</b>
-                 tab to run the analysis and save the results")),
-    # tags$ol(
-    #
-    #   tags$li(HTML("<b>Analysis with replicates</b>
-    # uses negative binomial model")),
-    #   tags$li(HTML("<b>Analysis without replicates</b>
-    #                uses Fisher's exact test"))
-    # )
+  #  title = "FEST data analysis",
+  headerPanel("FEST data analysis"),
+  # add description of the app and steps
+  tags$div(
+    tags$p("The FEST (Functional Expansion of Specific T-cells)
+           application for analysis of TCR sequencing data of short-term,
+           peptide-stimulated cultures to identify antigen-specific
+           clonotypic amplifications. The app loads TCR sequencing data
+           in the tab-delimited format, performs the analysis, and
+           visualizes and saves results. For analysis, we use only
+           productive clones and summarize template counts for
+           nucleotide sequences that translated into the same amino acid
+           sequence."),
+    tags$h3("Steps"),
+    tags$ol(
+      tags$li(HTML("<b>Load data</b>: upload FEST files or a previously saved R
+              object with data")),
+      tags$li(HTML("After the data is successfully loaded,
+              select the <b>Run analysis</b>
+                   tab to run the analysis. Please make sure to specify
+                   whether the input data has replicates or not.
+                   <br><b>Important!</b> If the input data has replicates, the conditions
+                   will be extracted from the input file names.
+                   To be able to correctly extract the conditions, file names should
+                   follow the format
+                   'sampleID_condition_replicate.ext'. E.g. 'sample1_HIV_1.tsv'.
+                   <br>If the input data has replicates,
+                   the negative binomial model will be used in the analysis; i
+                   f the input data does not have replicates, the Fisher's exact test
+                   will be used.")),
+      tags$li(HTML("After the analysis is done,
+              select the <b>Save results</b> tab
+                   to save the results.")),
+    ),
+    tags$p(HTML("For more details, please refer to the
+                <b>User's manual</b> tab"))
   ),
-  tags$p(HTML("For more details, please refer to the
-              <b>User's manual</b> tab"))
-),
 
 # layout with tabs
 tabsetPanel(
@@ -127,31 +138,36 @@ tabsetPanel(
   ), # end tabPanel with loading data
 
   #==============================
-  # tab for analysis without replicates
+  # tab for analysis
   #==============================
-	tabPanel("Analysis without replicates",
+	tabPanel("Run analysis",
 	# headerPanel("FEST data analysis"),
 	 sidebarLayout(
 	   # the left side panel
 		sidebarPanel(
+		  # check box that specifies the input data format
+  		checkboxInput('replicates','The input with replicates',
+  		              value = FALSE),
 
-		# check box that controls the type of analysis - if the comparison with a reference should be performed or not
-		checkboxInput('compareToRef','Compare to reference', value = TRUE),
+  		# check box that controls the type of analysis - if the comparison with a reference should be performed or not
+  		checkboxInput('compareToRef','Compare to reference', value = TRUE),
+    	# drop down menu to select a reference
+  		selectInput('refSamp', 'Select a reference', choices = list('None'), selected = NULL, multiple = FALSE,
+  			selectize = TRUE, width = NULL, size = NULL),
 
-		selectInput('refSamp', 'Select a reference sample', choices = list('None'), selected = NULL, multiple = FALSE,
-			selectize = TRUE, width = NULL, size = NULL),
+  		selectInput('baselineSamp', 'Select a baseline', choices = list('None'), selected = NULL, multiple = FALSE,
+  			selectize = TRUE, width = NULL, size = NULL),
+  		selectInput('excludeSamp', 'Select conditions to exclude', choices = list('None'), selected = NULL, multiple = TRUE,
+  			selectize = TRUE, width = NULL, size = NULL),
+  		textInput('nReads', 'Specify the minimal number of templates (increase in case of large files)', value = "1", width = NULL, placeholder = NULL),
+  		checkboxInput('ignoreBaseline','Ignore baseline threshold'),
+  		conditionalPanel(
+  			condition = "input.ignoreBaseline == false",
+  			numericInput('prob', 'Specify clone confidence', value = 0.99, max = 1, min = 0, step= 0.01)
+  	  ),
 
-		selectInput('baselineSamp', 'Select a baseline sample', choices = list('None'), selected = NULL, multiple = FALSE,
-			selectize = TRUE, width = NULL, size = NULL),
-		selectInput('excludeSamp', 'Select samples to exclude', choices = list('None'), selected = NULL, multiple = TRUE,
-			selectize = TRUE, width = NULL, size = NULL),
-		textInput('nReads', 'Specify the minimal number of templates (increase in case of large files)', value = "1", width = NULL, placeholder = NULL),
-		checkboxInput('ignoreBaseline','Ignore baseline threshold'),
-		conditionalPanel(
-			condition = "input.ignoreBaseline == false",
-			numericInput('prob', 'Specify clone confidence', value = 0.99, max = 1, min = 0, step= 0.01)
-		),
-#		numericInput('prob', 'Specify clone confidence', value = 0.99, max = 1, min = 0, step= 0.01),
+		# a conditional panel that appears if
+		# the Ignore baseline checkbox is not selected
 		conditionalPanel(
 			condition = "input.ignoreBaseline == false",
 		textInput('nCells', 'Estimated number of cells per well', value = "100000", width = NULL, placeholder = NULL)
@@ -162,47 +178,53 @@ tabsetPanel(
 
 #========================
 # set thresholds and save results
-    tags$hr(),
-		tags$p(HTML("<b>Specify thresholds:</b>")),
-		numericInput('fdrThr', 'for FDR ', value = 0.05,
-		             max = 1, step= 0.01),
-		textInput('orThr', 'for odds ratio', value = "5",
-		          width = NULL, placeholder = NULL),
-    textInput('percentThr', 'for percentage',
-                          value = "0"),
-    downloadButton('saveResults', 'Download Results'),
-		downloadButton('saveHeatmaps', 'Create heatmaps')
-	#		downloadLink("downloadData", "Download Results")
+#     tags$hr(),
+# 		tags$p(HTML("<b>Specify thresholds:</b>")),
+# 		numericInput('fdrThr', 'for FDR ', value = 0.05,
+# 		             max = 1, step= 0.01),
+# 		textInput('orThr', 'for odds ratio', value = "5",
+# 		          width = NULL, placeholder = NULL),
+#     textInput('percentThr', 'for percentage',
+#                           value = "0"),
+#     downloadButton('saveResults', 'Download Results'),
+# 		downloadButton('saveHeatmaps', 'Create heatmaps')
+# 	#		downloadLink("downloadData", "Download Results")
 		),
 
 
 		# the main panel
 		mainPanel(
 		 # textOutput('contents'),
-		  htmlOutput("message_fisher")
+		  htmlOutput("message_analysis")
 		)
 	 )
-	 ),# end tabPanel Analysis without replicates
+	 ),# end tabPanel Analysis
 
     #=============================
-    # tab for analysis with replicates
+    # tab for saving results of the analysis
     #=============================
-    tabPanel("Analysis with replicates",
-        sidebarLayout(
-        # the left side panel
-          sidebarPanel(
-            # parse the file names and output of replicate information
+tabPanel("Save results",
+         sidebarLayout(
+           # the left side panel
+           sidebarPanel(
+             tags$p(HTML("<b>Specify thresholds:</b>")),
+             numericInput('fdrThr', 'for FDR ', value = 0.05,
+                          max = 1, step= 0.01),
+             textInput('orThr', 'for odds ratio', value = "5",
+                       width = NULL, placeholder = NULL),
+             textInput('percentThr', 'for percentage',
+                       value = "0"),
+             downloadButton('saveResults', 'Download Results'),
+             downloadButton('saveHeatmaps', 'Create heatmaps')
+           ), # end sidebarPanel
 
-               ),
+           # the main panel
+           mainPanel(
+             htmlOutput("save_results")
+           )
 
-
-          # the main panel
-          mainPanel(
-            # textOutput('contents'),
-              htmlOutput("message_replicates")
-            )
-        )# end sidebarLayout
-    ),# end tabPanel Analysis with replicates
+         ) # end sidebarLayout
+), # end tabPanel with saving data
 
 
     #=============================
@@ -227,6 +249,8 @@ server <- function(input, output,session) {
   library(gplots)
   library("Matrix")
   library(DT)
+  library(kableExtra)
+  library(dplyr)
   if (!require(WriteXLS)) install.packages("WriteXLS")
   if(!require(immunarch)) install.packages("immunarch")
   if (!require(devtools)) install.packages("devtools")
@@ -333,7 +357,7 @@ server <- function(input, output,session) {
 
   # run analysis with the Run Analysis button is clicked
   observeEvent(input$runAnalysis,{
-    output$message_fisher = renderText('Analysis is running...')
+    output$message_analysis = renderText('Analysis is running...')
     # remove results of the previous analysis
     if(exists('analysisRes', envir = .GlobalEnv)) rm('analysisRes', envir = .GlobalEnv)
     # check if there are objects to run analysis
@@ -348,70 +372,108 @@ server <- function(input, output,session) {
         sampNames = names(ntData)
         obj = ntData
       }
-      sampForAnalysis = setdiff(sampNames, c(input$excludeSamp,input$refSamp, input$baselineSamp))
-      # get baseline frequencies to find a threshold
-      baselineSamp = input$baselineSamp
-      # if baseline field is empty, use refSamp to get threshold
-      if(input$baselineSamp == 'None') baselineSamp = input$refSamp
 
-      #===================
-      # select clones to test
-      # if the Ignore baseline flag is on,
-      #then all clones will be tested
-      clonesToTest = NULL
-      if(!input$ignoreBaseline)
+      #================================
+      ## analysis without replicates
+      #================================
+      if (input$replicates == FALSE)
       {
-        baselineFreq = getFreq(clones = names(obj[[baselineSamp]]),obj,samp=baselineSamp)
-        clonesToTest = rownames(baselineFreq)[which(baselineFreq[,1] > getFreqThreshold(as.numeric(input$nCells),input$prob)*100)] #
-      }
-      #===================
-      # if the comparison to reference should be included in the analysis
-      if(input$compareToRef)
-      {
-        if (input$refSamp == 'None')
+        sampForAnalysis = setdiff(sampNames,
+                                  c(input$excludeSamp,input$refSamp,
+                                    input$baselineSamp))
+        # get baseline frequencies to find a threshold
+        baselineSamp = input$baselineSamp
+        # if baseline field is empty, use refSamp to get threshold
+        if(input$baselineSamp == 'None') baselineSamp = input$refSamp
+
+        #===================
+        # select clones to test based on the Ignore baseline flag
+        # if the Ignore baseline flag is on,
+        # then all clones will be tested
+        # if the Ignore baseline flag is off,
+        # then only clones from the baseline sample that have the number of reads
+        # more than calculated threshold will be tested
+        clonesToTest = NULL
+        if(!input$ignoreBaseline)
         {
-          output$message_fisher = renderText('There is no reference. Please select a reference sample')
-        }else{
-
-          # create comparing pairs (to refSamp)
-          compPairs = cbind(sampForAnalysis,rep(input$refSamp,length(sampForAnalysis)))
-          # if the Ignore baseline flag is on
-          if(input$ignoreBaseline) clonesToTest = NULL
-          # run Fisher's test
-          if(nrow(compPairs) == 1)
+          baselineFreq = getFreq(clones = names(obj[[baselineSamp]]),obj,samp=baselineSamp)
+          clonesToTest = rownames(baselineFreq)[which(baselineFreq[,1] >
+                            getFreqThreshold(as.numeric(input$nCells),input$prob)*100)] #
+        }
+        #===================
+        # if the comparison to reference should be included in the analysis
+        if(input$compareToRef)
+        {
+          if (input$refSamp == 'None')
           {
-            res = list(runFisher(compPairs,obj, clones = clonesToTest, nReadFilter = c(as.numeric(input$nReads),0)))
+            output$message_analysis = renderText('There is no reference. Please select a reference sample')
           }else{
-            res = apply(compPairs,1,runFisher,obj, clones = clonesToTest, nReadFilter = c(as.numeric(input$nReads),0))
-          }
-          #			browser()
-          if (!is.null(res))
-          {
-            names(res) = apply(compPairs,1,paste,collapse = '_vs_')
-            output$message_fisher = renderText('Analysis is done. Click Download Results to save the results')
-            assign('analysisRes',res, envir = .GlobalEnv)
-          }	else{
-            output$message_fisher = renderText('There are no clones to analyze. Try to reduce confidence or the number of templates 1')
-          }
-        }
-      }else{
-        # if there is no comparison with the reference, then compare only within conditions
-        if(input$ignoreBaseline) clonesToTest = NULL
-        # take only clones that have the number of reads more then nReads and compare with top second and top third conditions
-        fisherRes = compareWithOtherTopConditions(obj, productiveReadCounts, sampForAnalysis,
-                                                  nReads = as.numeric(input$nReads), clones = clonesToTest)
-        if (!is.null(fisherRes))
-        {
-          output$message_fisher = renderText('Analysis is done. Click Download Results to save the results')
-          assign('analysisRes',fisherRes, envir = .GlobalEnv)
-        }	else{
-          output$message_fisher = renderText('There are no clones to analyze. Try to reduce the number of templates')
-        }
-      }
-    }else{
-      output$message_fisher = renderText('There are no data to analyze. Please load files')
-    }
 
+            # create comparing pairs (to refSamp)
+            compPairs = cbind(sampForAnalysis,rep(input$refSamp,length(sampForAnalysis)))
+            # if the Ignore baseline flag is on
+            if(input$ignoreBaseline) clonesToTest = NULL
+            # run Fisher's test
+            if(nrow(compPairs) == 1)
+            {
+              res = list(runFisher(compPairs,obj, clones = clonesToTest, nReadFilter = c(as.numeric(input$nReads),0)))
+            }else{
+              res = apply(compPairs,1,runFisher,obj, clones = clonesToTest, nReadFilter = c(as.numeric(input$nReads),0))
+            }
+            #			browser()
+            if (!is.null(res))
+            {
+              names(res) = apply(compPairs,1,paste,collapse = '_vs_')
+              output$message_analysis = renderText('Analysis is done. Click Download Results to save the results')
+              assign('analysisRes',res, envir = .GlobalEnv)
+            }	else{
+              output$message_analysis = renderText('There are no clones to analyze. Try to reduce confidence or the number of templates 1')
+            }
+          }
+        }else{
+          # if there is no comparison with the reference, then compare only within conditions
+          if(input$ignoreBaseline) clonesToTest = NULL
+          # take only clones that have the number of reads more then nReads and compare with top second and top third conditions
+          fisherRes = compareWithOtherTopConditions(obj, productiveReadCounts, sampForAnalysis,
+                                                    nReads = as.numeric(input$nReads), clones = clonesToTest)
+          if (!is.null(fisherRes))
+          {
+            output$message_analysis = renderText('Analysis is done. Click Download Results to save the results')
+            assign('analysisRes',fisherRes, envir = .GlobalEnv)
+          }	else{
+            output$message_analysis = renderText('There are no clones to analyze. Try to reduce the number of templates')
+          }
+        }
+      } else {# end of analysis without replicates
+      #================================
+      ## analysis with replicates
+      #================================
+        # extract conditions from the file names
+        sampAnnot = splitFileName(sampNames)
+        # check if there are conditions
+        if (all(is.na(sampAnnot$condition)))
+        {
+          output$message_analysis = renderText('There are no conditions to analyze.
+                                               Please check the input file names')
+        }else{
+          # output a table with sample annotations
+          output$message_analysis = renderTable({
+            # Create a table using kable
+            kable(sampAnnot, format = "html") %>%
+              kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))
+          }, sanitize.text.function = function(x) x)
+
+            # update conditions
+            updateSelectInput(session, "refSamp", choices=c('None',sampAnnot$condition))
+            updateSelectInput(session, "baselineSamp", choices=c('None',sampAnnot$condition))
+            updateSelectInput(session, "excludeSamp", choices=sampAnnot$condition)
+
+
+      }
+    }# end of analysis with replicates
+    } else{
+      output$message_analysis = renderText('There are no data to analyze. Please load files')
+    }
   })
 
 
@@ -462,7 +524,7 @@ server <- function(input, output,session) {
         # if there is no positive clones
         if (length(posClones)==0)
         {
-          output$message_fisher = renderText('There are no positive clones. Try to adjust thresholds')
+          output$save_results = renderText('There are no positive clones. Try to adjust thresholds')
           # add a sheet to the output with significant clones comparing to reference
           #clones = rownames(resTable)[which(resTable[,'significant_comparisons'] == 1)]
           tablesToXls$summary = data.frame('There are no positive clones', row.names = NULL, check.names = F)
@@ -558,10 +620,10 @@ server <- function(input, output,session) {
         #			tablesToXls$input = data.frame(isolate(reactiveValuesToList(input)))
         WriteXLS('tablesToXls', file, SheetNames = names(tablesToXls), row.names = T)
 
-        output$message_fisher = renderText('The results are saved')
+        output$save_results = renderText('The results are saved')
       }else{
 
-        output$message_fisher = renderText('Please click the Run Analysis button')
+        output$save_results = renderText('Please click the Run Analysis button')
 
       }
     })
@@ -589,7 +651,7 @@ server <- function(input, output,session) {
           # message
           m = 'There are no positive clones. Try to adjust thresholds'
           # show in the app
-          output$message_fisher = renderText(m)
+          output$save_results = renderText(m)
           # save in pdf
           pdf(file)
           plot.new()
@@ -600,7 +662,7 @@ server <- function(input, output,session) {
         {
           m = 'There is only one positive clone. Try to adjust thresholds to get more clones to plot'
           # show in the app
-          output$message_fisher = renderText(m)
+          output$save_results = renderText(m)
           # save in pdf
           pdf(file)
           plot.new()
@@ -620,7 +682,7 @@ server <- function(input, output,session) {
                        samp = sampForAnalysis,
                        refSamp = input$refSamp,
                        fileName = file, size = 7)
-          output$message_fisher = renderText('The heat map is saved')
+          output$save_results = renderText('The heat map is saved')
         }
 
       }

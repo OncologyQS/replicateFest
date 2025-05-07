@@ -25,6 +25,9 @@ library(dplyr)
 devtools::install_github("OncologyQS/replicateFest")
 library(replicateFest)
 
+source("R/manafest_shiny_functions.r")
+source("R/repManFunctions.r")
+
 #================================================================
 # usage of replicateFest on experimental data with replicates
 #================================================================
