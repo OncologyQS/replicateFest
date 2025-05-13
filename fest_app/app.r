@@ -83,12 +83,12 @@ ui <- fluidPage(
                    <br><b>Important!</b> If the input data has replicates, the conditions
                    will be extracted from the input file names.
                    To be able to correctly extract the conditions, file names should
-                   follow the format
-                   'sampleID_condition_replicate.ext'. E.g. 'sample1_HIV_1.tsv'.
+                   follow the format 'sampleID_condition_replicate.ext'.
+                   E.g. 'sample1_HIV_1.tsv'.
                    <br>If the input data has replicates,
-                   the negative binomial model will be used in the analysis; i
-                   f the input data does not have replicates, the Fisher's exact test
-                   will be used.")),
+                   the negative binomial model will be used in the analysis;
+                   if the input data does not have replicates,
+                   the Fisher's exact test will be used.")),
       tags$li(HTML("After the analysis is done,
               select the <b>Save results</b> tab
                    to save the results.")),
