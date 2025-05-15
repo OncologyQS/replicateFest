@@ -53,7 +53,8 @@
 # 2025-05-06 (v15)
 # split analysis and save the results to the different tabs
 # added analysis with replicates
-#
+# increased the default for the number of reads
+# removed the baseline threshold option
 
 #==============================
 # User interface
@@ -152,30 +153,21 @@ tabsetPanel(
   		# check box that controls the type of analysis - if the comparison with a reference should be performed or not
   		shinyjs::useShinyjs(),
   		checkboxInput('compareToRef','Compare to reference', value = TRUE),
+
+  		  		# specify if analysis should be performed on nucleotide level data
+  		checkboxInput('nuctleotideFlag','Use nucleotide level data'),
+
     	# drop down menu to select a reference
   		selectInput('refSamp', 'Select a reference', choices = list('None'), selected = NULL, multiple = FALSE,
   			selectize = TRUE, width = NULL, size = NULL),
 
-  		selectInput('baselineSamp', 'Select a baseline', choices = list('None'), selected = NULL, multiple = FALSE,
-  			selectize = TRUE, width = NULL, size = NULL),
+
   		selectInput('excludeSamp', 'Select conditions to exclude', choices = list('None'), selected = NULL, multiple = TRUE,
   			selectize = TRUE, width = NULL, size = NULL),
-  		textInput('nReads', 'Specify the minimal number of templates (increase in case of large files)', value = "1", width = NULL, placeholder = NULL),
-  		checkboxInput('ignoreBaseline','Ignore baseline threshold'),
-  		conditionalPanel(
-  			condition = "input.ignoreBaseline == false",
-  			numericInput('prob', 'Specify clone confidence', value = 0.99, max = 1, min = 0, step= 0.01)
-  	  ),
+  		textInput('nReads', 'Specify the minimal number of templates (increase in case of large files)',
+  		          value = "50", width = NULL, placeholder = NULL),
 
-		# a conditional panel that appears if
-		# the Ignore baseline checkbox is not selected
-		conditionalPanel(
-			condition = "input.ignoreBaseline == false",
-		textInput('nCells', 'Estimated number of cells per well', value = "100000", width = NULL, placeholder = NULL)
-		),
-		# specify if analysis should be performed on nucleotide level data
-		checkboxInput('nuctleotideFlag','Use nucleotide level data'),
-		actionButton('runAnalysis', 'Run Analysis', width = '60%'),
+ 		actionButton('runAnalysis', 'Run Analysis', width = '60%'),
 
 		),
 
@@ -264,7 +256,7 @@ server <- function(input, output,session) {
       {
         rm(list = c('mergedData','productiveReadCounts','ntData'), envir = .GlobalEnv)
         updateSelectInput(session, "refSamp", choices=list('None'))
-        updateSelectInput(session, "baselineSamp", choices=list('None'))
+#        updateSelectInput(session, "baselineSamp", choices=list('None'))
         updateSelectInput(session, "excludeSamp", choices=list('None'))
       }
       # specify input file format
@@ -283,7 +275,7 @@ server <- function(input, output,session) {
 
         if(file.exists('inputData.rda')) file.remove('inputData.rda')
         updateSelectInput(session, "refSamp", choices=c('None',names(mergedData)))
-        updateSelectInput(session, "baselineSamp", choices=c('None',names(mergedData)))
+#        updateSelectInput(session, "baselineSamp", choices=c('None',names(mergedData)))
         updateSelectInput(session, "excludeSamp", choices=names(mergedData))
         #		HTML(c('Uploaded files:<br/>',paste(unlist(input$sourceFiles$name), collapse = '<br/>')))
         HTML(c('Uploaded files:<br/>',paste(names(mergedData), collapse = '<br/>')))
@@ -310,7 +302,7 @@ server <- function(input, output,session) {
         {
           rm(list = c('mergedData','productiveReadCounts','ntData'), envir = .GlobalEnv)
           updateSelectInput(session, "refSamp", choices=list('None'))
-          updateSelectInput(session, "baselineSamp", choices=list('None'))
+#          updateSelectInput(session, "baselineSamp", choices=list('None'))
           updateSelectInput(session, "excludeSamp", choices=list('None'))
         }
         if (tolower(file_ext(input$inputObj$name)) == 'rda'){
@@ -319,7 +311,7 @@ server <- function(input, output,session) {
           if (exists('mergedData', envir = .GlobalEnv))
           {
             updateSelectInput(session, "refSamp", choices=c('None',names(mergedData)))
-            updateSelectInput(session, "baselineSamp", choices=c('None',names(mergedData)))
+#            updateSelectInput(session, "baselineSamp", choices=c('None',names(mergedData)))
             updateSelectInput(session, "excludeSamp", choices=names(mergedData))
             HTML(c('Uploaded samples:<br/>',paste(names(mergedData), collapse = '<br/>')))
           }else{ HTML('There are no input data to analyze. Please check the input file')}
@@ -349,28 +341,52 @@ server <- function(input, output,session) {
    #==================
   # an observerEvent for checking the The input with replicates checkbox
   observeEvent(input$replicates, {
-    if (input$replicates == TRUE){
+    if(exists('mergedData', envir = .GlobalEnv))
+    {
+
+      if (input$replicates == TRUE){
       # if the input data has replicates, then the reference sample should be selected
       # update conditions
-      updateSelectInput(session, "refSamp", choices=c('None'))
-      updateSelectInput(session, "baselineSamp", choices=c('None'))
-      updateSelectInput(session, "excludeSamp", choices="")
-      updateCheckboxInput(session, "ignoreBaseline", value = TRUE)
-      updateTextInput(session,'nReads',value = 50)
+      # check if there are objects to run analysis
+       # extract conditions from the file names
+        sampAnnot = splitFileName(names(mergedData))
+      # check if there are conditions
+      if (all(is.na(sampAnnot$condition)))
+      {
+        output$message_analysis = renderText('There are no conditions to analyze.
+                                               Please check the input file names')
+      }else{
+        # output a table with sample annotations
+        output$message_analysis = renderTable({
+          # Create a table using kable
+          kable(sampAnnot, format = "html") %>%
+            kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))
+        }, sanitize.text.function = function(x) x)
+
+        # update inputs in the dropdowns
+        updateSelectInput(session, "refSamp", choices=c('None',sampAnnot$condition))
+ #       updateSelectInput(session, "baselineSamp", choices=c('None',sampAnnot$condition))
+        updateSelectInput(session, "excludeSamp", choices=sampAnnot$condition)
+
+      }
       shinyjs::disable('compareToRef')
 
-    }else{
-      # if the input data does not have replicates, then the reference sample should be selected
-      # update conditions
-      updateSelectInput(session, "refSamp", choices=c('None'))
-      updateSelectInput(session, "baselineSamp", choices=c('None'))
-      updateSelectInput(session, "excludeSamp", choices="")
-      updateCheckboxInput(session, "ignoreBaseline", value = FALSE)
-      updateTextInput(session,'nReads',value = 1)
-      shinyjs::enable('compareToRef')
+      # if The input with replicates is unchecked
+      }else{
+        # if the input data does not have replicates, then the reference sample should be selected
+        # update conditions
+        updateSelectInput(session, "refSamp", choices=c('None',names(mergedData)))
+#        updateSelectInput(session, "baselineSamp", choices=c('None',names(mergedData)))
+        updateSelectInput(session, "excludeSamp", choices=names(mergedData))
+        shinyjs::enable('compareToRef')
+        # output sample names in the main panel
+        output$message_analysis = renderText(
+          HTML(c('Uploaded samples:<br/>',paste(names(mergedData),
+                                                collapse = '<br/>'))))
 
+      }
     }
-  })
+  } )
 
   #================
   # run analysis with the Run Analysis button is clicked
@@ -397,27 +413,15 @@ server <- function(input, output,session) {
       if (input$replicates == FALSE)
       {
         sampForAnalysis = setdiff(sampNames,
-                                  c(input$excludeSamp,input$refSamp,
-                                    input$baselineSamp))
-        # get baseline frequencies to find a threshold
-        baselineSamp = input$baselineSamp
-        # if baseline field is empty, use refSamp to get threshold
-        if(input$baselineSamp == 'None') baselineSamp = input$refSamp
+                                  c(input$excludeSamp,input$refSamp))
+        # # get baseline frequencies to find a threshold
+        # baselineSamp = input$baselineSamp
+        # # if baseline field is empty, use refSamp to get threshold
+        # if(input$baselineSamp == 'None') baselineSamp = input$refSamp
 
         #===================
-        # select clones to test based on the Ignore baseline flag
-        # if the Ignore baseline flag is on,
-        # then all clones will be tested
-        # if the Ignore baseline flag is off,
-        # then only clones from the baseline sample that have the number of reads
-        # more than calculated threshold will be tested
-        clonesToTest = NULL
-        if(!input$ignoreBaseline)
-        {
-          baselineFreq = getFreq(clones = names(obj[[baselineSamp]]),obj,samp=baselineSamp)
-          clonesToTest = rownames(baselineFreq)[which(baselineFreq[,1] >
-                            getFreqThreshold(as.numeric(input$nCells),input$prob)*100)] #
-        }
+        # select clones to test
+       clonesToTest = NULL
         #===================
         # if the comparison to reference should be included in the analysis
         if(input$compareToRef)
@@ -430,7 +434,7 @@ server <- function(input, output,session) {
             # create comparing pairs (to refSamp)
             compPairs = cbind(sampForAnalysis,rep(input$refSamp,length(sampForAnalysis)))
             # if the Ignore baseline flag is on
-            if(input$ignoreBaseline) clonesToTest = NULL
+#            if(input$ignoreBaseline) clonesToTest = NULL
             # run Fisher's test
             if(nrow(compPairs) == 1)
             {
@@ -442,7 +446,8 @@ server <- function(input, output,session) {
             if (!is.null(res))
             {
               names(res) = apply(compPairs,1,paste,collapse = '_vs_')
-              output$message_analysis = renderText('Analysis is done. Click Download Results to save the results')
+              output$message_analysis =
+                renderText('Analysis is done. Go to the Save results tab to save the results')
               assign('analysisRes',res, envir = .GlobalEnv)
             }	else{
               output$message_analysis = renderText('There are no clones to analyze. Try to reduce confidence or the number of templates 1')
@@ -450,7 +455,7 @@ server <- function(input, output,session) {
           }
         }else{
           # if there is no comparison with the reference, then compare only within conditions
-          if(input$ignoreBaseline) clonesToTest = NULL
+#          if(input$ignoreBaseline) clonesToTest = NULL
           # take only clones that have the number of reads more then nReads and compare with top second and top third conditions
           fisherRes = compareWithOtherTopConditions(obj, productiveReadCounts, sampForAnalysis,
                                                     nReads = as.numeric(input$nReads), clones = clonesToTest)
@@ -481,9 +486,9 @@ server <- function(input, output,session) {
               kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))
           }, sanitize.text.function = function(x) x)
 
-            # update conditions
+            # update inputs in the dropdowns
             updateSelectInput(session, "refSamp", choices=c('None',sampAnnot$condition))
-            updateSelectInput(session, "baselineSamp", choices=c('None',sampAnnot$condition))
+#            updateSelectInput(session, "baselineSamp", choices=c('None',sampAnnot$condition))
             updateSelectInput(session, "excludeSamp", choices=sampAnnot$condition)
 
             # get clones to test
@@ -516,7 +521,7 @@ server <- function(input, output,session) {
       }
     }# end of analysis with replicates
     } else{
-      output$message_analysis = renderText('There are no data to analyze. Please load files')
+      output$message_analysis = renderText('There are no data to analyze. Please load files 2')
     }
   })
 
@@ -532,7 +537,7 @@ server <- function(input, output,session) {
       {
         # check if analysis was done on aa or nt level
         if (input$nuctleotideFlag) obj = ntData else obj = mergedData
-        sampForAnalysis = setdiff(names(obj), c(input$excludeSamp,input$refSamp, input$baselineSamp))
+        sampForAnalysis = setdiff(names(obj), c(input$excludeSamp,input$refSamp))
         #======================
         # get positive clones
         posClones = NULL
@@ -555,8 +560,6 @@ server <- function(input, output,session) {
 
         #===============================
         # change "None" to NULL for baseline and reference samples
-        baselineSamp = input$baselineSamp
-        if(input$baselineSamp == 'None') baselineSamp = NULL
         refSamp = input$refSamp
         if(input$refSamp == 'None') refSamp = NULL
 
@@ -578,7 +581,7 @@ server <- function(input, output,session) {
           tablesToXls = createPosClonesOutput(posClones,
                                               obj,
                                               refSamp,
-                                              baselineSamp,
+                                              NULL,
                                               addDiff = F)
         }
 
@@ -626,36 +629,20 @@ server <- function(input, output,session) {
         #============
         # add a sheet with parameters
         #============
-        s = c(refSamp, baselineSamp,sampForAnalysis)
-        # add the baseline threshold percentage and
-        # the corresponding number of templates in baseline sample
-        baselineThrNames = baselineThrVal = NULL
-        if(!input$ignoreBaseline)
-        {
-          baselineThrNames =c('confidence','nCells',
-                              'baseline_threshold_percent',
-                              'baseline_threshold_templates')
-          freq = getFreqThreshold(as.numeric(input$nCells),input$prob)
-          if(input$baselineSamp == 'None')
-            baselineSamp = input$refSamp
-          baselineThrVal = c(input$prob,input$nCells,freq*100,
-                             floor(round(freq*productiveReadCounts[baselineSamp])))
-        }
-        param = c('Reference_samp','Baseline_sample',
+        s = names(productiveReadCounts)
+         param = c('Reference sample',
                   'Excluded samples','Compare to reference',
-                  'nTemplates_threshold','FDR_threshold',
-                  'OR_threshold','percent_threshold',
-                  'Ignore_baseline_threshold',
-                  'Nucleotide_level', baselineThrNames,
+                  'n template threshold','FDR threshold',
+                  'OR threshold','percent threshold',
+                  'Nucleotide_level',
                   'nAnalyzedSamples',
                   paste(s, 'nTemplates',sep = '_'))
-        value = c(toString(refSamp), toString(baselineSamp),
+        value = c(toString(refSamp),
                   paste(input$excludeSamp, collapse = ', '),
                   input$compareToRef, input$nReads,input$fdrThr,
                   input$orThr, input$percentThr,
-                  input$ignoreBaseline,
-                  input$nuctleotideFlag, baselineThrVal,
-                  length(sampForAnalysis), productiveReadCounts[s])
+                  input$nuctleotideFlag,
+                  length(s), productiveReadCounts[s])
 
         tablesToXls$parameters = data.frame(param, value)
 
@@ -675,14 +662,14 @@ server <- function(input, output,session) {
   # save heatmaps with selected thresholds when the Download Heatmaps button is clicked
   output$saveHeatmaps <- downloadHandler(
     filename=function(){
-      paste0('heatmaps_',Sys.Date(),'.pdf')},
+      paste0('heatmap_',Sys.Date(),'.pdf')},
     contentType = "image/pdf",
     content=function(file){
       if (exists('analysisRes', envir = .GlobalEnv))
       {
         # check if analysis was done on aa or nt level
         if (input$nuctleotideFlag) obj = ntData else obj = mergedData
-        sampForAnalysis = setdiff(names(obj), c(input$excludeSamp,input$refSamp, input$baselineSamp))
+        sampForAnalysis = setdiff(names(obj), c(input$excludeSamp,input$refSamp))
         posClones = getPositiveClones(analysisRes, obj,
                                       samp = sampForAnalysis,
                                       orThr = as.numeric(input$orThr),
