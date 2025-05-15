@@ -150,6 +150,7 @@ tabsetPanel(
   		              value = FALSE),
 
   		# check box that controls the type of analysis - if the comparison with a reference should be performed or not
+  		shinyjs::useShinyjs(),
   		checkboxInput('compareToRef','Compare to reference', value = TRUE),
     	# drop down menu to select a reference
   		selectInput('refSamp', 'Select a reference', choices = list('None'), selected = NULL, multiple = FALSE,
@@ -176,19 +177,6 @@ tabsetPanel(
 		checkboxInput('nuctleotideFlag','Use nucleotide level data'),
 		actionButton('runAnalysis', 'Run Analysis', width = '60%'),
 
-#========================
-# set thresholds and save results
-#     tags$hr(),
-# 		tags$p(HTML("<b>Specify thresholds:</b>")),
-# 		numericInput('fdrThr', 'for FDR ', value = 0.05,
-# 		             max = 1, step= 0.01),
-# 		textInput('orThr', 'for odds ratio', value = "5",
-# 		          width = NULL, placeholder = NULL),
-#     textInput('percentThr', 'for percentage',
-#                           value = "0"),
-#     downloadButton('saveResults', 'Download Results'),
-# 		downloadButton('saveHeatmaps', 'Create heatmaps')
-# 	#		downloadLink("downloadData", "Download Results")
 		),
 
 
@@ -203,7 +191,7 @@ tabsetPanel(
     #=============================
     # tab for saving results of the analysis
     #=============================
-tabPanel("Save results",
+    tabPanel("Save results",
          sidebarLayout(
            # the left side panel
            sidebarPanel(
@@ -251,12 +239,14 @@ server <- function(input, output,session) {
   library(DT)
   library(kableExtra)
   library(dplyr)
+  library(shinyjs)
   if (!require(WriteXLS)) install.packages("WriteXLS")
   if(!require(immunarch)) install.packages("immunarch")
   if (!require(devtools)) install.packages("devtools")
   if (!require(replicateFest)) devtools::install_github("OncologyQS/replicateFest")
   library(replicateFest)
 
+  #===================
   # read input files
   observeEvent(input$sourceFiles,{
     output$message_load = renderUI({
@@ -305,6 +295,7 @@ server <- function(input, output,session) {
   })
   })
 
+  #===================
   # load RDA file with the input data
   observeEvent(input$inputObj,{
     output$message_load = renderUI({
@@ -339,7 +330,7 @@ server <- function(input, output,session) {
     })
   })
 
-
+  #===================
   # save the inputData object with uploaded files for further analysis when the Save Input Object button is clicked
   output$saveInputObj <- downloadHandler(
     filename='inputData.rda',
@@ -355,6 +346,33 @@ server <- function(input, output,session) {
       }
     })
 
+   #==================
+  # an observerEvent for checking the The input with replicates checkbox
+  observeEvent(input$replicates, {
+    if (input$replicates == TRUE){
+      # if the input data has replicates, then the reference sample should be selected
+      # update conditions
+      updateSelectInput(session, "refSamp", choices=c('None'))
+      updateSelectInput(session, "baselineSamp", choices=c('None'))
+      updateSelectInput(session, "excludeSamp", choices="")
+      updateCheckboxInput(session, "ignoreBaseline", value = TRUE)
+      updateTextInput(session,'nReads',value = 50)
+      shinyjs::disable('compareToRef')
+
+    }else{
+      # if the input data does not have replicates, then the reference sample should be selected
+      # update conditions
+      updateSelectInput(session, "refSamp", choices=c('None'))
+      updateSelectInput(session, "baselineSamp", choices=c('None'))
+      updateSelectInput(session, "excludeSamp", choices="")
+      updateCheckboxInput(session, "ignoreBaseline", value = FALSE)
+      updateTextInput(session,'nReads',value = 1)
+      shinyjs::enable('compareToRef')
+
+    }
+  })
+
+  #================
   # run analysis with the Run Analysis button is clicked
   observeEvent(input$runAnalysis,{
     output$message_analysis = renderText('Analysis is running...')
@@ -449,7 +467,7 @@ server <- function(input, output,session) {
       ## analysis with replicates
       #================================
         # extract conditions from the file names
-        sampAnnot = splitFileName(sampNames)
+        sampAnnot = splitFileName(names(obj))
         # check if there are conditions
         if (all(is.na(sampAnnot$condition)))
         {
@@ -468,6 +486,32 @@ server <- function(input, output,session) {
             updateSelectInput(session, "baselineSamp", choices=c('None',sampAnnot$condition))
             updateSelectInput(session, "excludeSamp", choices=sampAnnot$condition)
 
+            # get clones to test
+            clonesToTest = getClonesToTest(obj, ctThresh = input$nReads)
+            # check if there are enought clones to analyze
+            if (length(clonesToTest)<1)
+            {
+              output$message_analysis = renderText('There are no clones to analyze. Try to reduce confidence or the number of templates 1')
+              return()
+            }
+
+            res = NULL
+            # run the analysis for selected clones
+            res = fitModelSet(clonesToTest, obj,
+                                     sampAnnot$condition,
+                                     excludeCond = input$excludeSamp,
+                                     control=input$refSamp,
+                                     c.corr=1)
+            rownames(res) = res$clone
+
+            # check if there are any results to save
+            if (!is.null(res))
+            {
+              output$message_analysis = renderText('Analysis is done. Click Download Results to save the results')
+              assign('analysisRes',res, envir = .GlobalEnv)
+            }	else{
+              output$message_analysis = renderText('There are no clones to analyze. Try to reduce confidence or the number of templates 1')
+            }
 
       }
     }# end of analysis with replicates

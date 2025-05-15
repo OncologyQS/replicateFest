@@ -1,6 +1,7 @@
 # 2025-01-24
 # Ludmila Danilova, Leslie Cope
-# HIV vaccine project from UCSF
+# Usage of replicateFest on experimental data with replicates
+# as an example, using HIV experiment from UCSF, Rutishauser, Rachel group
 
 #These assays were performed to test for HIV-specific responses
 #in HIV+ patients who received a vaccine. There are 3 patients,
@@ -98,13 +99,13 @@ fitModel(clone1,mergedData,
          peptides = timeSamples$Condition,control="DMSO",
          c.corr=1)
 
-# run all clones in a patient and time point
+# run all clones in a patient and time point and return the results
 newOut1 = runExperiment(timeSamples$path,
                         peptides = timeSamples$Condition,
                         cont= "DMSO",
                         FDRthr = 0.05,
                         xrCond = c("Gag","HIV08","HIV10","HIV12"),
-                        outputFile = paste0(p,"_",t,"_xrGag_FDR_05.xlsx"))
+                        saveToFile = F)
 
 
 
