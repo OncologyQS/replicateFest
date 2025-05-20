@@ -365,7 +365,8 @@ runExperiment=function(files, peptides, ctThresh=50, control,
    #======
   # find uniquely expanded clones by checking the second best clone
   # save the second best comparison results
-  screen_scndBest = fitResults[rownames(res_exp05), setdiff(colnames(fitResults),contCol)]
+  screen_scndBest = fitResults[rownames(res_exp05),
+                               setdiff(colnames(fitResults),contCol)]
   # check for uniqueness. it should be expanded and significant in comparison to the second best as well
   unique_exp = (screen_scndBest[,grep("OR", colnames(screen_scndBest))]>1 &
     screen_scndBest[,grep("FDR", colnames(screen_scndBest))]<FDRthr)

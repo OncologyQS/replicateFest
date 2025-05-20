@@ -147,7 +147,8 @@ createResTable = function(res,mergedData, orThr = 1, FDR_threshold = 0.05,
 		}
 		colnames(output_OR_CI) = paste(rep(c('OR:','CI95%:'),length(res)),rep(names(res),each = 2))
 	}else {output_OR_CI = output_OR}
-	tab = data.frame(sequence = clones,output_fdr,significant_comparisons = apply((as.numeric(output_fdr) < FDR_threshold & output_OR > orThr),1,sum,na.rm = T),
+	tab = data.frame(sequence = clones,output_fdr,
+	                 significant_comparisons = apply((as.numeric(output_fdr) < FDR_threshold & output_OR > orThr),1,sum,na.rm = T),
 		output_OR_CI,output_counts,output_freq, check.names = F)
 	tab = tab[which(tab[,'significant_comparisons'] > 0),]
 	# if significanceTable return a binary table clones vs conditions specifying which clone is significant in what condition
@@ -372,7 +373,6 @@ getPositiveClones = function(analysisRes, mergedData,
                              samp = names(mergedData),
                              orThr = 1,
                              fdrThr = 0.05,
-                             nReads = 10,
                              percentThr = 0)
 {
   totalReadCounts = sapply(mergedData, sum)
@@ -414,7 +414,6 @@ getPositiveClones = function(analysisRes, mergedData,
 	#==============================
 	# select clones with max percentage more than percentThr
 	 freqMatrix = freqMatrix[apply(freqMatrix,1,max) > percentThr,]
-#	freqMatrix[countMatrix<nReads] = 0 # removed this filter in v12
 
 	#===============================
 	# compare with the second highest
@@ -478,13 +477,15 @@ createPosClonesOutput = function(posClones, mergedData, refSamp = NULL, baseline
   totalReadCounts = sapply(mergedData, sum)
   output = vector(mode = 'list')
 	clones = names(posClones)
+
 	# write peptide summary of positive clones
 	freqMatrix = getFreq(clones,mergedData,names(mergedData), colSuf = '')
 	peptLevelList = tapply(clones,posClones, FUN = function(x)return(x))
 	peptideTab = matrix(nrow = length(peptLevelList), ncol = 2,
 		dimnames = list(names(peptLevelList),c('positive_clones','sum_freq')))
 	peptideTab[,'positive_clones'] = sapply(peptLevelList,length)
-	peptideTab[,'sum_freq'] = sapply(names(peptLevelList),function(x) sum(freqMatrix[peptLevelList[[x]],x]))
+	peptideTab[,'sum_freq'] = sapply(names(peptLevelList),
+	                                 function(x) sum(freqMatrix[peptLevelList[[x]],x]))
 	output$condition_summary = data.frame(peptideTab)
 
 	# write clone-level summary
@@ -605,7 +606,6 @@ getPositiveClonesFromTopConditions = function(fisherResTable,
 	# find positive clones
 	posClones = names(fdrClones2)[which(!fdrClones2|is.na(fdrClones2))]
 
-	browser()
 	#=============================
 	# check if they are unique by checking top two conditions with the highest number of reads
 	freqMatrix = getFreqOrCount(posClones,

@@ -90,7 +90,7 @@ timeSamples = patSamples %>% filter(Time == t)
 
 # run one clone in a patient and time point
 # read in data
-mergedData=readMergeSave(timeSamples$path, filenames = NULL)$aaData
+mergedData=readMergeSave(timeSamples$path, filenames = NULL)$mergedData
 
 # fit model for one clone
 clone1 = "CASSFGRGAEKLFF"

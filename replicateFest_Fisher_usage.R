@@ -9,23 +9,21 @@ devtools::install_github("OncologyQS/replicateFest")
 library(replicateFest)
 library(WriteXLS)
 
+source("R/manafest_shiny_functions.r")
+
 #================================================================
 # usage of replicateFest on experimental data without replicates
 #================================================================
 # load previously saved data
-load("C:/Users/ldanilo1/OneDrive - Johns Hopkins/JHU/Manafest/20200429_v13/Ny016-014Input.rda")
-#load("C:/Users/Luda/OneDrive - Johns Hopkins/JHU/Manafest/20200429_v13/Ny016-014Input.rda")
+load("no_replicates_inputData.rda")
 
 # set parameters for the analysis
 input = list()
 input$excludeSamp = ''
-input$refSamp = "NY016-014_No_Pep"
+input$refSamp = "FW1525_NoPep"
 input$baselineSamp = NULL
-input$ignoreBaseline = TRUE
 
-input$nCells = 100000
-input$prob = .99
-input$nReads = 500
+input$nReads = 50
 input$fdrThr = .05
 input$orThr = 5
 input$percentThr = 0
@@ -46,12 +44,10 @@ fisherRes = apply(compPairs,1,runFisher,mergedData,
 # add names of compared conditions
 names(fisherRes) = apply(compPairs,1,paste,collapse = '_vs_')
 
-source("R/manafest_shiny_functions.r")
 # select positive clones with specified thresholds
 posClones = getPositiveClones(fisherRes, mergedData, samp = sampForAnalysis,
                               orThr = as.numeric(input$orThr),
                               fdrThr=as.numeric(input$fdrThr),
-                              nReads = as.numeric(input$nReads),
                               percentThr = as.numeric(input$percentThr))
 
 

@@ -412,17 +412,13 @@ server <- function(input, output,session) {
       #================================
       if (input$replicates == FALSE)
       {
+        # list samples to analyze that excludes reference and other
+        # samples that should be excluded from the analysis
         sampForAnalysis = setdiff(sampNames,
                                   c(input$excludeSamp,input$refSamp))
-        # # get baseline frequencies to find a threshold
-        # baselineSamp = input$baselineSamp
-        # # if baseline field is empty, use refSamp to get threshold
-        # if(input$baselineSamp == 'None') baselineSamp = input$refSamp
 
-        #===================
         # select clones to test
-       clonesToTest = NULL
-        #===================
+        clonesToTest = NULL
         # if the comparison to reference should be included in the analysis
         if(input$compareToRef)
         {
@@ -433,8 +429,7 @@ server <- function(input, output,session) {
 
             # create comparing pairs (to refSamp)
             compPairs = cbind(sampForAnalysis,rep(input$refSamp,length(sampForAnalysis)))
-            # if the Ignore baseline flag is on
-#            if(input$ignoreBaseline) clonesToTest = NULL
+
             # run Fisher's test
             if(nrow(compPairs) == 1)
             {
@@ -468,6 +463,8 @@ server <- function(input, output,session) {
           }
         }
       } else {# end of analysis without replicates
+
+
       #================================
       ## analysis with replicates
       #================================
@@ -559,7 +556,7 @@ server <- function(input, output,session) {
         }
 
         #===============================
-        # change "None" to NULL for baseline and reference samples
+        # change "None" to NULL for reference sample
         refSamp = input$refSamp
         if(input$refSamp == 'None') refSamp = NULL
 
