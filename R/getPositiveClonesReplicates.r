@@ -48,7 +48,18 @@ getPositiveClonesReplicates = function(analysisRes,
   return(res)
 }
 
-posCloneRep = getPositiveClonesReplicates(analysisRes, mergedData, "DMSO")
+load("7099_03182029_inputData.rda")
+
+res = fitModelSet(clonesToTest, obj,
+                  sampAnnot$condition,
+                  excludeCond = input$excludeSamp,
+                  control=input$refSamp,
+                  c.corr=1)
+rownames(res) = res$clone
+
+posCloneRep = getPositiveClonesReplicates(analysisRes,
+                                          mergedData,
+                                          "DMSO")
 
 # made output of positive clones as a data.frame
 posClonesdf = getPositiveClones(fisherRes, mergedData,
