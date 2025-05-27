@@ -452,8 +452,11 @@ server <- function(input, output,session) {
           # if there is no comparison with the reference, then compare only within conditions
 #          if(input$ignoreBaseline) clonesToTest = NULL
           # take only clones that have the number of reads more then nReads and compare with top second and top third conditions
-          fisherRes = compareWithOtherTopConditions(obj, productiveReadCounts, sampForAnalysis,
-                                                    nReads = as.numeric(input$nReads), clones = clonesToTest)
+          fisherRes = compareWithOtherTopConditions(obj,
+                                                    productiveReadCounts,
+                                                    sampForAnalysis,
+                                                    nReads = as.numeric(input$nReads),
+                                                    clones = clonesToTest)
           if (!is.null(fisherRes))
           {
             output$message_analysis = renderText('Analysis is done. Click Download Results to save the results')

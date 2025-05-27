@@ -562,12 +562,15 @@ getFreqThreshold = function(n, p)
 #' @param clones an optional vector with clones to analyze.
 #' Default is NULL, which means that all clones with the number of reads more than nReads will be analyzed
 #' @return a table with FDRs and ORs for comparisons with the second and third top conditions
-compareWithOtherTopConditions = function(mergedData, sampForAnalysis,
-                                         nReads = 10, clones = NULL)
+compareWithOtherTopConditions = function(mergedData,
+                                         sampForAnalysis,
+                                         nReads = 10,
+                                         clones = NULL)
 {
   productiveReadCounts = sapply(mergedData, sum)
   # combine clones from all conditions that have the number of clones more than nReads
-	allClones = sapply(mergedData[sampForAnalysis], function(x) setdiff(names(x)[which(x >= nReads)],""))
+	allClones = sapply(mergedData[sampForAnalysis],
+	                   function(x) setdiff(names(x)[which(x >= nReads)],""))
 	clonesToTest = c()
 	for(i in names(allClones))
 	{
@@ -732,7 +735,6 @@ runExperimentFisher=function(files,
                                     samp = sampForAnalysis,
                                     orThr = orThr,
                                     fdrThr=fdrThr,
-                                    nReads = nReads,
                                     percentThr = percentThr)
     }	else{
       print('There are no clones to analyze. Try to reduce confidence or the number of templates 1')
@@ -745,8 +747,7 @@ runExperimentFisher=function(files,
     fisherRes = compareWithOtherTopConditions(mergedData,
                                               sampForAnalysis,
                                               nReads = nReads,
-                                              clones = NULL,
-                                              percentThr = percentThr)
+                                              clones = NULL)
 
     # select positive clones with specified thresholds
     posClones = getPositiveClonesFromTopConditions(fisherRes,
