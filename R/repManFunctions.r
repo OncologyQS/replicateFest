@@ -375,7 +375,7 @@ runExperiment=function(files, peptides, ctThresh=50, control,
   # get T/F matrix for uniqueness comparisons
   # results for the second best comparison
   # the rest of info
-  sigComCol = c("clone","n_significant_comparisons","significant_comparisons")
+  sigComCol = c("clone","n_significant_comparisons","significant_condition")
   screen_scndBest = cbind(res_exp05[,sigComCol],
                           unique_exp,
                           res_exp05[,setdiff(colnames(res_exp),sigComCol)],
@@ -555,7 +555,7 @@ getExpanded = function(fitResults, countData, ORthr = 1, FDRthr = 0.05)
   # add the number and the list to the results
   res_exp = cbind(clone = res_exp[,"clone"],
                   n_significant_comparisons = rowSums(sig, na.rm = T),
-                  significant_comparisons = sigComp,
+                  significant_condition = sigComp,
                   res_exp[,setdiff(colnames(res_exp),c("clone"))])
    # add abundance and percentage of the top clones in each condition
   # get abundance for the top clones
@@ -584,7 +584,7 @@ getXR = function(res, conditions, xrCond = xrCond)
   # a vector of conditions that shouldn't be cross-reactive
   # find all and take difference
   allCond = res %>% filter(n_significant_comparisons == 1) %>%
-    dplyr::select(significant_comparisons) %>% unlist() %>% unique()
+    dplyr::select(significant_condition) %>% unlist() %>% unique()
 
   # conditions that shouldn't be cross-reactive
   excludeCond = setdiff(conditions, xrCond)
@@ -592,10 +592,10 @@ getXR = function(res, conditions, xrCond = xrCond)
   # find cross-reactive clones
   res_xr = res %>% filter(n_significant_comparisons > 1)
   # find clone that are cross-reactive fo xrCond
-  inclXR = res_xr %>% filter(grepl(paste(xrCond,collapse = "|"),significant_comparisons))
+  inclXR = res_xr %>% filter(grepl(paste(xrCond,collapse = "|"),significant_condition))
 
   # exclude conditions that are not in xrCond
-  excl = inclXR %>% filter(!grepl(paste(excludeCond,collapse = "|"),significant_comparisons))
+  excl = inclXR %>% filter(!grepl(paste(excludeCond,collapse = "|"),significant_condition))
   return(excl)
 }
 

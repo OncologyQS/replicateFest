@@ -40,7 +40,7 @@ getPositiveClonesReplicates = function(analysisRes,
   # add columns that indicates how many and what comparisons were significant
   # results for the second best comparison
   # the rest of info
-  sigComCol = c("clone","n_significant_comparisons","significant_comparisons")
+  sigComCol = c("clone","n_significant_comparisons","significant_comparison")
   res = cbind(res_exp_filtered[unique_exp,sigComCol],
                         res_exp_filtered[unique_exp,setdiff(colnames(res_exp),sigComCol)],
                           screen_scndBest[unique_exp,])
@@ -49,3 +49,17 @@ getPositiveClonesReplicates = function(analysisRes,
 }
 
 posCloneRep = getPositiveClonesReplicates(analysisRes, mergedData, "DMSO")
+
+# made output of positive clones as a data.frame
+posClonesdf = getPositiveClones(fisherRes, mergedData,
+                        samp = sampForAnalysis,
+                        orThr = as.numeric(input$orThr),
+                        fdrThr = as.numeric(input$fdrThr),
+                        percentThr = as.numeric(input$percentThr))
+
+tablesToXls = createPosClonesOutput(posClonesdf,
+                                    mergedData,
+                                    input$refSamp,
+                                    NULL,
+                                    addDiff = F)
+

@@ -440,7 +440,9 @@ getPositiveClones = function(analysisRes, mergedData,
 	if(length(posClones)>0)
 	{
 	# get corresponding condition
-		return(signCond[posClones])
+#		return(signCond[posClones])
+	  return(data.frame(clone = posClones,
+	                    significant_condition = signCond[posClones]))
 	}else{return(NULL)}
 }
 
@@ -472,27 +474,38 @@ getFisherForNclone = function(freq, clones, n = 2,mergedData)
 
 #
 # create output tables to be saved in Excel
-createPosClonesOutput = function(posClones, mergedData, refSamp = NULL, baselineSamp = NULL, addDiff = T)
+createPosClonesOutput = function(posClones, mergedData,
+                                 refSamp = NULL,
+                                 baselineSamp = NULL,
+                                 addDiff = T)
 {
   totalReadCounts = sapply(mergedData, sum)
   output = vector(mode = 'list')
-	clones = names(posClones)
+#	clones = names(posClones)
+	clones = posClones$clone
 
 	# write peptide summary of positive clones
+	# get frequencies of positive clones across all samples
 	freqMatrix = getFreq(clones,mergedData,names(mergedData), colSuf = '')
-	peptLevelList = tapply(clones,posClones, FUN = function(x)return(x))
+
+	# make a list of conditions with positive clones in each condition
+	peptLevelList = tapply(clones,posClones$significant_condition,
+	                       FUN = function(x)return(x))
 	peptideTab = matrix(nrow = length(peptLevelList), ncol = 2,
-		dimnames = list(names(peptLevelList),c('positive_clones','sum_freq')))
-	peptideTab[,'positive_clones'] = sapply(peptLevelList,length)
+		dimnames = list(names(peptLevelList),c('n_positive_clones','sum_freq')))
+	peptideTab[,'n_positive_clones'] = sapply(peptLevelList,length)
 	peptideTab[,'sum_freq'] = sapply(names(peptLevelList),
 	                                 function(x) sum(freqMatrix[peptLevelList[[x]],x]))
 	output$condition_summary = data.frame(peptideTab)
 
+	# get significant conditions
+	signCond = unique(posClones$significant_condition)
+
 	# write clone-level summary
 	if(!is.null(baselineSamp) && !is.null(refSamp))
 	{
-		fc_ref = getFC(clones,mergedData,refSamp, unique(posClones), "")
-		fc_bl = getFC(clones,mergedData,baselineSamp, unique(posClones), "")
+		fc_ref = getFC(clones,mergedData,refSamp, signCond, "")
+		fc_bl = getFC(clones,mergedData,baselineSamp, signCond, "")
 		tab = data.frame(condition = posClones,
 			getFreq(clones,mergedData,baselineSamp),
 			sapply(clones,function(x) fc_bl[x,posClones[x]]),
@@ -502,13 +515,16 @@ createPosClonesOutput = function(posClones, mergedData, refSamp = NULL, baseline
 	} else {
 		if(!is.null(refSamp))
 		{
-			fc_ref = getFC(clones,mergedData,refSamp, unique(posClones), "")
-			tab = data.frame(condition = posClones,
+#browser()
+		  fc_ref = getFC(clones,mergedData,refSamp, signCond, "")
+			tab = data.frame(condition = posClones$significant_condition,
 				getFreq(clones,mergedData,refSamp),
-				sapply(clones,function(x) fc_ref[x,posClones[x]]),check.names = F)
+				sapply(clones,
+				       function(x)
+				         fc_ref[x,posClones[which(posClones$clone == x),"significant_condition"]]),check.names = F)
 			colnames(tab)[3] = paste0('FC:', refSamp)
 		}else{
-			tab = data.frame(condition = posClones)
+			tab = data.frame(condition = posClones$significant_condition)
 		}
 	}
 	output$positive_clones_summary = tab
@@ -520,7 +536,7 @@ createPosClonesOutput = function(posClones, mergedData, refSamp = NULL, baseline
 		tab = cbind(tab, getDiff(clones, mergedData, samp = setdiff(names(mergedData),c(refSamp, baselineSamp)), refSamp))
 	}
 #browser()
-	output$positive_clones_all_data = data.frame(condition = posClones,tab,check.names = F)
+	output$positive_clones_all_data = data.frame(condition = posClones$significant_condition,tab,check.names = F)
 	return(output)
 }
 
@@ -620,7 +636,10 @@ getPositiveClonesFromTopConditions = function(fisherResTable,
 	if(length(posClones)>0)
 	{
 	# return conditions of positive clones
-		return(fisherResTable[posClones,'condition'])
+#		return(fisherResTable[posClones,'condition'])
+	  return(data.frame(clone = posClones,
+	                    significant_condition = fisherResTable[posClones,'condition']))
+
 	}else{return(NULL)}
 }
 

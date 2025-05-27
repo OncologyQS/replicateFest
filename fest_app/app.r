@@ -544,7 +544,6 @@ server <- function(input, output,session) {
                                         samp = sampForAnalysis,
                                         orThr = as.numeric(input$orThr),
                                         fdrThr = as.numeric(input$fdrThr),
-                                        nReads = as.numeric(input$nReads),
                                         percentThr = as.numeric(input$percentThr))
         }else{ # if there is no comparison to ref sample
           posClones = getPositiveClonesFromTopConditions(analysisRes,
