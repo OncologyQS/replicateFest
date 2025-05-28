@@ -592,6 +592,7 @@ createPosClonesOutput = function(posClones, mergedData,
 # In the replication version, these should be samples
 getPerSampleSummary = function(posClones, mergedData)
 {
+  clones = unique(posClones[,1])
   # write peptide summary of positive clones
   # get frequencies of positive clones across all samples
   freqMatrix = getFreq(clones,mergedData,names(mergedData), colSuf = '')
