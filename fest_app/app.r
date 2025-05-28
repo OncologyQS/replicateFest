@@ -580,8 +580,7 @@ server <- function(input, output,session) {
           tablesToXls = createPosClonesOutput(posClones,
                                               obj,
                                               refSamp,
-                                              NULL,
-                                              addDiff = F)
+                                              NULL)
         }
 
         #===================

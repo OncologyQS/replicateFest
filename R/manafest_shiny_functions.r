@@ -355,7 +355,9 @@ runSingleFisher = function(clone, pair, mergedData)
 #' getPositiveClones
 #' @description
 #' returns a vector with positive clones as names and conditions,
-#' in which a clone is significant, as values
+#' in which a clone is significant, as values.
+#' For every clone, checks top two conditions with the highest number of reads
+#' to see if a clone is uniquely expanded
 #' @param analysisRes a list with results of Fisher's test
 #' for pairwise comparisons
 #' @param mergedData a list of data frames with read counts
@@ -380,7 +382,7 @@ getPositiveClones = function(analysisRes, mergedData,
 				FDR_threshold=fdrThr, saveCI =F)
 	if(is.null(resTable)) return(NULL)
 
-	# find significant expansions
+	# find significant expansions in one condition
 	clones = rownames(resTable)[which(resTable[,'significant_comparisons'] == 1)]
 	#================
 	# find condition in which it's expanded
@@ -388,10 +390,11 @@ getPositiveClones = function(analysisRes, mergedData,
 				FDR_threshold=fdrThr, saveCI =F, significanceTable = T)
 #	signTable = data.frame(signTable[clones,])
 	signMatrix = matrix(signTable[clones,],
-			nrow = length(clones), ncol = ncol(signTable), dimnames = list(clones,sapply(strsplit(colnames(signTable),'_vs_'), function(x)x[1])))
+			nrow = length(clones),
+			ncol = ncol(signTable),
+			dimnames = list(clones,sapply(strsplit(colnames(signTable),'_vs_'), function(x)x[1])))
 
-		# returns condition in which a clone is significant
-
+	# returns condition in which a clone is significant
 	signCond = apply(signMatrix,1,function(x) colnames(signMatrix)[which(x)])
 	#=====================
 	# if we have only one comparison
@@ -401,9 +404,8 @@ getPositiveClones = function(analysisRes, mergedData,
 		fdrCol = grep('FDR: ', colnames(resTable), fixed = T, value = T)
 		n = unlist(strsplit(fdrCol,'FDR: '))[2]
 		n = unlist(strsplit(n,'_vs_'))[1]
-		res = rep(n, length(clones))
-		names(res) = clones
-		return(res)
+		return(data.frame(clone = clones,
+		                  significant_condition = rep(n, length(clones))))
 	}
 	#=============================
 	# check if they are unique by checking top two conditions with the highest number of reads
@@ -433,9 +435,6 @@ getPositiveClones = function(analysisRes, mergedData,
 
 	# select clones that have maximum frequency across conditions
 	# more than the threshold
-
-
-	#print(cbind(fishResComb,fdrClones2))
 	posClones = names(fdrClones2)[which(!fdrClones2|is.na(fdrClones2))]
 	if(length(posClones)>0)
 	{
@@ -444,6 +443,58 @@ getPositiveClones = function(analysisRes, mergedData,
 	  return(data.frame(clone = posClones,
 	                    significant_condition = signCond[posClones]))
 	}else{return(NULL)}
+}
+
+#' @title getPositiveClonesFromTopConditions
+#' @description
+#' Selects clones that have significant FDRs and OR higher than threshold
+#' meaning that a clone is significant and uniquely expanded
+#' also select clones that have NAs in FDR and OR, which means that
+#' this clone appears in only one condition and there is nothing to compare
+#' checks if there is a condition that is also significantly expanded.
+#' This function takes a table with FDRs, ORs, and condition in which
+#' the clone is the most abundant
+#' Column 1 and 2 are FDRs, 3 and 4 - ORs, and 5 is condition
+#' It returns a vector with positive clones as names and conditions,
+#' in which a clone is significant, as values
+#' @param fisherResTable a table with FDRs, ORs, and condition
+#' in which the clone is the most abundant.
+#' This table is an output from compareWithOtherTopConditions function
+#' @param orThr a threshold for odds ratio
+#' @param fdrThr a threshold for FDR
+#' @param percentThr a threshold for percentage
+#' @return a vector with positive clones as names and conditions,
+#' in which a clone is significant, as values
+#' @export
+getPositiveClonesFromTopConditions = function(fisherResTable,
+                                              orThr = 1,
+                                              fdrThr = 0.05,
+                                              percentThr = 0, ...)
+{
+  # apply FDR and OR thresholds
+  fdrClones2 = apply(fisherResTable,1,function(x) any(as.numeric(x[1:2])>fdrThr|as.numeric(x[3:4])<orThr))
+  # find positive clones
+  posClones = names(fdrClones2)[which(!fdrClones2|is.na(fdrClones2))]
+
+  #=============================
+  # check if they are unique by checking top two conditions with the highest number of reads
+  freqMatrix = getFreqOrCount(posClones,
+                              colSuf = '',
+                              returnFreq = T, ...)
+
+  #==============================
+  # select clones with max percentage more than percentThr
+  freqMatrix = freqMatrix[apply(freqMatrix,1,max) > percentThr,]
+  posClones = rownames(freqMatrix)
+
+  if(length(posClones)>0)
+  {
+    # return conditions of positive clones
+    #		return(fisherResTable[posClones,'condition'])
+    return(data.frame(clone = posClones,
+                      significant_condition = fisherResTable[posClones,'condition']))
+
+  }else{return(NULL)}
 }
 
 # runs Fisher's test for the nth clone with the highest frequency/the number of reads
@@ -473,49 +524,46 @@ getFisherForNclone = function(freq, clones, n = 2,mergedData)
 }
 
 #
-# create output tables to be saved in Excel
+# creates output tables to be saved in Excel
 createPosClonesOutput = function(posClones, mergedData,
                                  refSamp = NULL,
-                                 baselineSamp = NULL,
-                                 addDiff = T)
+                                 baselineSamp = NULL)
 {
   totalReadCounts = sapply(mergedData, sum)
   output = vector(mode = 'list')
-#	clones = names(posClones)
-	clones = posClones$clone
 
-	# write peptide summary of positive clones
-	# get frequencies of positive clones across all samples
-	freqMatrix = getFreq(clones,mergedData,names(mergedData), colSuf = '')
-
-	# make a list of conditions with positive clones in each condition
-	peptLevelList = tapply(clones,posClones$significant_condition,
-	                       FUN = function(x)return(x))
-	peptideTab = matrix(nrow = length(peptLevelList), ncol = 2,
-		dimnames = list(names(peptLevelList),c('n_positive_clones','sum_freq')))
-	peptideTab[,'n_positive_clones'] = sapply(peptLevelList,length)
-	peptideTab[,'sum_freq'] = sapply(names(peptLevelList),
-	                                 function(x) sum(freqMatrix[peptLevelList[[x]],x]))
-	output$condition_summary = data.frame(peptideTab)
+  # get per sample summary of positive clones
+  # a table with the number of positive clones per sample
+  # and the sum of their frequencies
+	output$condition_summary = getPerSampleSummary(posClones, mergedData)
 
 	# get significant conditions
 	signCond = unique(posClones$significant_condition)
+
+	# remove duplicated clones
+	posClones = posClones[which(!duplicated(posClones$clone)),]
+	clones = posClones$clone
 
 	# write clone-level summary
 	if(!is.null(baselineSamp) && !is.null(refSamp))
 	{
 		fc_ref = getFC(clones,mergedData,refSamp, signCond, "")
 		fc_bl = getFC(clones,mergedData,baselineSamp, signCond, "")
-		tab = data.frame(condition = posClones,
-			getFreq(clones,mergedData,baselineSamp),
-			sapply(clones,function(x) fc_bl[x,posClones[x]]),
-			getFreq(clones,mergedData,refSamp),
-			sapply(clones,function(x) fc_ref[x,posClones[x]]),check.names = F)
+		tab = data.frame(posClones,
+		                 getFreq(clones,mergedData,baselineSamp),
+		                 sapply(clones,
+		                        function(x)
+		                          fc_bl[x,posClones[which(posClones$clone == x),"significant_condition"]]),
+		                 getFreq(clones,mergedData,refSamp),
+		                 sapply(clones,
+		                        function(x)
+		                          fc_ref[x,posClones[which(posClones$clone == x),"significant_condition"]]),
+		                 check.names = F)
+
 		colnames(tab)[c(3,5)] = paste0('FC:', c(baselineSamp,refSamp))
 	} else {
 		if(!is.null(refSamp))
 		{
-#browser()
 		  fc_ref = getFC(clones,mergedData,refSamp, signCond, "")
 			tab = data.frame(condition = posClones$significant_condition,
 				getFreq(clones,mergedData,refSamp),
@@ -530,16 +578,35 @@ createPosClonesOutput = function(posClones, mergedData,
 	output$positive_clones_summary = tab
 
 	# extended information for all samples
+	# add per sample percentage
 	tab = getCountsPercent(clones, mergedData, samp = names(mergedData))
-	if (addDiff)
-	{
-		tab = cbind(tab, getDiff(clones, mergedData, samp = setdiff(names(mergedData),c(refSamp, baselineSamp)), refSamp))
-	}
 #browser()
 	output$positive_clones_all_data = data.frame(condition = posClones$significant_condition,tab,check.names = F)
 	return(output)
 }
 
+# function that returns per sample summary of positive clones a table with the
+# number of positive clones per sample and the sum of their frequencies
+# @params posClones a data frame with positive clones in the first column
+# and their conditions to be summarized in the second.
+# In the replication version, these should be samples
+getPerSampleSummary = function(posClones, mergedData)
+{
+  # write peptide summary of positive clones
+  # get frequencies of positive clones across all samples
+  freqMatrix = getFreq(clones,mergedData,names(mergedData), colSuf = '')
+
+  # make a list of conditions with positive clones in each condition
+  peptLevelList = tapply(posClones[,1],posClones[,2],
+                         FUN = function(x)return(x))
+  peptideTab = matrix(nrow = length(peptLevelList), ncol = 2,
+                      dimnames = list(names(peptLevelList),c('n_positive_clones','sum_freq')))
+  peptideTab[,'n_positive_clones'] = sapply(peptLevelList,length)
+  peptideTab[,'sum_freq'] = sapply(names(peptLevelList),
+                                   function(x) sum(freqMatrix[peptLevelList[[x]],x]))
+
+  return(data.frame(peptideTab))
+}
 #' getFreqThreshold
 # calculate frequency threshold using the number of cells and probability
 # (1-((1-p)^(1/n)))
@@ -600,51 +667,6 @@ compareWithOtherTopConditions = function(mergedData,
 }
 
 
-#' @title getPositiveClonesFromTopConditions
-#' @description
-#' Selects clones that have significant FDRs and OR higher than threshold meaning that a clone is significant and unique expansion
-#' also select clones that have NAs in FDR and OR, which means that this clone appears in only one condition and there is nothing to compare
-#' check if there is a condition that is also significantly expanded
-#' This function takes a table with FDRs, ORs, and condition in which the clone is the most abundant
-#' Column 1 and 2 are FDRs, 3 and 4 - ORs, and 5 is condition
-#' It returns a vector with positive clones as names and conditions, in which a clone is significant, as values
-#' @param fisherResTable a table with FDRs, ORs, and condition in which the clone is the most abundant.
-#' This table is an output from compareWithOtherTopConditions function
-#' @param orThr a threshold for odds ratio
-#' @param fdrThr a threshold for FDR
-#' @param percentThr a threshold for percentage
-#' @return a vector with positive clones as names and conditions, in which a clone is significant, as values
-#' @export
-getPositiveClonesFromTopConditions = function(fisherResTable,
-                                              orThr = 1,
-                                              fdrThr = 0.05,
-                                              percentThr = 0, ...)
-{
-	# apply FDR and OR thresholds
-	fdrClones2 = apply(fisherResTable,1,function(x) any(as.numeric(x[1:2])>fdrThr|as.numeric(x[3:4])<orThr))
-	# find positive clones
-	posClones = names(fdrClones2)[which(!fdrClones2|is.na(fdrClones2))]
-
-	#=============================
-	# check if they are unique by checking top two conditions with the highest number of reads
-	freqMatrix = getFreqOrCount(posClones,
-	                            colSuf = '',
-	                            returnFreq = T, ...)
-
-	#==============================
-	# select clones with max percentage more than percentThr
-	freqMatrix = freqMatrix[apply(freqMatrix,1,max) > percentThr,]
-	posClones = rownames(freqMatrix)
-
-	if(length(posClones)>0)
-	{
-	# return conditions of positive clones
-#		return(fisherResTable[posClones,'condition'])
-	  return(data.frame(clone = posClones,
-	                    significant_condition = fisherResTable[posClones,'condition']))
-
-	}else{return(NULL)}
-}
 
 #===========
 # wrapper for running the full analysis using Fisher's test

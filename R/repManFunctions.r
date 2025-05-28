@@ -632,13 +632,16 @@ splitFileName = function(filenames)
   # split the file names by "_"
   splitNames = strsplit(filenames, "_")
   # create a data frame with condition and replicate information
-  condRep = data.frame(matrix(nrow = length(filenames), ncol = 3,
-                       dimnames = list(filenames,c("sample","condition","replicate"))))
-  # get the last three elements to fill in the data frame
+  condRep = data.frame(matrix(nrow = length(filenames), ncol = 2,
+                       dimnames = list(filenames,c("condition","replicate"))))
+  # get the last two elements to fill in the data frame
   for( i in 1:(length(filenames)))
   {
     l = length(splitNames[[i]])
-    if(l>2) condRep[i,] = splitNames[[i]][(l-2):l]
+    if(l>1) condRep[i,] = splitNames[[i]][(l-1):l]
   }
+  # add file name
+  condRep = cbind(file = filenames, condRep)
+  rownames(condRep) = NULL
   return(condRep)
 }
