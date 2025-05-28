@@ -784,7 +784,7 @@ runExperimentFisher=function(files,
   # create  output
   tablesToXls = createPosClonesOutput(posClones, mergedData,
                                       refSamp,
-                                      baselineSamp, addDiff = F)
+                                      baselineSamp)
   #===================
   # add the ref_comparison_only sheet
   #===================
