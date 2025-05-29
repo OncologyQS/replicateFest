@@ -10,7 +10,6 @@ getPositiveClones(
   samp = names(mergedData),
   orThr = 1,
   fdrThr = 0.05,
-  nReads = 10,
   percentThr = 0
 )
 }
@@ -27,9 +26,9 @@ for each sample}
 
 \item{fdrThr}{a threshold for FDR}
 
-\item{nReads}{a threshold for the number of reads}
-
 \item{percentThr}{a threshold for the percentage of reads}
+
+\item{nReads}{a threshold for the number of reads}
 }
 \value{
 a vector with positive clones as names and conditions,
@@ -37,5 +36,7 @@ in which a clone is significant, as values
 }
 \description{
 returns a vector with positive clones as names and conditions,
-in which a clone is significant, as values
+in which a clone is significant, as values.
+For every clone, checks top two conditions with the highest number of reads
+to see if a clone is uniquely expanded
 }

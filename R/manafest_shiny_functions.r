@@ -665,10 +665,6 @@ compareWithOtherTopConditions = function(mergedData,
 #' The results are return and saved in an Excel file.
 #' @param files a list of file names with read counts
 #' @param refSamp a reference sample ID
-#' @param baselineSamp a baseline sample ID
-#' @param ignoreBaseline a logical value indicating if the baseline sample should be ignored
-#' @param nCells a number of cells
-#' @param prob a probability
 #' @param nReads a threshold for the number of reads
 #' @param fdrThr a threshold for FDR
 #' @param orThr a threshold for OR
@@ -682,10 +678,6 @@ compareWithOtherTopConditions = function(mergedData,
 
 runExperimentFisher=function(files,
                              refSamp,
-                             baselineSamp = NULL,
-                             ignoreBaseline = TRUE,
-                             nCells = 100000,
-                             prob = .99,
                              nReads = 50,
                              fdrThr = .05,
                              orThr = 5,
@@ -699,8 +691,7 @@ runExperimentFisher=function(files,
   mergedData = readMergeSave(files, filenames = NULL)$mergedData
   # specify samples to analyze
   sampForAnalysis = setdiff(names(mergedData),
-                            c(excludeSamp,refSamp,
-                              baselineSamp))
+                            c(excludeSamp,refSamp))
   productiveReadCounts = sapply(mergedData, sum)
 
   #======================
@@ -717,13 +708,6 @@ runExperimentFisher=function(files,
     #then all clones will be tested
     clonesToTest = NULL
     fisherRes = NULL
-    if(!ignoreBaseline)
-    {
-      baselineFreq = getFreq(clones = names(mergedData[[baselineSamp]]),
-                             mergedData,samp=baselineSamp)
-      clonesToTest = rownames(baselineFreq)[which(baselineFreq[,1] >
-                                                    getFreqThreshold(as.numeric(nCells),prob)*100)] #
-    }
     # create comparing pairs (to refSamp)
     compPairs = cbind(sampForAnalysis,rep(refSamp,
                                           length(sampForAnalysis)))
@@ -795,42 +779,27 @@ runExperimentFisher=function(files,
   #============
   # add a sheet with parameters
   #============
-  s = c(refSamp, baselineSamp,sampForAnalysis)
-  # add the baseline threshold percentage and
-  # the corresponding number of templates in baseline sample
-  baselineThrNames = baselineThrVal = NULL
-  if(!ignoreBaseline)
-  {
-    baselineThrNames =c('confidence','nCells',
-                        'baseline_threshold_percent',
-                        'baseline_threshold_templates')
-    freq = getFreqThreshold(nCells,prob)
-    if(baselineSamp == 'None')
-      baselineSamp = refSamp
-    baselineThrVal = c(prob,nCells,freq*100,
-                       floor(round(freq*productiveReadCounts[baselineSamp])))
-  }
-
-  # create a table with input parameters to save into output
-  param = c('Reference_samp','Baseline_sample',
+  s = names(productiveReadCounts)
+  param = c('Reference sample',
             'Excluded samples','Compare to reference',
-            'nTemplates_threshold','FDR_threshold',
-            'OR_threshold','Ignore_baseline_threshold',
-            baselineThrNames,'nAnalyzedSamples',
-            paste(s, 'nTemplates',sep = '_'))
-  value = c(toString(refSamp), toString(baselineSamp),
+            'n template threshold','FDR threshold',
+            'OR threshold','percent threshold',
+            'Nucleotide level analysis',
+            'n analyzed samples',
+            paste(s, 'n templates',sep = '_'))
+  value = c(toString(refSamp),
             paste(excludeSamp, collapse = ', '),
             compareToRef, nReads,fdrThr,
-            orThr, ignoreBaseline, baselineThrVal,
-            length(sampForAnalysis), productiveReadCounts[s])
+            orThr, percentThr,
+            nuctleotideFlag,
+            length(s), productiveReadCounts[s])
 
   tablesToXls$parameters = data.frame(param, value)
 
   # save into Excel file
   if(saveToFile)
   {
-    WriteXLS('tablesToXls', outputFile,
-             SheetNames = names(tablesToXls), row.names = T)
+    saveResults(tablesToXls,outputFile)
   } else return(tablesToXls)
 
 }

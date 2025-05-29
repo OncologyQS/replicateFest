@@ -7,10 +7,6 @@
 runExperimentFisher(
   files,
   refSamp,
-  baselineSamp = NULL,
-  ignoreBaseline = TRUE,
-  nCells = 1e+05,
-  prob = 0.99,
   nReads = 50,
   fdrThr = 0.05,
   orThr = 5,
@@ -25,14 +21,6 @@ runExperimentFisher(
 \item{files}{a list of file names with read counts}
 
 \item{refSamp}{a reference sample ID}
-
-\item{baselineSamp}{a baseline sample ID}
-
-\item{ignoreBaseline}{a logical value indicating if the baseline sample should be ignored}
-
-\item{nCells}{a number of cells}
-
-\item{prob}{a probability}
 
 \item{nReads}{a threshold for the number of reads}
 
