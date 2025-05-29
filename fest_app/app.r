@@ -613,14 +613,11 @@ server <- function(input, output,session) {
             #===========================
             # check if there are no clones to save
             if (is.null(refCompRes))
-            {
               tablesToXls$ref_comparison_only = data.frame(res = 'There are no significant clones')
-
-            }
             # if there are clones
             if(nrow(refCompRes) > 0)
-              tablesToXls$ref_comparison_only =
-                data.frame(refCompRes,check.names = F)
+              tablesToXls$ref_comparison_only = refCompRes
+
           }else{
             tablesToXls$ref_comparison_only = data.frame(res = 'There are no significant clones')
           }
@@ -633,9 +630,9 @@ server <- function(input, output,session) {
                   'Excluded samples','Compare to reference',
                   'n template threshold','FDR threshold',
                   'OR threshold','percent threshold',
-                  'Nucleotide_level',
-                  'nAnalyzedSamples',
-                  paste(s, 'nTemplates',sep = '_'))
+                  'Nucleotide level analysis',
+                  'n analyzed samples',
+                  paste(s, 'n templates',sep = '_'))
         value = c(toString(refSamp),
                   paste(input$excludeSamp, collapse = ', '),
                   input$compareToRef, input$nReads,input$fdrThr,

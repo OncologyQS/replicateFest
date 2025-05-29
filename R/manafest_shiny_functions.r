@@ -147,7 +147,7 @@ createResTable = function(res,mergedData, orThr = 1, FDR_threshold = 0.05,
 		}
 		colnames(output_OR_CI) = paste(rep(c('OR:','CI95%:'),length(res)),rep(names(res),each = 2))
 	}else {output_OR_CI = output_OR}
-	tab = data.frame(sequence = clones,output_fdr,
+	tab = data.frame(clone = clones,output_fdr,
 	                 significant_comparisons = apply((as.numeric(output_fdr) < FDR_threshold & output_OR > orThr),1,sum,na.rm = T),
 		output_OR_CI,output_counts,output_freq, check.names = F)
 	tab = tab[which(tab[,'significant_comparisons'] > 0),]
@@ -554,7 +554,7 @@ createPosClonesOutput = function(posClones, mergedData,
 				sapply(clones,
 				       function(x)
 				         fc_ref[x,posClones[which(posClones$clone == x),"significant_condition"]]),check.names = F)
-			colnames(tab)[3] = paste0('FC:', refSamp)
+			colnames(tab)[ncol(tab)] = paste0('FC:', refSamp)
 		}else{
 			tab = posClones
 		}
@@ -565,7 +565,7 @@ createPosClonesOutput = function(posClones, mergedData,
 	# add per sample percentage
 	tab = getCountsPercent(clones, mergedData, samp = names(mergedData))
 #browser()
-	output$positive_clones_all_data = data.frame(condition = posClones$significant_condition,tab,check.names = F)
+	output$positive_clones_all_data = data.frame(posClones,tab,check.names = F)
 	return(output)
 }
 
