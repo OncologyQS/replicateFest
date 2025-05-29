@@ -100,12 +100,12 @@ fitModel(clone1,mergedData,
          c.corr=1)
 
 # run all clones in a patient and time point and return the results
-newOut1 = runExperiment(timeSamples$path,
+res = runExperiment(timeSamples$path,
                         peptides = timeSamples$Condition,
                         cont= "DMSO",
                         FDRthr = 0.05,
                         xrCond = c("Gag","HIV08","HIV10","HIV12"),
                         saveToFile = F)
 
-
+saveResults(res, outputFile = "test.xlsx")
 

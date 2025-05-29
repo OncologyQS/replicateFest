@@ -647,8 +647,8 @@ server <- function(input, output,session) {
         #========
         # save results to xlsx
         #			tablesToXls$input = data.frame(isolate(reactiveValuesToList(input)))
-        WriteXLS('tablesToXls', file, SheetNames = names(tablesToXls), row.names = T)
-
+#        WriteXLS('tablesToXls', file, SheetNames = names(tablesToXls), row.names = T)
+        saveResults(tablesToXls,file)
         output$save_results = renderText('The results are saved')
       }else{
 

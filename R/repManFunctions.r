@@ -386,7 +386,7 @@ runExperiment=function(files, peptides, ctThresh=50, control,
    res_uniq = res_exp05 %>% filter(n_significant_comparisons == 1)
  #=====
   # find cross-reactive clones
-  if(!is.na(xrCond))
+  if(length(xrCond)>0)
   {
     res_xr = getXR(res_exp05, peptides, xrCond = xrCond)
     res_uniq = rbind(res_uniq,res_xr)
@@ -601,22 +601,18 @@ getXR = function(res, conditions, xrCond = xrCond)
 
 # function that saves the results to an excel file
 # input: a list of data frames with results
-
 saveResults = function(results, outputFile = "output.xlsx")
 {
   library(openxlsx)
   # create a workbook
   wb = createWorkbook()
-  # add sheets
-  addWorksheet(wb, "expanded")
-  addWorksheet(wb, "uniquely_expanded")
-  addWorksheet(wb, "second_best_result")
-  addWorksheet(wb, "parameters")
-  # add data to sheets
-  writeData(wb, "expanded", results$ref_only)
-  writeData(wb, "uniquely_expanded", results$uniquely_exp)
-  writeData(wb, "second_best_result", results$second_best)
-  writeData(wb, "parameters", results$params)
+  for(i in names(results))
+  {
+    # add sheets
+    addWorksheet(wb, i)
+    # add data to sheets
+    writeData(wb, i, results[[i]])
+  }
   # save the workbook
   saveWorkbook(wb, outputFile, overwrite = TRUE)
 }
