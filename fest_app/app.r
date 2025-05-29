@@ -55,6 +55,7 @@
 # added analysis with replicates
 # increased the default for the number of reads
 # removed the baseline threshold option
+# switched to openxlsx for saving results
 
 #==============================
 # User interface
@@ -594,8 +595,8 @@ server <- function(input, output,session) {
           if (!is.null(resTable))
           {
             # make a numeric table to save in an Excel spreadsheet
-            refCompRes = data.frame(resTable[,2:ncol(resTable)], check.names = F)
-
+          #  refCompRes = data.frame(resTable[,2:ncol(resTable)], check.names = F)
+            refCompRes = resTable
             #=================
             # apply percentage threshold
             if(as.numeric(input$percentThr) > 0)
@@ -616,7 +617,7 @@ server <- function(input, output,session) {
               tablesToXls$ref_comparison_only = data.frame(res = 'There are no significant clones')
 
             }
-            # if there are more clones
+            # if there are clones
             if(nrow(refCompRes) > 0)
               tablesToXls$ref_comparison_only =
                 data.frame(refCompRes,check.names = F)
@@ -646,8 +647,6 @@ server <- function(input, output,session) {
 
         #========
         # save results to xlsx
-        #			tablesToXls$input = data.frame(isolate(reactiveValuesToList(input)))
-#        WriteXLS('tablesToXls', file, SheetNames = names(tablesToXls), row.names = T)
         saveResults(tablesToXls,file)
         output$save_results = renderText('The results are saved')
       }else{

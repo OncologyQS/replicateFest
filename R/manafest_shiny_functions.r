@@ -545,36 +545,20 @@ createPosClonesOutput = function(posClones, mergedData,
 	clones = posClones$clone
 
 	# write clone-level summary
-	if(!is.null(baselineSamp) && !is.null(refSamp))
-	{
-		fc_ref = getFC(clones,mergedData,refSamp, signCond, "")
-		fc_bl = getFC(clones,mergedData,baselineSamp, signCond, "")
-		tab = data.frame(posClones,
-		                 getFreq(clones,mergedData,baselineSamp),
-		                 sapply(clones,
-		                        function(x)
-		                          fc_bl[x,posClones[which(posClones$clone == x),"significant_condition"]]),
-		                 getFreq(clones,mergedData,refSamp),
-		                 sapply(clones,
-		                        function(x)
-		                          fc_ref[x,posClones[which(posClones$clone == x),"significant_condition"]]),
-		                 check.names = F)
-
-		colnames(tab)[c(3,5)] = paste0('FC:', c(baselineSamp,refSamp))
-	} else {
 		if(!is.null(refSamp))
 		{
+		  # calculate FC relative to reference
 		  fc_ref = getFC(clones,mergedData,refSamp, signCond, "")
-			tab = data.frame(condition = posClones$significant_condition,
+			tab = data.frame(posClones,
 				getFreq(clones,mergedData,refSamp),
 				sapply(clones,
 				       function(x)
 				         fc_ref[x,posClones[which(posClones$clone == x),"significant_condition"]]),check.names = F)
 			colnames(tab)[3] = paste0('FC:', refSamp)
 		}else{
-			tab = data.frame(condition = posClones$significant_condition)
+			tab = posClones
 		}
-	}
+
 	output$positive_clones_summary = tab
 
 	# extended information for all samples
@@ -600,13 +584,12 @@ getPerSampleSummary = function(posClones, mergedData)
   # make a list of conditions with positive clones in each condition
   peptLevelList = tapply(posClones[,1],posClones[,2],
                          FUN = function(x)return(x))
-  peptideTab = matrix(nrow = length(peptLevelList), ncol = 2,
-                      dimnames = list(names(peptLevelList),c('n_positive_clones','sum_freq')))
-  peptideTab[,'n_positive_clones'] = sapply(peptLevelList,length)
-  peptideTab[,'sum_freq'] = sapply(names(peptLevelList),
-                                   function(x) sum(freqMatrix[peptLevelList[[x]],x]))
+  peptideTab = data.frame(condition = names(peptLevelList),
+      n_positive_clones = sapply(peptLevelList,length),
+      sum_freq = sapply(names(peptLevelList),
+                          function(x) sum(freqMatrix[peptLevelList[[x]],x])))
 
-  return(data.frame(peptideTab))
+  return(peptideTab)
 }
 #' getFreqThreshold
 # calculate frequency threshold using the number of cells and probability
