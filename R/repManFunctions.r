@@ -606,6 +606,7 @@ saveResults = function(results, outputFile = "output.xlsx")
   library(openxlsx)
   # create a workbook
   wb = createWorkbook()
+
   for(i in names(results))
   {
     # add sheets

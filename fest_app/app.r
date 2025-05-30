@@ -613,27 +613,31 @@ server <- function(input, output,session) {
             #===========================
             # check if there are no clones to save
             if (is.null(refCompRes))
-              tablesToXls$ref_comparison_only = data.frame(res = 'There are no significant clones')
+              tablesToXls$ref_comparison_only =
+                data.frame(res = 'There are no significant clones')
             # if there are clones
             if(nrow(refCompRes) > 0)
               tablesToXls$ref_comparison_only = refCompRes
 
           }else{
-            tablesToXls$ref_comparison_only = data.frame(res = 'There are no significant clones')
+            tablesToXls$ref_comparison_only =
+              data.frame(res = 'There are no significant clones')
           }
         }
         #============
         # add a sheet with parameters
         #============
         s = names(productiveReadCounts)
-         param = c('Reference sample',
+         param = c("Data with replicates",
+                  'Reference sample',
                   'Excluded samples','Compare to reference',
                   'n template threshold','FDR threshold',
                   'OR threshold','percent threshold',
                   'Nucleotide level analysis',
                   'n analyzed samples',
                   paste(s, 'n templates',sep = '_'))
-        value = c(toString(refSamp),
+        value = c(input$replicates,
+                  toString(refSamp),
                   paste(input$excludeSamp, collapse = ', '),
                   input$compareToRef, input$nReads,input$fdrThr,
                   input$orThr, input$percentThr,

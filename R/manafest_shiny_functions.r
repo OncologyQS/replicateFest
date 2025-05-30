@@ -272,8 +272,17 @@ getFreqOrCount = function(clones, mergedData,
 	return(data.frame(output_freq,check.names = F))
 }
 
-# return fold change of frequencies for selected clones and samples
-getFC = function(clones, mergedData, refSamp, samp = names(mergedData), colSuf = 'FC:')
+#' return fold change of frequencies for selected clones and samples
+#' @param clones a vector of clones to calculate FC
+#' @param mergedData a list of clones and
+#' the corresponding read for all samples in the experiment
+#' @param refSamp one sample from mergedData relative to which
+#' the fold change should be calculated
+#' @param samp a vector of sample names for which FC should be calculated
+#' @param colSuf a string to be used at the beginning of columns with FC
+
+getFC = function(clones, mergedData, refSamp,
+                 samp = names(mergedData), colSuf = 'FC:')
 {
   totalReadCountPerSample = sapply(mergedData, sum)
   samp = setdiff(samp,refSamp)
@@ -547,14 +556,22 @@ createPosClonesOutput = function(posClones, mergedData,
 	# write clone-level summary
 		if(!is.null(refSamp))
 		{
-		  # calculate FC relative to reference
-		  fc_ref = getFC(clones,mergedData,refSamp, signCond, "")
-			tab = data.frame(posClones,
-				getFreq(clones,mergedData,refSamp),
-				sapply(clones,
-				       function(x)
-				         fc_ref[x,posClones[which(posClones$clone == x),"significant_condition"]]),check.names = F)
-			colnames(tab)[ncol(tab)] = paste0('FC:', refSamp)
+		  # find replicates of refSamp in merged data
+		  refSamp = grep(refSamp, names(mergedData), value = T)
+      # a table with a per clone information
+		  tab = data.frame(posClones)
+	    # in case of several samples in the reference condition
+	    # iterate through the samples and add FC for every sample
+	    for( i in refSamp)
+	    {
+  		  # calculate FC relative to reference
+  		  fc_ref = getFC(clones,mergedData,i, signCond, "")
+  			tab = data.frame(tab, getFreq(clones,mergedData,i),
+  				sapply(clones,
+  				       function(x)
+  				         fc_ref[x,posClones[which(posClones$clone == x),"significant_condition"]]),check.names = F)
+  			colnames(tab)[ncol(tab)] = paste0('FC:', i)
+	    }
 		}else{
 			tab = posClones
 		}
