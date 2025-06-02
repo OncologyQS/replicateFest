@@ -594,14 +594,14 @@ server <- function(input, output,session) {
                                                 obj,
                                       orThr = as.numeric(input$orThr),
                                       fdrThr = as.numeric(input$fdrThr),
-                                      percentThr = as.numeri(input$percentThr))
+                                      percentThr = as.numeric(input$percentThr))
 
           }else{ # if without replicates
           # create a table with results
             resTable = createResTable(analysisRes,obj,
                                     orThr = as.numeric(input$orThr),
                                     fdrThr = as.numeric(input$fdrThr),
-                                    percentThr = as.numeri(input$percentThr),
+                                    percentThr = as.numeric(input$percentThr),
                                     saveCI = F)
           }
            #===========================
