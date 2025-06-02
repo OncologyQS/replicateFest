@@ -408,7 +408,7 @@ getPositiveClones = function(analysisRes, mergedData,
 	if(is.null(resTable)) return(NULL)
 
 	# find significant expansions in one condition
-	clones = rownames(resTable)[which(resTable[,'significant_comparisons'] == 1)]
+	clones = rownames(resTable)[which(resTable[,'n_significant_comparisons'] == 1)]
 	#================
 	# find condition in which it's expanded
 	signTable = createResTable(analysisRes, mergedData, orThr = orThr,

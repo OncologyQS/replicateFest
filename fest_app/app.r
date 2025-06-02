@@ -582,7 +582,6 @@ server <- function(input, output,session) {
                                               refSamp,
                                               NULL)
         }
-
         #===================
         # add the ref_comparison_only sheet
         #===================
@@ -695,8 +694,11 @@ server <- function(input, output,session) {
         if (length(posClones)>1)
         {
           # create a table with results
-          resTable = createResTable(analysisRes,mergedData, orThr = as.numeric(input$orThr),
-                                    fdrThr = as.numeric(input$fdrThr), saveCI = F)
+          resTable = createResTable(analysisRes,mergedData,
+                                    orThr = as.numeric(input$orThr),
+                                    fdrThr = as.numeric(input$fdrThr),
+                                    percentThr = as.numeric(input$percentThr),
+                                    saveCI = F)
           # make heatmap with all significant clones
           posClones = list(rownames(resTable))
           names(posClones) = 'Positive_clones'
