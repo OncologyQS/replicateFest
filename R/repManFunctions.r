@@ -400,7 +400,7 @@ runExperiment=function(files, peptides, ctThresh=50, control,
                           value = totalReadCountPerSample)
   # the parameters
   params = data.frame(parameter = c("reference","read_threshold",
-                                    "FDR_threshold",
+                                    "fdrThr",
                                     "percent_threshold",
                                     "exclude_conditions",
                                     "cross_reactive_conditions"),
@@ -641,4 +641,119 @@ splitFileName = function(filenames)
   condRep = cbind(file = filenames, condRep)
   rownames(condRep) = NULL
   return(condRep)
+}
+
+#' getPositiveClonesReplicates
+#' returns positive clones for version with replicates
+#' @param analysisRes a data frame with results of analysis
+#' @param mergedData a list of data frames with read counts for each sample
+#' @param control a name of control condition to compare to
+#' @param samp a vector of sample names to include in the analysis
+#' @param excludeCond a vector of conditions to exclude from the analysis
+#' @param orThr a threshold for odds ratio
+#' @param fdrThr a threshold for FDR
+#' @param percentThr a threshold for percentage of reads in a sample to consider a clone expanded
+#' @return a data frame with positive clones, significant condition,
+#' and significant sample
+
+getPositiveClonesReplicates = function(analysisRes,
+                                       mergedData,
+                                       control,
+                                       samp = names(mergedData),
+                                       excludeCond = NA,
+                                       orThr = 1,
+                                       fdrThr = 0.05,
+                                       percentThr = 0)
+{
+  # get all expanded clones relative to the control
+  # find colunms with control to get clones expanded relative to reference
+  contCol = grep(control,colnames(analysisRes), value = T)
+  res_exp = getExpanded(analysisRes[,c("clone",contCol)], mergedData,
+                        ORthr = orThr, FDRthr = fdrThr)
+
+  #=================
+  # keep clones with maximum percentage across
+  # all analyzed samples higher that a specified threshold
+  #=================
+  # grep columns with percentage
+  percCol = grep("percent",colnames(res_exp), value = T)
+  #browser()
+  # exclude columns with excludeCond
+  percCol = percCol[!grepl(paste(excludeCond,collapse = "|"),percCol)]
+  # get clones with maximum percentage higher than specified threshold
+  res_exp_filtered = res_exp[apply(res_exp[,percCol],1,max) >percentThr,]
+
+  #======
+  # find uniquely expanded clones by checking the second best clone
+  # save the second best comparison results
+  # these are the rest of the columns that are not comparison to reference
+  screen_scndBest = analysisRes[rownames(res_exp_filtered),
+                                setdiff(colnames(analysisRes),contCol)]
+  # check for uniqueness. it should be expanded and significant in comparison to the second best as well
+  unique_exp = (screen_scndBest[,grep("OR", colnames(screen_scndBest))]>1 &
+                  screen_scndBest[,grep("FDR", colnames(screen_scndBest))]<fdrThr)
+  # merge the results
+  # add columns that indicates how many and what comparisons were significant
+  # results for the second best comparison
+  # the rest of info
+  sigComCol = c("clone","n_significant_comparisons")
+  res = cbind(res_exp_filtered[unique_exp,sigComCol],
+              significant_comparison = res_exp_filtered[unique_exp,"significant_condition"],
+              res_exp_filtered[unique_exp,setdiff(colnames(res_exp),sigComCol)],
+              screen_scndBest[unique_exp,])
+
+  # extract conditions from the file names
+  sampAnnot = splitFileName(names(mergedData))
+  # extend output by replacing significant_condition with sample names,
+  # so for every clone, there will several replicates instead of one condition
+  resExt = merge(res[,c("clone","significant_comparison")],
+                 sampAnnot[,c("file","condition")],
+                 by.x = "significant_comparison",
+                 by.y = "condition")
+  # fix colnames to match input for createPosClonesOutput
+  colnames(resExt) = c("significant_comparison","clone","significant_condition")
+
+  #=====
+  return(resExt[,c("clone","significant_condition","significant_comparison")])
+}
+
+#' createResTableReplicates
+#' @description Creates a table with significantly expanded clones
+#' relative to the control condition and all corresponding data,
+#' such as OR, FDR, abundances, and percentages
+#' @param res a table with results of analysis
+#' @param mergedData a list of data frames with read counts for each sample
+#' @param orThr a threshold for odds ratio
+#' @param fdrThr a threshold for FDR
+#' @param percentThr a threshold for percentage of reads in a sample to consider a clone expanded
+#' @return a data frame with significant clones and the corresponding
+#'  OR, FDR, counts, and percentages for all conditions
+#' @export
+# write output
+# OR, p-value, FDR, abundance, percent
+createResTableReplicates = function(res,mergedData,
+                          orThr = 1,
+                          fdrThr = 0.05,
+                          percentThr = 0)
+{
+  # calculate the total number of reads for each sample
+  totalReadCountPerSample = sapply(mergedData, sum)
+  # keep clones that are significant in at least one comparison
+  # find columns with OR and FRD
+  orCols = grep("OR:", colnames(res), value = T)
+  fdrCols = grep("FDR:", colnames(res), value = T)
+
+  # a table with significant clones only
+  resSig = res[which(res[,orCols]>= orThr & res[,fdrCols]< fdrThr),]
+
+  if(nrow(resSig)==0){print('There is no significant clones'); return(NULL)}
+  # get abundances and percentages
+  tab = getCountsPercent(resSig$clone, mergedData,
+    samp = names(mergedData))
+  # grep columns with percentage
+  percCol = grep("percent",colnames(tab), value = T)
+  # get clones with maximum percentage higher than specified threshold
+  tab = tab[apply(tab[,percCol],1,max) >percentThr,]
+
+  return(cbind(resSig[rownames(tab),],tab))
 }

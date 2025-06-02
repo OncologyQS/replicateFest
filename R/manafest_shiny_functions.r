@@ -92,7 +92,7 @@ runFisher = function(pair, mergedData,
 #' @param res a table with results of Fisher's test
 #' @param mergedData a list of data frames with read counts for each sample
 #' @param orThr a threshold for odds ratio
-#' @param FDR_threshold a threshold for FDR
+#' @param fdrThr a threshold for FDR
 #' @param saveCI a logical value indicating if confidence intervals should be saved
 #' @param significanceTable a logical value indicating if a table with significant clones should be returned
 #' @return a data frame with significant clones and the corresponding
@@ -100,8 +100,12 @@ runFisher = function(pair, mergedData,
 #' @export
 # write output
 # p-value, OR from fisher test + abundance + frequency
-createResTable = function(res,mergedData, orThr = 1, FDR_threshold = 0.05,
-	saveCI = T, significanceTable = F)
+createResTable = function(res,mergedData,
+                          orThr = 1,
+                          fdrThr = 0.05,
+                          percentThr = 0,
+                          saveCI = T,
+                          significanceTable = F)
 {
   # calculate the total number of reads for each sample
   totalReadCountPerSample = sapply(mergedData, sum)
@@ -112,15 +116,15 @@ createResTable = function(res,mergedData, orThr = 1, FDR_threshold = 0.05,
 	for (i in notNullComp){
 #print(i)
 		clones = union(clones,rownames(res[[i]])[which(as.numeric(res[[i]][,'odds.ratio']) >= orThr &
-			as.numeric(res[[i]][,'CI_low']) > 1 & as.numeric(res[[i]][,'FDR']) < FDR_threshold)])
+			as.numeric(res[[i]][,'CI_low']) > 1 & as.numeric(res[[i]][,'FDR']) < fdrThr)])
 	}
 	if(length(clones)==0){print('There is no significant clones'); return(NULL)}
 	# create output matrices
-	output_counts = output_freq = matrix(0,nrow = length(clones), ncol = length(mergedData))
 	output_fdr = output_OR = output_CI = matrix(nrow = length(clones), ncol = length(res))
-	rownames(output_counts) = rownames(output_freq) = rownames(output_fdr) = rownames(output_OR) = rownames(output_CI) = clones
-	colnames(output_fdr) = colnames(output_OR) = colnames(output_CI) = names(res)
-	colnames(output_counts) = colnames(output_freq) = names(mergedData)
+	colnames(output_fdr) = colnames(output_OR) =
+	  colnames(output_CI) = names(res)
+	rownames(output_fdr) = rownames(output_OR) =
+	  rownames(output_CI) = clones
 	for (i in notNullComp)
 	{
 		rows = intersect(rownames(res[[i]]),rownames(output_fdr))
@@ -128,17 +132,9 @@ createResTable = function(res,mergedData, orThr = 1, FDR_threshold = 0.05,
 		output_OR[rows,i] = round(res[[i]][rows,'odds.ratio'],3)
 		if (saveCI) {output_CI[rows,i] = paste(round(res[[i]][rows,'CI_low'],3),'-',round(res[[i]][rows,'CI_up'],3), sep = '')}
 	}
-	for (i in names(mergedData))
-	{
-		rows = intersect(names(mergedData[[i]]),rownames(output_counts))
-		output_counts[rows,i] = mergedData[[i]][rows]
-		output_freq[rows,i] = round((mergedData[[i]][rows]/totalReadCountPerSample[i])*100,3)
-	}
 	colnames(output_fdr) = paste('FDR:',names(res))
 	colnames(output_OR) = paste('OR:',names(res))
 	colnames(output_CI) = paste('CI95%:',names(res))
-	colnames(output_counts) = paste(names(mergedData),'abundance', sep = '_')
-	colnames(output_freq) = paste(names(mergedData),'percent', sep = '_')
 	if(saveCI) {
 		output_OR_CI = c()
 		for(i in 1:ncol(output_OR))
@@ -147,17 +143,37 @@ createResTable = function(res,mergedData, orThr = 1, FDR_threshold = 0.05,
 		}
 		colnames(output_OR_CI) = paste(rep(c('OR:','CI95%:'),length(res)),rep(names(res),each = 2))
 	}else {output_OR_CI = output_OR}
-	tab = data.frame(clone = clones,output_fdr,
-	                 significant_comparisons = apply((as.numeric(output_fdr) < FDR_threshold & output_OR > orThr),1,sum,na.rm = T),
-		output_OR_CI,output_counts,output_freq, check.names = F)
-	tab = tab[which(tab[,'significant_comparisons'] > 0),]
+	# calculate the number of significant comaprisons
+	significant_comparisons = apply((as.numeric(output_fdr) < fdrThr &
+	                                   output_OR > orThr),1,sum,na.rm = T)
+
+
+	# get abundances and percentages
+	output_counts_percent = getCountsPercent(clones, mergedData,
+	                         samp = names(mergedData))
+	# grep columns with percentage
+	percCol = grep("percent",colnames(output_counts_percent), value = T)
+	# get clones with maximum percentage higher than specified threshold
+	output_counts_percent = output_counts_percent[apply(output_counts_percent[,percCol],1,max) >percentThr,]
+
+	# update clones to output
+	clones = rownames(output_counts_percent)
+
+	outTab = data.frame(clone = clones,
+	                    n_significant_comparisons =significant_comparisons[clones],
+	                    output_fdr[clones,],
+	                    output_OR_CI[clones,],
+	                    output_counts_percent, check.names = F)
+	# remove not significant clones
+	outTab = outTab[which(outTab[,'n_significant_comparisons'] > 0),]
+
 	# if significanceTable return a binary table clones vs conditions specifying which clone is significant in what condition
 	if (significanceTable)
 	{
-		signTab = matrix(as.numeric(output_fdr[rownames(tab),]) < FDR_threshold & output_OR[rownames(tab),] > orThr,
+		signTab = matrix(as.numeric(output_fdr[rownames(tab),]) < fdrThr & output_OR[rownames(tab),] > orThr,
 			nrow = nrow(tab), ncol = length(res), dimnames = list(rownames(tab),names(res)))
 		return(signTab)
-	} else return(tab)
+	} else return(outTab)
 }
 
 
@@ -388,7 +404,7 @@ getPositiveClones = function(analysisRes, mergedData,
 {
   totalReadCounts = sapply(mergedData, sum)
   resTable = createResTable(analysisRes, mergedData, orThr = orThr,
-				FDR_threshold=fdrThr, saveCI =F)
+				fdrThr=fdrThr, saveCI =F)
 	if(is.null(resTable)) return(NULL)
 
 	# find significant expansions in one condition
@@ -396,7 +412,7 @@ getPositiveClones = function(analysisRes, mergedData,
 	#================
 	# find condition in which it's expanded
 	signTable = createResTable(analysisRes, mergedData, orThr = orThr,
-				FDR_threshold=fdrThr, saveCI =F, significanceTable = T)
+				fdrThr=fdrThr, saveCI =F, significanceTable = T)
 #	signTable = data.frame(signTable[clones,])
 	signMatrix = matrix(signTable[clones,],
 			nrow = length(clones),
@@ -778,7 +794,7 @@ runExperimentFisher=function(files,
     # create a table with results
     resTable = createResTable(fisherRes,mergedData,
                               orThr = orThr,
-                              FDR_threshold = fdrThr, saveCI = F)
+                              fdrThr = fdrThr, saveCI = F)
     if (!is.null(resTable))
     {
       # make a numeric table to save in an Excel spreadsheet

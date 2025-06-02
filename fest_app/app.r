@@ -563,7 +563,6 @@ server <- function(input, output,session) {
         refSamp = input$refSamp
         if(input$refSamp == 'None') refSamp = NULL
 
-
         #========================
         # create object with results to write to Excel
         #=======================
@@ -589,46 +588,41 @@ server <- function(input, output,session) {
         #===================
         if(input$compareToRef) #if there is comparison to the ref sample
         {
-          # create a table with results
-          resTable = createResTable(analysisRes,obj, orThr = as.numeric(input$orThr),
-                                    FDR_threshold = as.numeric(input$fdrThr), saveCI = F)
-          if (!is.null(resTable))
+          # if analyzing data with replicate
+          if(input$replicates)
           {
-            # make a numeric table to save in an Excel spreadsheet
-          #  refCompRes = data.frame(resTable[,2:ncol(resTable)], check.names = F)
-            refCompRes = resTable
-            #=================
-            # apply percentage threshold
-            if(as.numeric(input$percentThr) > 0)
-            {
-              # find columns with "percent"
-              percCol = grep("percent",colnames(refCompRes), value = T)
-              # find max percentage for each clone
-              m = apply(refCompRes[,percCol],1,max)
-              # find clones that have percentage above the threshold
-              cl = rownames(refCompRes)[m > input$percentThr]
-              refCompRes = refCompRes[cl,]
+            resTable = createResTableReplicates(analysisRes,
+                                                obj,
+                                      orThr = as.numeric(input$orThr),
+                                      fdrThr = as.numeric(input$fdrThr),
+                                      percentThr = as.numeri(input$percentThr))
 
-            }
-            #===========================
-            # check if there are no clones to save
-            if (is.null(refCompRes))
-              tablesToXls$ref_comparison_only =
-                data.frame(res = 'There are no significant clones')
-            # if there are clones
-            if(nrow(refCompRes) > 0)
-              tablesToXls$ref_comparison_only = refCompRes
-
+          }else{ # if without replicates
+          # create a table with results
+            resTable = createResTable(analysisRes,obj,
+                                    orThr = as.numeric(input$orThr),
+                                    fdrThr = as.numeric(input$fdrThr),
+                                    percentThr = as.numeri(input$percentThr),
+                                    saveCI = F)
+          }
+           #===========================
+           # check if there are no clones to save
+           if (is.null(resTable))
+             tablesToXls$ref_comparison_only =
+               data.frame(res = 'There are no significant clones')
+           # if there are clones
+           if(nrow(resTable) > 0)
+             tablesToXls$ref_comparison_only = resTable
           }else{
             tablesToXls$ref_comparison_only =
               data.frame(res = 'There are no significant clones')
           }
-        }
+
         #============
         # add a sheet with parameters
         #============
         s = names(productiveReadCounts)
-         param = c("Data with replicates",
+        param = c("Data with replicates",
                   'Reference sample',
                   'Excluded samples','Compare to reference',
                   'n template threshold','FDR threshold',
@@ -702,7 +696,7 @@ server <- function(input, output,session) {
         {
           # create a table with results
           resTable = createResTable(analysisRes,mergedData, orThr = as.numeric(input$orThr),
-                                    FDR_threshold = as.numeric(input$fdrThr), saveCI = F)
+                                    fdrThr = as.numeric(input$fdrThr), saveCI = F)
           # make heatmap with all significant clones
           posClones = list(rownames(resTable))
           names(posClones) = 'Positive_clones'
