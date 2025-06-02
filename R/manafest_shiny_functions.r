@@ -107,8 +107,6 @@ createResTable = function(res,mergedData,
                           saveCI = T,
                           significanceTable = F)
 {
-  # calculate the total number of reads for each sample
-  totalReadCountPerSample = sapply(mergedData, sum)
   # get all clones for output
   clones = c()
 	notNullComp = names(res)[!sapply(res,is.null)]
@@ -170,8 +168,9 @@ createResTable = function(res,mergedData,
 	# if significanceTable return a binary table clones vs conditions specifying which clone is significant in what condition
 	if (significanceTable)
 	{
-		signTab = matrix(as.numeric(output_fdr[rownames(tab),]) < fdrThr & output_OR[rownames(tab),] > orThr,
-			nrow = nrow(tab), ncol = length(res), dimnames = list(rownames(tab),names(res)))
+		signTab = matrix(as.numeric(output_fdr[rownames(outTab),]) < fdrThr & output_OR[rownames(outTab),] > orThr,
+			nrow = nrow(outTab), ncol = length(res),
+			dimnames = list(rownames(outTab),names(res)))
 		return(signTab)
 	} else return(outTab)
 }
