@@ -544,11 +544,25 @@ server <- function(input, output,session) {
         posClones = NULL
         if(input$compareToRef) #if there is comparison to the ref sample
         {
-          posClones = getPositiveClones(analysisRes, obj,
+          # if analyzed data with replicate
+          if(input$replicates)
+          {
+            browser()
+            posClones = getPositiveClonesReplicates(analysisRes,
+                                                    obj,
+                                                    control = input$refSamp,
+                                                    samp = sampForAnalysis,
+                                                    excludeCond = input$excludeSamp,
+                                                    orThr = as.numeric(input$orThr),
+                                                    fdrThr = as.numeric(input$fdrThr),
+                                                    percentThr = as.numeric(input$percentThr))
+            }else{ # if analyzed data without replicates
+              posClones = getPositiveClones(analysisRes, obj,
                                         samp = sampForAnalysis,
                                         orThr = as.numeric(input$orThr),
                                         fdrThr = as.numeric(input$fdrThr),
                                         percentThr = as.numeric(input$percentThr))
+            }
         }else{ # if there is no comparison to ref sample
           posClones = getPositiveClonesFromTopConditions(analysisRes,
                                                          orThr = as.numeric(input$orThr),
@@ -590,6 +604,7 @@ server <- function(input, output,session) {
           # if analyzing data with replicate
           if(input$replicates)
           {
+            browser()
             resTable = createResTableReplicates(analysisRes,
                                                 obj,
                                       orThr = as.numeric(input$orThr),
