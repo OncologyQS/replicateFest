@@ -679,9 +679,9 @@ getPositiveClonesReplicates = function(analysisRes,
   percCol = grep("percent",colnames(res_exp), value = T)
   #browser()
   # exclude columns with excludeCond
-  percCol = percCol[!grepl(paste(excludeCond,collapse = "|"),percCol)]
+  if(!is.null(excludeCond)) percCol = percCol[!grepl(paste(excludeCond,collapse = "|"),percCol)]
   # get clones with maximum percentage higher than specified threshold
-  res_exp_filtered = res_exp[apply(res_exp[,percCol],1,max) >percentThr,]
+  res_exp_filtered = res_exp[apply(res_exp[,percCol],1,max) > percentThr,]
 
   #======
   # find uniquely expanded clones by checking the second best clone
