@@ -549,17 +549,17 @@ getFisherForNclone = function(freq, clones, n = 2,mergedData)
 
 #
 # creates output tables to be saved in Excel
-createPosClonesOutput = function(posClones, mergedData,
+createPosClonesOutput = function(posClones,
+                                 mergedData,
                                  refSamp = NULL,
-                                 baselineSamp = NULL)
+                                 replicates = FALSE)
 {
-  totalReadCounts = sapply(mergedData, sum)
   output = vector(mode = 'list')
 
   # get per sample summary of positive clones
   # a table with the number of positive clones per sample
   # and the sum of their frequencies
-	output$condition_summary = getPerSampleSummary(posClones, mergedData)
+	output$condition_summary = getPerSampleSummary(posClones, mergedData, replicates)
 
 	# get significant conditions
 	signCond = unique(posClones$significant_condition)
@@ -601,12 +601,15 @@ createPosClonesOutput = function(posClones, mergedData,
 	return(output)
 }
 
-# function that returns per sample summary of positive clones a table with the
-# number of positive clones per sample and the sum of their frequencies
-# @params posClones a data frame with positive clones in the first column
-# and their conditions to be summarized in the second.
-# In the replication version, these should be samples
-getPerSampleSummary = function(posClones, mergedData)
+#' getPerSampleSummary
+#' returns per sample summary of positive clones a table with the
+#' number of positive clones per sample and the sum of their frequencies
+#' @params posClones a data frame with positive clones in the first column
+#' and their conditions to be summarized in the second.
+#' In the replication version, these should be samples
+#' @params mergedData a list of data frames with read counts for each sample
+#' @params replicates a logical value indicating if there are replicates
+getPerSampleSummary = function(posClones, mergedData, replicates = FALSE)
 {
   clones = unique(posClones[,1])
   # write peptide summary of positive clones
@@ -620,6 +623,21 @@ getPerSampleSummary = function(posClones, mergedData)
       n_positive_clones = sapply(peptLevelList,length),
       sum_freq = sapply(names(peptLevelList),
                           function(x) sum(freqMatrix[peptLevelList[[x]],x])))
+  # if there are replicates, further summarize frequency by conditions
+  if (replicates)
+  {
+ #   browser()
+    # extract conditions from the file names
+    sampAnnot = splitFileName(names(mergedData))
+    # add peptide name to peptideTab to be able to summarize by it
+    tab = merge(sampAnnot[,c("file","condition")],peptideTab,
+                by.y = "condition", by.x = "file")
+    # summarize
+    tab = tab %>% group_by(condition, n_positive_clones) %>%
+      summarise(sum_freq = sum(sum_freq))
+    # convert to data.frame
+    peptideTab = as.data.frame(tab)
+  }
 
   return(peptideTab)
 }

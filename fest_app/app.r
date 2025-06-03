@@ -547,7 +547,6 @@ server <- function(input, output,session) {
           # if analyzed data with replicate
           if(input$replicates)
           {
-            browser()
             posClones = getPositiveClonesReplicates(analysisRes,
                                                     obj,
                                                     control = input$refSamp,
@@ -594,7 +593,7 @@ server <- function(input, output,session) {
           tablesToXls = createPosClonesOutput(posClones,
                                               obj,
                                               refSamp,
-                                              NULL)
+                                              replicates = input$replicates)
         }
         #===================
         # add the ref_comparison_only sheet
@@ -604,7 +603,6 @@ server <- function(input, output,session) {
           # if analyzing data with replicate
           if(input$replicates)
           {
-            browser()
             resTable = createResTableReplicates(analysisRes,
                                                 obj,
                                       orThr = as.numeric(input$orThr),
