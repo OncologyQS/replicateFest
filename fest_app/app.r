@@ -239,6 +239,9 @@ server <- function(input, output,session) {
   if (!require(replicateFest)) devtools::install_github("OncologyQS/replicateFest")
   library(replicateFest)
 
+#  source("R/manafest_shiny_functions.r")
+#  source("R/repManFunctions.r")
+
   #===================
   # read input files
   observeEvent(input$sourceFiles,{
@@ -544,9 +547,11 @@ server <- function(input, output,session) {
         posClones = NULL
         if(input$compareToRef) #if there is comparison to the ref sample
         {
-          # if analyzed data with replicate
+
+         # if analyzed data with replicate
           if(input$replicates)
           {
+browser()
             posClones = getPositiveClonesReplicates(analysisRes,
                                                     obj,
                                                     control = input$refSamp,
@@ -581,14 +586,15 @@ server <- function(input, output,session) {
         #=======================
         tablesToXls = vector(mode = 'list')
         # if there is no positive clones
-        if (length(posClones)==0)
+        if (nrows(posClones)==0)
         {
           output$save_results = renderText('There are no positive clones. Try to adjust thresholds')
           # add a sheet to the output with significant clones comparing to reference
           #clones = rownames(resTable)[which(resTable[,'significant_comparisons'] == 1)]
           tablesToXls$summary = data.frame('There are no positive clones', row.names = NULL, check.names = F)
         }else{
-          # if there are positive clones, save them in to Excel file
+ browser()
+           # if there are positive clones, save them in to Excel file
           # create table with results
           tablesToXls = createPosClonesOutput(posClones,
                                               obj,

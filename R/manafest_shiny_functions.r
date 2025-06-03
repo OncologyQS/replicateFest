@@ -611,6 +611,7 @@ createPosClonesOutput = function(posClones,
 #' @params replicates a logical value indicating if there are replicates
 getPerSampleSummary = function(posClones, mergedData, replicates = FALSE)
 {
+  library(dplyr)
   clones = unique(posClones[,1])
   # write peptide summary of positive clones
   # get frequencies of positive clones across all samples
@@ -626,15 +627,13 @@ getPerSampleSummary = function(posClones, mergedData, replicates = FALSE)
   # if there are replicates, further summarize frequency by conditions
   if (replicates)
   {
- #   browser()
     # extract conditions from the file names
     sampAnnot = splitFileName(names(mergedData))
     # add peptide name to peptideTab to be able to summarize by it
     tab = merge(sampAnnot[,c("file","condition")],peptideTab,
                 by.y = "condition", by.x = "file")
     # summarize
-    tab = tab %>% group_by(condition, n_positive_clones) %>%
-      summarise(sum_freq = sum(sum_freq))
+    tab = tab %>% group_by(condition, n_positive_clones) %>% summarise(sum_freq = sum(sum_freq))
     # convert to data.frame
     peptideTab = as.data.frame(tab)
   }
