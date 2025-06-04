@@ -445,13 +445,10 @@ getAbundances = function(clones,countData)
 }
 
 #' @title getClonesToTest
-#' @description function that returns the read counts for clones of interest in all samples
+#' @description function that returns clones of interest in all samples
 #' @param countDat a list of merged data
 #' @param ctThresh a minimal number of reads required to consider a clone
 #' @return a vector of clones of interest
-# function that returns the read counts for clones of interest in all samples
-# input: a list of merged data, a vector of clones of interest
-# all clones from all samples
 getClonesToTest = function(countDat, ctThresh = 50)
 {
   # all clones
@@ -459,10 +456,10 @@ getClonesToTest = function(countDat, ctThresh = 50)
   # the corresponding counts
   cts=unlist(sapply(countDat,function(x)  return(x)))
   #
-  sumCt=tapply(cts,clones,sum)
+  maxCt=tapply(cts,clones,max)
 
   # clones that have more than ctThresh reads to run the analysis
-  goodClones=names(sumCt)[which(sumCt>ctThresh)]
+  goodClones=names(maxCt)[which(maxCt>ctThresh)]
 
   return(goodClones)
 }

@@ -497,6 +497,7 @@ server <- function(input, output,session) {
 
             # get clones to test
             clonesToTest = getClonesToTest(obj, ctThresh = input$nReads)
+      browser()
             # check if there are enought clones to analyze
             if (length(clonesToTest)<1)
             {
@@ -551,7 +552,7 @@ server <- function(input, output,session) {
          # if analyzed data with replicate
           if(input$replicates)
           {
-browser()
+##browser()
             posClones = getPositiveClonesReplicates(analysisRes,
                                                     obj,
                                                     control = input$refSamp,
@@ -586,19 +587,18 @@ browser()
         #=======================
         tablesToXls = vector(mode = 'list')
         # if there is no positive clones
-        if (nrows(posClones)==0)
+        if (nrow(posClones)==0)
         {
           output$save_results = renderText('There are no positive clones. Try to adjust thresholds')
           # add a sheet to the output with significant clones comparing to reference
           #clones = rownames(resTable)[which(resTable[,'significant_comparisons'] == 1)]
           tablesToXls$summary = data.frame('There are no positive clones', row.names = NULL, check.names = F)
         }else{
- browser()
-           # if there are positive clones, save them in to Excel file
+          # if there are positive clones, save them in to Excel file
           # create table with results
           tablesToXls = createPosClonesOutput(posClones,
                                               obj,
-                                              refSamp,
+                                              input$refSamp,
                                               replicates = input$replicates)
         }
         #===================
