@@ -559,13 +559,13 @@ createPosClonesOutput = function(posClones,
   # get per sample summary of positive clones
   # a table with the number of positive clones per sample
   # and the sum of their frequencies
-	output$condition_summary = getPerSampleSummary(posClones, mergedData, replicates)
+	output$condition_summary = getPerSampleSummary(posClones,
+	                                               mergedData,
+	                                               replicates)
 
 	# get significant conditions
 	signCond = unique(posClones$significant_condition)
 
-	# remove duplicated clones
-	posClones = posClones[which(!duplicated(posClones$clone)),]
 	clones = posClones$clone
 
 	# write clone-level summary
@@ -580,11 +580,11 @@ createPosClonesOutput = function(posClones,
 	    for( i in refSamp)
 	    {
   		  # calculate FC relative to reference
-  		  fc_ref = getFC(clones,mergedData,i, signCond, "")
+  		  fc_ref = getFC(unique(clones),mergedData,i, signCond, "")
   			tab = data.frame(tab, getFreq(clones,mergedData,i),
-  				sapply(clones,
-  				       function(x)
-  				         fc_ref[x,posClones[which(posClones$clone == x),"significant_condition"]]),check.names = F)
+  				sapply(1:nrow(posClones),
+  				       function(j)
+  				         fc_ref[posClones[j,"clone"],posClones[j,"significant_condition"]]),check.names = F)
   			colnames(tab)[ncol(tab)] = paste0('FC:', i)
 	    }
 		}else{
@@ -593,11 +593,20 @@ createPosClonesOutput = function(posClones,
 
 	output$positive_clones_summary = tab
 
-	# extended information for all samples
+	# extended information per clone for all samples
+	# if data is with replicates, remove duplications in clones and
+	# keep only significant comparison, not sample
+	if (replicates)
+	{
+	  posClones = posClones[which(!duplicated(posClones$clone)),c("clone","significant_comparison")]
+	}
 	# add per sample percentage
-	tab = getCountsPercent(clones, mergedData, samp = names(mergedData))
+	tab = getCountsPercent(posClones$clone, mergedData)
 #browser()
-	output$positive_clones_all_data = data.frame(posClones,tab,check.names = F)
+
+  output$positive_clones_all_data = data.frame(posClones,
+                                               tab,
+                                               check.names = F)
 	return(output)
 }
 
