@@ -89,6 +89,7 @@ t = "02242020"
 patSamples = sampAnnot %>% filter(Patient ==p)
 timeSamples = patSamples %>% filter(Time == t)
 
+#=========================
 # run one clone in a patient and time point
 # read in data
 mergedData=readMergeSave(timeSamples$path, filenames = NULL)$mergedData
@@ -99,12 +100,12 @@ clone1 = "CASSFGRGAEKLFF"
 fitModel(clone1,mergedData,
          peptides = timeSamples$Condition,control="DMSO",
          c.corr=1)
-
+#====================
 # run all clones in a patient and time point and return the results
 res = runExperiment(timeSamples$path,
                         peptides = timeSamples$Condition,
                         cont= "DMSO",
-                        FDRthr = 0.05,
+                        fdrThr = 0.05,
                         xrCond = c("Gag","HIV08","HIV10","HIV12"),
                         saveToFile = F)
 

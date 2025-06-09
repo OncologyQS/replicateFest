@@ -283,10 +283,10 @@ fitModel = function(clone,countData,peptides,control,
 #' The results are return and saved in an Excel file.
 #' @param files a list of filenames with full paths
 #' @param peptides a vector of peptides corresponding to columns in merged data
-#' @param ctThresh minimal number of reads required to consider a clone
+#' @param nReads minimal number of reads required to consider a clone
 #' @param control name of control/reference condition
-#' @param ORthr threshold for OR to consider a clone expanded
-#' @param FDRthr threshold for FDR to consider a clone expanded
+#' @param orThr threshold for OR to consider a clone expanded
+#' @param fdrThr threshold for FDR to consider a clone expanded
 #' @param excludeCond a vector of conditions to exclude from the analysis
 #' @param xrCond a vector of cross-reactive conditions
 #' @param percentThr a threshold for percentage of reads in a sample to consider a clone expanded
@@ -312,111 +312,113 @@ fitModel = function(clone,countData,peptides,control,
 
 #### 2025-01-29 added comparison to the second best to find unique expansions
 
-runExperiment=function(files, peptides, ctThresh=50, control,
-                       ORthr=1, FDRthr = 0.05, excludeCond = NA,
+runExperiment=function(files, peptides, nReads=50, control,
+                       orThr=1, fdrThr = 0.05, excludeCond = NA,
                        xrCond = NA, percentThr = 0,
                        outputFile = "output.xlsx",
-                       saveToFile = T, permute = FALSE){
-
+                       saveToFile = T, permute = FALSE)
+{
 
   #### start algorithm read data
-  mergeDat=readMergeSave(files, filenames = NULL)$mergedData
+  mergeData=readMergeSave(files, filenames = NULL)$mergedData
 
-  # permute sample labels in mergeDat to run permutation test
+  # permute sample labels in mergeData to run permutation test
   if (permute){
     set.seed(123456)
     # create sampling
-    s = sample(1:length(mergeDat),size = length(mergeDat), replace = F)
+    s = sample(1:length(mergeData),size = length(mergeData), replace = F)
     # update sample names
-    names(mergeDat) = names(mergeDat)[s]
+    names(mergeData) = names(mergeData)[s]
     # update peptides
     peptides = peptides[s]
   }
 
   # get clones to test
-  goodClones = getClonesToTest(mergeDat, ctThresh = ctThresh)
+  goodClones = getClonesToTest(mergeData, nReads = nReads)
   print(c("good clones #",length(goodClones)))
 
+  if(length(goodClones) == 0)
+  {
+    print("There are not clones to analyze. Try to reduce the number of tempaltes.")
+    return(NULL)
+  }
+
   # run the analysis for selected clones
-  fitResults = fitModelSet(goodClones, mergeDat, peptides,
-                       excludeCond = excludeCond,
-                       control=control,c.corr=1)
+  fitResults = fitModelSet(goodClones,
+                           mergeData,
+                           peptides,
+                           excludeCond = excludeCond,
+                           control=control,c.corr=1)
   rownames(fitResults) = fitResults$clone
 
-#browser()
-  # get all expanded clones relative to the control
-  # find colunms with control
-  contCol = grep(control,colnames(fitResults), value = T)
-  res_exp = getExpanded(fitResults[,c("clone",contCol)], mergeDat,
-                        ORthr = ORthr, FDRthr = FDRthr)
 
-  #=================
-  # keep clones with maximum percentage across
-  # all analyzed samples higher that a specified threshold
-  #=================
-  # grep columns with percentage
-  percCol = grep("percent",colnames(res_exp), value = T)
-  #browser()
-  # exclude columns with excludeCond
-  percCol = percCol[!grepl(paste(excludeCond,collapse = "|"),percCol)]
-  # get clones with maximum percentage higher than specified threshold
-  res_exp05 = res_exp[apply(res_exp[,percCol],1,max) >percentThr,]
-
-   #======
-  # find uniquely expanded clones by checking the second best clone
-  # save the second best comparison results
-  screen_scndBest = fitResults[rownames(res_exp05),
-                               setdiff(colnames(fitResults),contCol)]
-  # check for uniqueness. it should be expanded and significant in comparison to the second best as well
-  unique_exp = (screen_scndBest[,grep("OR", colnames(screen_scndBest))]>1 &
-    screen_scndBest[,grep("FDR", colnames(screen_scndBest))]<FDRthr)
-  # merge the results
-  # add columns that indicates how many and what comparisons were significant
-  # get T/F matrix for uniqueness comparisons
-  # results for the second best comparison
-  # the rest of info
-  sigComCol = c("clone","n_significant_comparisons","significant_condition")
-  screen_scndBest = cbind(res_exp05[,sigComCol],
-                          unique_exp,
-                          res_exp05[,setdiff(colnames(res_exp),sigComCol)],
-                          screen_scndBest)
-
-
-  # get clones expanded in one condiiton comparing to the control
-   res_uniq = res_exp05 %>% filter(n_significant_comparisons == 1)
- #=====
-  # find cross-reactive clones
-  if(length(xrCond)>0)
+  # get positive (uniquely expanded) clones
+  posClones = getPositiveClonesReplicates(fitResults,
+                                          mergeData,
+                                          control = control,
+                                          excludeCond = excludeCond,
+                                          orThr = orThr,
+                                          fdrThr = fdrThr,
+                                          percentThr = percentThr)
+  tablesToXls = list()
+  # if there is no positive clones
+  if (nrow(posClones)==0)
   {
-    res_xr = getXR(res_exp05, peptides, xrCond = xrCond)
-    res_uniq = rbind(res_uniq,res_xr)
-  }
-  #=====
-  # get parameters of the run
-  # total reads for each sample
-  # get total read count for each sample
-  totalReadCountPerSample = sapply(mergeDat, sum)
-  totalReads = data.frame(parameter = paste(names(totalReadCountPerSample), "total_reads", sep = "_"),
-                          value = totalReadCountPerSample)
-  # the parameters
-  params = data.frame(parameter = c("reference","read_threshold",
-                                    "fdrThr",
-                                    "percent_threshold",
-                                    "exclude_conditions",
-                                    "cross_reactive_conditions"),
-                      value = c(control,ctThresh,FDRthr,percentThr,
-                                paste(excludeCond,collapse = ","),
-                                paste(xrCond,collapse = ",")))
+    print('There are no positive clones. Try to adjust thresholds')
+    tablesToXls$summary = data.frame('There are no positive clones', row.names = NULL, check.names = F)
+  }else{
+    # if there are positive clones, save them in to Excel file
+  # create table with results
+  tablesToXls = createPosClonesOutput(posClones,
+                                      mergeData,
+                                      control,
+                                      replicates = TRUE)
 
-  output = list(ref_only = res_exp,
-                uniquely_exp = res_uniq,
-                second_best = screen_scndBest,
-                params = rbind(params,totalReads))
+  }
+
+  resTable = createResTableReplicates(fitResults,
+                                      mergeData,
+                                      orThr,
+                                      fdrThr,
+                                      percentThr)
+  # if there are clones
+  if(nrow(resTable) > 0)
+  {
+    tablesToXls$ref_comparison_only = resTable
+  }else{
+    tablesToXls$ref_comparison_only =
+      data.frame(res = 'There are no significant clones')
+  }
+  s = names(mergeData)
+  productiveReadCounts = sapply(mergedData, sum)
+  param = c("Data with replicates",
+            'Reference sample',
+            'Excluded samples','Compare to reference',
+            'n template threshold','FDR threshold',
+            'OR threshold','percent threshold',
+            'Nucleotide level analysis',
+            'n samples',
+            paste(s, 'n templates',sep = '_'))
+  value = c(TRUE,
+            control,
+            paste(excludeCond, collapse = ', '),
+            TRUE,
+            nReads,
+            fdrThr,
+            orThr,
+            percentThr,
+            FALSE,
+            length(s), productiveReadCounts[s])
+
+  tablesToXls$parameters = data.frame(param, value)
+
+
+
   # save into Excel file
   if(saveToFile)
   {
-    saveResults(output, outputFile = outputFile)
-  } else return(output)
+    saveResults(tablesToXls, outputFile = outputFile)
+  } else return(tablesToXls)
 }
 
 #' @export
@@ -447,9 +449,9 @@ getAbundances = function(clones,countData)
 #' @title getClonesToTest
 #' @description function that returns clones of interest in all samples
 #' @param countDat a list of merged data
-#' @param ctThresh a minimal number of reads required to consider a clone
+#' @param nReads a minimal number of reads required to consider a clone
 #' @return a vector of clones of interest
-getClonesToTest = function(countDat, ctThresh = 50)
+getClonesToTest = function(countDat, nReads = 50)
 {
   # all clones
   clones=unlist(sapply(countDat,function(x)  return(names(x))))
@@ -458,8 +460,8 @@ getClonesToTest = function(countDat, ctThresh = 50)
   #
   maxCt=tapply(cts,clones,max)
 
-  # clones that have more than ctThresh reads to run the analysis
-  goodClones=names(maxCt)[which(maxCt>ctThresh)]
+  # clones that have more than nReads reads to run the analysis
+  goodClones=names(maxCt)[which(maxCt>nReads)]
 
   return(goodClones)
 }
@@ -515,13 +517,13 @@ fitModelSet = function(clones, countData, peptides, excludeCond = NA,...)
 #' function that returns the expanded clones
 #' @param fitResults a data frame with ORs, p-values and FDRs
 #' @param countData a list of counts for all samples
-#' @param ORthr threshold for OR to consider a clone expanded
-#' @param FDRthr threshold for FDR to consider a clone expanded
+#' @param orThr threshold for OR to consider a clone expanded
+#' @param fdrThr threshold for FDR to consider a clone expanded
 #' @return a data frame with expanded clones
 #'
 # input: a data frame with ORs, p-values and FDRs
 # output: a data frame with expanded clones
-getExpanded = function(fitResults, countData, ORthr = 1, FDRthr = 0.05)
+getExpanded = function(fitResults, countData, orThr = 1, fdrThr = 0.05)
 {
   # find all significantly expanded clones
   # find comparison names
@@ -532,15 +534,15 @@ getExpanded = function(fitResults, countData, ORthr = 1, FDRthr = 0.05)
   for (i in comp){
     #print(i)
     expandedClones = union(expandedClones,
-                           rownames(fitResults)[which(as.numeric(fitResults[,paste0("OR: ",i)]) >= ORthr & # expanded
-                                                    as.numeric(fitResults[,paste0("FDR: ",i)]) < FDRthr)])# significant
+                           rownames(fitResults)[which(as.numeric(fitResults[,paste0("OR: ",i)]) >= orThr & # expanded
+                                                    as.numeric(fitResults[,paste0("FDR: ",i)]) < fdrThr)])# significant
   }
   # get the results for expanded clones only
   res_exp = fitResults[expandedClones,]
   # add columns that indicates how many and what comparisons were significant
   # get T/F matrix for significant comparisons
-  sig = (res_exp[,paste0("FDR: ",comp)] < FDRthr &
-           res_exp[,paste0("OR: ",comp)] > ORthr)
+  sig = (res_exp[,paste0("FDR: ",comp)] < fdrThr &
+           res_exp[,paste0("OR: ",comp)] > orThr)
  # browser()
   # list significant comparisons
   sigComp = apply(sig, 1, function(x){
@@ -615,6 +617,7 @@ saveResults = function(results, outputFile = "output.xlsx")
   saveWorkbook(wb, outputFile, overwrite = TRUE)
 }
 
+#' splitFileName
 #' function that extracts condition and replicate information
 #' from the file names. The condition and replicate should
 #' be separated by "_" and be the last two elements.
@@ -666,7 +669,7 @@ getPositiveClonesReplicates = function(analysisRes,
   # find colunms with control to get clones expanded relative to reference
   contCol = grep(control,colnames(analysisRes), value = T)
   res_exp = getExpanded(analysisRes[,c("clone",contCol)], mergedData,
-                        ORthr = orThr, FDRthr = fdrThr)
+                        orThr = orThr, fdrThr = fdrThr)
 
   #=================
   # keep clones with maximum percentage across

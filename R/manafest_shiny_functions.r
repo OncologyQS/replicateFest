@@ -809,8 +809,7 @@ runExperimentFisher=function(files,
 
   # create  output
   tablesToXls = createPosClonesOutput(posClones, mergedData,
-                                      refSamp,
-                                      baselineSamp)
+                                      refSamp)
   #===================
   # add the ref_comparison_only sheet
   #===================
@@ -849,7 +848,7 @@ runExperimentFisher=function(files,
             paste(excludeSamp, collapse = ', '),
             compareToRef, nReads,fdrThr,
             orThr, percentThr,
-            nuctleotideFlag,
+            FALSE,
             length(s), productiveReadCounts[s])
 
   tablesToXls$parameters = data.frame(param, value)

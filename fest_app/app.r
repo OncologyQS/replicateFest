@@ -513,12 +513,12 @@ server <- function(input, output,session) {
         output$message_analysis = renderText('Analysis is done. Click Download Results to save the results')
         assign('analysisRes',analysisRes, envir = .GlobalEnv)
     }	else{
-        output$message_analysis = renderText('There are no clones to analyze. Try to reduce confidence or the number of templates 1')
+        output$message_analysis = renderText('There are no clones to analyze. Try to reduce the number of templates')
     }
 
 
     } else{
-      output$message_analysis = renderText('There are no data to analyze. Please load files 2')
+      output$message_analysis = renderText('There are no data to analyze. Please load files')
     }
   })
 

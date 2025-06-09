@@ -7,13 +7,33 @@
 # load package
 devtools::install_github("OncologyQS/replicateFest")
 library(replicateFest)
-library(WriteXLS)
 
-source("R/manafest_shiny_functions.r")
 
 #================================================================
 # usage of replicateFest on experimental data without replicates
-#================================================================
+#================================================================#========================
+# specify a folder with an input data
+inputDir = "/Data"
+# list paths to files with data
+files = list.files(inputDir, full.names = T, pattern = "txt")
+# specify sample names that should be excluded from analysis
+exSamp = ""
+# run analysis and save results
+runExperimentFisher(files,
+                    refSamp = "FW1525_NoPep",
+                    nReads = 50,
+                    fdrThr = .05,
+                    orThr = 5,
+                    percentThr = 0,
+                    excludeSamp = exSamp,
+                    compareToRef = TRUE,
+                    outputFile = "output.xlsx",
+                    saveToFile = T)
+
+
+#==============================
+# step by step analysis of previously saved data
+#==============================
 # load previously saved data
 load("no_replicates_inputData.rda")
 
@@ -21,7 +41,6 @@ load("no_replicates_inputData.rda")
 input = list()
 input$excludeSamp = ''
 input$refSamp = "FW1525_NoPep"
-input$baselineSamp = NULL
 
 input$nReads = 50
 input$fdrThr = .05
@@ -30,8 +49,7 @@ input$percentThr = 0
 
 # specify samples to analyze
 sampForAnalysis = setdiff(names(mergedData),
-                          c(input$excludeSamp,input$refSamp,
-                            input$baselineSamp))
+                          c(input$excludeSamp,input$refSamp))
 #============================================
 # run the analysis with reference
 # create comparing pairs (to refSamp)
@@ -60,44 +78,14 @@ fisherRes = compareWithOtherTopConditions(mergedData,
 
 posClones = getPositiveClonesFromTopConditions(fisherRes,
                                                orThr = as.numeric(input$orThr),
-                                         fdrThr=as.numeric(input$fdrThr),
-                                         percentThr = as.numeric(input$percentThr),
-                                         mergedData, samp = sampForAnalysis)
+                                               fdrThr=as.numeric(input$fdrThr),
+                                               percentThr = as.numeric(input$percentThr),
+                                               mergedData, samp = sampForAnalysis)
 
 
 #==============
 # create and save output
-tablesToXls1 = createPosClonesOutput(posClones, mergedData,
-                                    input$refSamp,
-                                    input$baselineSamp, addDiff = F)
+tablesToXls = createPosClonesOutput(posClones, mergedData,
+                                    input$refSamp)
 
-WriteXLS('tablesToXls1', 'results_without_ref.xlsx',
-         SheetNames = names(tablesToXls), row.names = T)
-
-
-#========================
-# write a function to run the Fisher's test as part of package
-#========================
-source("R/manafest_shiny_functions.r")
-#========================
-# function debug
-inputDir = "C:/Users/Luda/OneDrive - Johns Hopkins/JHU/Manafest/20241009_v10_1_debug_for_Eleni/Data"
-files = list.files(inputDir, full.names = T, pattern = "txt")
-exSamp = c("FW1525_HIV","FW1525_FFPE_cancer_3417A",
-           "FW1525_CEF","FW1525_Baseline_1",
-           "FW1525_RL2807_FFPE_skin")
-runExperimentFisher(files[15:27],
-                    refSamp = "FW1525_NoPep",
-                    baselineSamp = NULL,
-                    ignoreBaseline = TRUE,
-                    nCells = 100000,
-                    prob = .99,
-                    nReads = 50,
-                    fdrThr = .05,
-                    orThr = 5,
-                    percentThr = 0,
-                    excludeSamp = exSamp,
-                    compareToRef = TRUE,
-                    outputFile = "output.xlsx",
-                    saveToFile = T)
-
+saveResults(tablesToXls,"analysisResults.xlsx")
