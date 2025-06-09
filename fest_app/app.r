@@ -51,11 +51,12 @@
 # added all functions to the replicateFest package
 
 # 2025-05-06 (v15)
-# split analysis and save the results to the different tabs
+# made load data, run analysis, and save the results to the different tabs
 # added analysis with replicates
 # increased the default for the number of reads
-# removed the baseline threshold option
+# removed the baseline option
 # switched to openxlsx for saving results
+# made a list with analysis results and parameters that were used for the analysis
 
 #==============================
 # User interface
@@ -99,86 +100,84 @@ ui <- fluidPage(
                 <b>User's manual</b> tab"))
   ),
 
-# layout with tabs
-tabsetPanel(
-  #============================
-  # tab for loading the data
-  tabPanel("Load data",
-           sidebarLayout(
-             # the left side panel
-             sidebarPanel(
-               # select the format of input files
-               selectInput('inputFiles', 'Select an input format',
-                           choices = c('FEST files','an R object with data'),
-                           selected = NULL, multiple = FALSE,selectize = TRUE,
-                           width = NULL, size = NULL),
+  # layout with tabs
+  tabsetPanel(
+    #============================
+    # tab for loading the data
+    tabPanel("Load data",
+             sidebarLayout(
+               # the left side panel
+               sidebarPanel(
+                 # select the format of input files
+                 selectInput('inputFiles', 'Select an input format',
+                             choices = c('FEST files','an R object with data'),
+                             selected = NULL, multiple = FALSE,selectize = TRUE,
+                             width = NULL, size = NULL),
 
-               # if a previously saved R object with the input data will be uploaded
-               conditionalPanel(
-                 condition = "input.inputFiles == 'an R object with data'",
-                 fileInput('inputObj', 'Upload an R object with data (.rda)',
-                           multiple = FALSE,
-                           accept=c('rda', '.rda'))
-               ),
-               # show the fileInput control depending on the selected values of inputFiles
-               # if files with raw data will be uploaded
-               conditionalPanel(
-                 condition = "input.inputFiles == 'FEST files'",
-                 fileInput('sourceFiles', 'Upload FEST files (.tsv)',
-                           multiple = TRUE,
-                           accept=c('text/tsv', 'text/comma-separated-values,text/plain', '.tsv')),
-                 downloadButton('saveInputObj', 'Save Input Object')
-               ), # end conditionalPanel
-            ), # end sidebarPanel
+                 # if a previously saved R object with the input data will be uploaded
+                 conditionalPanel(
+                   condition = "input.inputFiles == 'an R object with data'",
+                   fileInput('inputObj', 'Upload an R object with data (.rda)',
+                             multiple = FALSE,
+                             accept=c('rda', '.rda'))
+                 ),
+                 # show the fileInput control depending on the selected values of inputFiles
+                 # if files with raw data will be uploaded
+                 conditionalPanel(
+                   condition = "input.inputFiles == 'FEST files'",
+                   fileInput('sourceFiles', 'Upload FEST files (.tsv)',
+                             multiple = TRUE,
+                             accept=c('text/tsv', 'text/comma-separated-values,text/plain', '.tsv')),
+                   downloadButton('saveInputObj', 'Save Input Object')
+                 ), # end conditionalPanel
+              ), # end sidebarPanel
 
-            # the main panel
-            mainPanel(
-              htmlOutput("message_load")
-            )
+              # the main panel
+              mainPanel(
+                htmlOutput("message_load")
+              )
 
-        ) # end sidebarLayout
-  ), # end tabPanel with loading data
+          ) # end sidebarLayout
+    ), # end tabPanel with loading data
 
-  #==============================
-  # tab for analysis
-  #==============================
-	tabPanel("Run analysis",
-	# headerPanel("FEST data analysis"),
-	 sidebarLayout(
-	   # the left side panel
-		sidebarPanel(
-		  # check box that specifies the input data format
-  		checkboxInput('replicates','The input with replicates',
-  		              value = FALSE),
+    #==============================
+    # tab for analysis
+    #==============================
+  	tabPanel("Run analysis",
+  	 sidebarLayout(
+  	   # the left side panel
+  		sidebarPanel(
+  		  # check box that specifies the input data format
+    		checkboxInput('replicates','The input with replicates',
+    		              value = FALSE),
 
-  		# check box that controls the type of analysis - if the comparison with a reference should be performed or not
-  		shinyjs::useShinyjs(),
-  		checkboxInput('compareToRef','Compare to reference', value = TRUE),
+    		# check box that controls the type of analysis - if the comparison with a reference should be performed or not
+    		shinyjs::useShinyjs(),
+    		checkboxInput('compareToRef','Compare to reference', value = TRUE),
 
-  		  		# specify if analysis should be performed on nucleotide level data
-  		checkboxInput('nuctleotideFlag','Use nucleotide level data'),
+    		  		# specify if analysis should be performed on nucleotide level data
+    		checkboxInput('nuctleotideFlag','Use nucleotide level data'),
 
-    	# drop down menu to select a reference
-  		selectInput('refSamp', 'Select a reference', choices = list('None'), selected = NULL, multiple = FALSE,
-  			selectize = TRUE, width = NULL, size = NULL),
-
-
-  		selectInput('excludeSamp', 'Select conditions to exclude', choices = list('None'), selected = NULL, multiple = TRUE,
-  			selectize = TRUE, width = NULL, size = NULL),
-  		textInput('nReads', 'Specify the minimal number of templates (increase in case of large files)',
-  		          value = "50", width = NULL, placeholder = NULL),
-
- 		actionButton('runAnalysis', 'Run Analysis', width = '60%'),
-
-		),
+      	# drop down menu to select a reference
+    		selectInput('refSamp', 'Select a reference', choices = list('None'), selected = NULL, multiple = FALSE,
+    			selectize = TRUE, width = NULL, size = NULL),
 
 
-		# the main panel
-		mainPanel(
-		 # textOutput('contents'),
-		  htmlOutput("message_analysis")
-		)
-	 )
+    		selectInput('excludeSamp', 'Select conditions to exclude', choices = list('None'), selected = NULL, multiple = TRUE,
+    			selectize = TRUE, width = NULL, size = NULL),
+    		textInput('nReads', 'Specify the minimal number of templates (increase in case of large files)',
+    		          value = "50", width = NULL, placeholder = NULL),
+
+   		  actionButton('runAnalysis', 'Run Analysis', width = '60%'),
+
+  		),
+
+  		# the main panel
+  	  mainPanel(
+  		 # textOutput('contents'),
+  		  htmlOutput("message_analysis")
+  		)
+  	 )
 	 ),# end tabPanel Analysis
 
     #=============================
@@ -205,7 +204,7 @@ tabsetPanel(
            )
 
          ) # end sidebarLayout
-), # end tabPanel with saving data
+    ), # end tabPanel with saving data
 
 
     #=============================
@@ -279,9 +278,8 @@ server <- function(input, output,session) {
 
         if(file.exists('inputData.rda')) file.remove('inputData.rda')
         updateSelectInput(session, "refSamp", choices=c('None',names(mergedData)))
-#        updateSelectInput(session, "baselineSamp", choices=c('None',names(mergedData)))
         updateSelectInput(session, "excludeSamp", choices=names(mergedData))
-        #		HTML(c('Uploaded files:<br/>',paste(unlist(input$sourceFiles$name), collapse = '<br/>')))
+
         HTML(c('Uploaded files:<br/>',paste(names(mergedData), collapse = '<br/>')))
       }else{
         HTML('Error in reading files')
@@ -349,38 +347,37 @@ server <- function(input, output,session) {
     {
 
       if (input$replicates == TRUE){
-      # if the input data has replicates, then the reference sample should be selected
-      # update conditions
-      # check if there are objects to run analysis
-       # extract conditions from the file names
-        sampAnnot = splitFileName(names(mergedData))
-      # check if there are conditions
-      if (all(is.na(sampAnnot$condition)))
-      {
-        output$message_analysis = renderText('There are no conditions to analyze.
-                                               Please check the input file names')
-      }else{
-        # output a table with sample annotations
-        output$message_analysis = renderTable({
-          # Create a table using kable
-          kable(sampAnnot, format = "html") %>%
-            kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))
-        }, sanitize.text.function = function(x) x)
+        # if the input data has replicates, then the reference sample should be selected
+        # update conditions
+        # check if there are objects to run analysis
+         # extract conditions from the file names
+          sampAnnot = splitFileName(names(mergedData))
+        # check if there are conditions
+        if (all(is.na(sampAnnot$condition)))
+        {
+          output$message_analysis = renderText('There are no conditions to analyze.
+                                                 Please check the input file names')
+        }else{
+          # output a table with sample annotations
+          output$message_analysis = renderTable({
+            # Create a table using kable
+            kable(sampAnnot, format = "html") %>%
+              kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))
+          }, sanitize.text.function = function(x) x)
 
-        # update inputs in the dropdowns
-        updateSelectInput(session, "refSamp", choices=c('None',sampAnnot$condition))
- #       updateSelectInput(session, "baselineSamp", choices=c('None',sampAnnot$condition))
-        updateSelectInput(session, "excludeSamp", choices=sampAnnot$condition)
+          # update inputs in the dropdowns
+          updateSelectInput(session, "refSamp",
+                            choices=c('None',sampAnnot$condition))
+          updateSelectInput(session, "excludeSamp", choices=sampAnnot$condition)
 
-      }
-      shinyjs::disable('compareToRef')
+        }
+        shinyjs::disable('compareToRef')
 
       # if The input with replicates is unchecked
       }else{
         # if the input data does not have replicates, then the reference sample should be selected
         # update conditions
         updateSelectInput(session, "refSamp", choices=c('None',names(mergedData)))
-#        updateSelectInput(session, "baselineSamp", choices=c('None',names(mergedData)))
         updateSelectInput(session, "excludeSamp", choices=names(mergedData))
         shinyjs::enable('compareToRef')
         # output sample names in the main panel
@@ -411,6 +408,13 @@ server <- function(input, output,session) {
         obj = ntData
       }
 
+      # create an object with results
+      # it's a list with two elements:
+      # one is the analysis output
+      # and the other one is the parameters of the analysis
+      analysisRes = list(res = NULL,
+                         params = reactiveValuesToList(input))
+#browser()
       #================================
       ## analysis without replicates
       #================================
@@ -437,38 +441,26 @@ server <- function(input, output,session) {
             # run Fisher's test
             if(nrow(compPairs) == 1)
             {
-              res = list(runFisher(compPairs,obj, clones = clonesToTest, nReadFilter = c(as.numeric(input$nReads),0)))
+              analysisRes$res = list(runFisher(compPairs,obj, clones = clonesToTest, nReadFilter = c(as.numeric(input$nReads),0)))
             }else{
-              res = apply(compPairs,1,runFisher,obj, clones = clonesToTest, nReadFilter = c(as.numeric(input$nReads),0))
+              analysisRes$res = apply(compPairs,1,runFisher,obj, clones = clonesToTest, nReadFilter = c(as.numeric(input$nReads),0))
             }
             #			browser()
-            if (!is.null(res))
+            if (!is.null(analysisRes$res))
             {
-              names(res) = apply(compPairs,1,paste,collapse = '_vs_')
-              output$message_analysis =
-                renderText('Analysis is done. Go to the Save results tab to save the results')
-              assign('analysisRes',res, envir = .GlobalEnv)
-            }	else{
-              output$message_analysis = renderText('There are no clones to analyze. Try to reduce confidence or the number of templates 1')
-            }
+              names(analysisRes$res) = apply(compPairs,1,paste,collapse = '_vs_')
+           }
           }
         }else{
           # if there is no comparison with the reference, then compare only within conditions
 #          if(input$ignoreBaseline) clonesToTest = NULL
           # take only clones that have the number of reads more then nReads and compare with top second and top third conditions
-          fisherRes = compareWithOtherTopConditions(obj,
+          analysisRes$res = compareWithOtherTopConditions(obj,
                                                     productiveReadCounts,
                                                     sampForAnalysis,
                                                     nReads = as.numeric(input$nReads),
                                                     clones = clonesToTest)
-          if (!is.null(fisherRes))
-          {
-            output$message_analysis = renderText('Analysis is done. Click Download Results to save the results')
-            assign('analysisRes',fisherRes, envir = .GlobalEnv)
-          }	else{
-            output$message_analysis = renderText('There are no clones to analyze. Try to reduce the number of templates')
-          }
-        }
+       }
       } else {# end of analysis without replicates
 
 
@@ -497,7 +489,6 @@ server <- function(input, output,session) {
 
             # get clones to test
             clonesToTest = getClonesToTest(obj, ctThresh = input$nReads)
-      browser()
             # check if there are enought clones to analyze
             if (length(clonesToTest)<1)
             {
@@ -507,24 +498,25 @@ server <- function(input, output,session) {
 
             res = NULL
             # run the analysis for selected clones
-            res = fitModelSet(clonesToTest, obj,
+            analysisRes$res = fitModelSet(clonesToTest, obj,
                                      sampAnnot$condition,
                                      excludeCond = input$excludeSamp,
                                      control=input$refSamp,
                                      c.corr=1)
-            rownames(res) = res$clone
-
-            # check if there are any results to save
-            if (!is.null(res))
-            {
-              output$message_analysis = renderText('Analysis is done. Click Download Results to save the results')
-              assign('analysisRes',res, envir = .GlobalEnv)
-            }	else{
-              output$message_analysis = renderText('There are no clones to analyze. Try to reduce confidence or the number of templates 1')
-            }
+            rownames(analysisRes$res) = analysisRes$res$clone
 
       }
     }# end of analysis with replicates
+     # check if there are any results to save
+    if (!is.null(analysisRes$res))
+    {
+        output$message_analysis = renderText('Analysis is done. Click Download Results to save the results')
+        assign('analysisRes',analysisRes, envir = .GlobalEnv)
+    }	else{
+        output$message_analysis = renderText('There are no clones to analyze. Try to reduce confidence or the number of templates 1')
+    }
+
+
     } else{
       output$message_analysis = renderText('There are no data to analyze. Please load files 2')
     }
@@ -553,33 +545,33 @@ server <- function(input, output,session) {
           if(input$replicates)
           {
 ##browser()
-            posClones = getPositiveClonesReplicates(analysisRes,
+            posClones = getPositiveClonesReplicates(analysisRes$res,
                                                     obj,
-                                                    control = input$refSamp,
+                                                    control = analysisRes$params$refSamp,
                                                     samp = sampForAnalysis,
-                                                    excludeCond = input$excludeSamp,
-                                                    orThr = as.numeric(input$orThr),
-                                                    fdrThr = as.numeric(input$fdrThr),
-                                                    percentThr = as.numeric(input$percentThr))
+                                                    excludeCond = analysisRes$params$excludeSamp,
+                                                    orThr = as.numeric(analysisRes$params$orThr),
+                                                    fdrThr = as.numeric(analysisRes$params$fdrThr),
+                                                    percentThr = as.numeric(analysisRes$params$percentThr))
             }else{ # if analyzed data without replicates
-              posClones = getPositiveClones(analysisRes, obj,
+              posClones = getPositiveClones(analysisRes$res, obj,
                                         samp = sampForAnalysis,
-                                        orThr = as.numeric(input$orThr),
-                                        fdrThr = as.numeric(input$fdrThr),
-                                        percentThr = as.numeric(input$percentThr))
+                                        orThr = as.numeric(analysisRes$params$orThr),
+                                        fdrThr = as.numeric(analysisRes$params$fdrThr),
+                                        percentThr = as.numeric(analysisRes$params$percentThr))
             }
         }else{ # if there is no comparison to ref sample
-          posClones = getPositiveClonesFromTopConditions(analysisRes,
-                                                         orThr = as.numeric(input$orThr),
-                                                         fdrThr=as.numeric(input$fdrThr),
-                                                         percentThr = as.numeric(input$percentThr),
+          posClones = getPositiveClonesFromTopConditions(analysisRes$res,
+                                                         orThr = as.numeric(analysisRes$params$orThr),
+                                                         fdrThr=as.numeric(analysisRes$params$fdrThr),
+                                                         percentThr = as.numeric(analysisRes$params$percentThr),
                                                          mergedData = obj,
                                                          samp = sampForAnalysis)
         }
 
         #===============================
         # change "None" to NULL for reference sample
-        refSamp = input$refSamp
+        refSamp = analysisRes$input$refSamp
         if(input$refSamp == 'None') refSamp = NULL
 
         #========================
@@ -598,29 +590,29 @@ server <- function(input, output,session) {
           # create table with results
           tablesToXls = createPosClonesOutput(posClones,
                                               obj,
-                                              input$refSamp,
-                                              replicates = input$replicates)
+                                              analysisRes$params$refSamp,
+                                              replicates = analysisRes$params$replicates)
         }
         #===================
         # add the ref_comparison_only sheet
         #===================
-        if(input$compareToRef) #if there is comparison to the ref sample
+        if(analysisRes$params$compareToRef) #if there is comparison to the ref sample
         {
           # if analyzing data with replicate
-          if(input$replicates)
+          if(analysisRes$params$replicates)
           {
-            resTable = createResTableReplicates(analysisRes,
+            resTable = createResTableReplicates(analysisRes$res,
                                                 obj,
-                                      orThr = as.numeric(input$orThr),
-                                      fdrThr = as.numeric(input$fdrThr),
-                                      percentThr = as.numeric(input$percentThr))
+                                      orThr = as.numeric(analysisRes$params$orThr),
+                                      fdrThr = as.numeric(analysisRes$params$fdrThr),
+                                      percentThr = as.numeric(analysisRes$params$percentThr))
 
           }else{ # if without replicates
           # create a table with results
-            resTable = createResTable(analysisRes,obj,
-                                    orThr = as.numeric(input$orThr),
-                                    fdrThr = as.numeric(input$fdrThr),
-                                    percentThr = as.numeric(input$percentThr),
+            resTable = createResTable(analysisRes$res,obj,
+                                    orThr = as.numeric(analysisRes$params$orThr),
+                                    fdrThr = as.numeric(analysisRes$params$fdrThr),
+                                    percentThr = as.numeric(analysisRes$params$percentThr),
                                     saveCI = F)
           }
            #===========================
@@ -646,14 +638,17 @@ server <- function(input, output,session) {
                   'n template threshold','FDR threshold',
                   'OR threshold','percent threshold',
                   'Nucleotide level analysis',
-                  'n analyzed samples',
+                  'n samples',
                   paste(s, 'n templates',sep = '_'))
-        value = c(input$replicates,
-                  toString(refSamp),
-                  paste(input$excludeSamp, collapse = ', '),
-                  input$compareToRef, input$nReads,input$fdrThr,
-                  input$orThr, input$percentThr,
-                  input$nuctleotideFlag,
+        value = c(analysisRes$params$replicates,
+                  analysisRes$input$refSamp,
+                  paste(analysisRes$params$excludeSamp, collapse = ', '),
+                  analysisRes$params$compareToRef,
+                  analysisRes$params$nReads,
+                  analysisRes$params$fdrThr,
+                  analysisRes$params$orThr,
+                  analysisRes$params$percentThr,
+                  analysisRes$params$nuctleotideFlag,
                   length(s), productiveReadCounts[s])
 
         tablesToXls$parameters = data.frame(param, value)
@@ -679,12 +674,13 @@ server <- function(input, output,session) {
       {
         # check if analysis was done on aa or nt level
         if (input$nuctleotideFlag) obj = ntData else obj = mergedData
-        sampForAnalysis = setdiff(names(obj), c(input$excludeSamp,input$refSamp))
-        posClones = getPositiveClones(analysisRes, obj,
+        sampForAnalysis = setdiff(names(obj),
+                                  c(analysisRes$params$excludeSamp,analysisRes$params$refSamp))
+        posClones = getPositiveClones(analysisRes$res, obj,
                                       samp = sampForAnalysis,
-                                      orThr = as.numeric(input$orThr),
-                                      fdrThr=as.numeric(input$fdrThr),
-                                      percentThr = as.numeric(input$percentThr))
+                                      orThr = as.numeric(analysisRes$params$orThr),
+                                      fdrThr=as.numeric(analysisRes$params$fdrThr),
+                                      percentThr = as.numeric(analysisRes$params$percentThr))
         # if there is no positive clones,
         # with a message about that
         if (length(posClones)==0)
@@ -713,10 +709,10 @@ server <- function(input, output,session) {
         if (length(posClones)>1)
         {
           # create a table with results
-          resTable = createResTable(analysisRes,mergedData,
-                                    orThr = as.numeric(input$orThr),
-                                    fdrThr = as.numeric(input$fdrThr),
-                                    percentThr = as.numeric(input$percentThr),
+          resTable = createResTable(analysisRes$res,obj,
+                                    orThr = as.numeric(analysisRes$params$orThr),
+                                    fdrThr = as.numeric(analysisRes$params$fdrThr),
+                                    percentThr = as.numeric(analysisRes$params$percentThr),
                                     saveCI = F)
           # make heatmap with all significant clones
           posClones = list(rownames(resTable))
@@ -724,7 +720,7 @@ server <- function(input, output,session) {
 
           makeHeatmaps(posClones, obj,
                        samp = sampForAnalysis,
-                       refSamp = input$refSamp,
+                       refSamp = analysisRes$params$refSamp,
                        fileName = file, size = 7)
           output$save_results = renderText('The heat map is saved')
         }
