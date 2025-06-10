@@ -232,7 +232,7 @@ server <- function(input, output,session) {
   library(kableExtra)
   library(dplyr)
   library(shinyjs)
-  if (!require(WriteXLS)) install.packages("WriteXLS")
+  if (!require(openxlsx)) install.packages("openxlsx")
   if(!require(immunarch)) install.packages("immunarch")
   if (!require(devtools)) install.packages("devtools")
   if (!require(replicateFest)) devtools::install_github("OncologyQS/replicateFest")
