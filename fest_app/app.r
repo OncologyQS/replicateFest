@@ -540,11 +540,11 @@ server <- function(input, output,session) {
         posClones = NULL
         if(input$compareToRef) #if there is comparison to the ref sample
         {
+#browser()
 
          # if analyzed data with replicate
           if(input$replicates)
           {
-##browser()
             posClones = getPositiveClonesReplicates(analysisRes$res,
                                                     obj,
                                                     control = analysisRes$params$refSamp,

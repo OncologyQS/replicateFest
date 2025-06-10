@@ -22,31 +22,51 @@
 </ul>
 
 		<h2><a name="Overview">Overview</a></h2>
-		<p>The <a href="http://www.stat-apps.onc.jhmi.edu/FEST/">FEST</a> (Functional Expansion of Specific T-cells) platform is a Shiny application 
-		for analysis of TCR sequencing of short-term, 
-		peptide-stimulated cultures to identify antigen-specific clonotypic amplifications. The app loads TCR sequencing data in the tab-delimited format,
+		<p>The <a href="http://www.stat-apps.onc.jhmi.edu/FEST/">FEST</a> (Functional Expansion of Specific T-cells) platform is 
+			a Shiny application for analysis of TCR sequencing of short-term, 
+		peptide-stimulated cultures to identify antigen-specific clonotypic amplifications. 
+		The app loads TCR sequencing data in the tab-delimited format,
  performs the analysis, and visualizes and saves results. For analysis, we use only productive clones and
  summarize template counts for nucleotide sequences that translated into the same amino acid sequence.
- For each analyzed clone, we apply Fisher’s exact test to compare the number of templates in a culture of interest
- (with peptide) and a reference culture (T cells cultured with cytokines but without peptide). The p-value adjusted by Benjamini-Hochberg
- procedure (FDR) is used to determine antigen-specific clonotypes (FEST positive clones) that
- met the following criteria: 
+ The analysis can be performed for two types of experiments - with and without replicates. The different tests are used for each type.
+For experiments without replicates, we use the pairwise Fisher’s exact test to compare the number of templates in a culture of interest		
+ (with peptide) and a reference culture (T cells cultured with cytokines but without peptide). For experiments with replicates, we fit 
+ the negative binomial model for all conditions. The analysis is done for each clone separately. The p-values are adjusted by Benjamini-Hochberg
+ procedure (FDR). 
+ <p>
+	The analysis is performed in the follwoing steps:
+   <ol>
+     <li><b>Load data</b>: upload FEST files or a previously saved R
+              object with data.</li>
+      <li>After the data is successfully loaded,
+              select the <b>Run analysis</b>
+                   tab to run the analysis. Please make sure to specify
+                   whether the input data has replicates or not.
+                   <br><b>Important!</b> If the input data has replicates, the conditions
+                   will be extracted from the input file names.
+                   To be able to correctly extract the conditions, file names should
+                   follow the format 'sampleID_condition_replicate.ext'.
+                   E.g. 'sample1_HIV_1.tsv'.                   
+      <li>After the analysis is done,
+              select the <b>Save results</b> tab to save the results.</li>
+	</ol>
+    
+ </p>
+ 
+ To determine antigen-specific clonotypes (FEST positive clones), we use the following criteria specified on 
+ the <b>Save results</b> tab, a clonotype: 
  <ol>
-	 <li>significantly expanded in the culture of interest compared to the reference
-	 culture at an FDR less than the specified threshold
-	 (a value from the <b>Specify FDR threshold</b> field), <br>
-	 <b>NOTE:</b> This step is omitted if the <b>Compare to reference</b> option is disabled</li>
-	 <li>significantly expanded in the culture of interest compared to every other culture
-	 performed in tandem (a value from the <b>Specify FDR threshold</b> field),</li> 
-	 <li>have an odds ratio above a value specified in the <b>Specify odds ratio threshold</b> field, </li>
-	 <li>a minimum template threshold in uncultured T cells (baseline) calculated by:<br>
-	 limit = 1-(1-P)<sup> (1/n)</sup><br>
-	 Where P = the probability of observing the clone in a given well (clone confidence specified in the <b>Specify clone confidence</b> field) and 
-	 n = the estimated number of CD8+ T cells per well prior to culture (specified in the <b>Estimated number of CD8+ T cells per well</b> field).  <br>
-	 <b>NOTE:</b> This threshold is not applied if the <b>Ignore baseline threshold</b> option is enabled</li>
+	 <li>should be significantly expanded in the culture of interest compared to the reference
+	 culture at an FDR less than the specified threshold, <br>
+	 <b>NOTE:</b> This step is omitted if the <b>Compare to reference</b> option is disabled. </li>
+	 <li>should be significantly expanded in the culture of interest compared to every other culture
+	 performed in tandem,</li> 
+	 <li>should have an odds ratio above a specified value, </li>
+	 <li>should have a percent above a specified value. </li>	 
  </ol>
- Clones can then be subject to a threshold for a minimal number of templates (the <b>Specify the minimal number of templates</b> field). FEST positive clones are
- saved in the output table (the <b>Download Results</b> button) and plotted as an output heat map (the <b>Create Heat Map</b> button).</p>
+ Clones can then be subject to a threshold for a minimal number of templates (the <b>Specify the minimal number of templates</b> field 
+ on the <b>Run analysis</b> tab). FEST positive clones are saved in the output table (the <b>Download Results</b> button on 
+ the <b>Save results</b> tab) and plotted as an output heat map (the <b>Create Heat Map</b> button).</p>
 
 <a href="#top"><font size="2">Top of Page</font></a></P>
 
@@ -64,22 +84,17 @@
 		<a href="#top"><font size="2">Top of Page</font></a>
 
 <h2><a name="inputParams">Input parameters</a></h2>
-	<p>Before running the analysis, you need to specify the following input parameters:
+	<p>After loading the data, go to the <b>Run Analysis</b> tab and specify the following input parameters:
 	
 	<ul>
+		<li> <b>The input with replicates</b>. If your experiment has replicates.</li>
 		<li> <b>Compare to reference</b>. If you want to omit the comparison to a reference sample step, disable this option.</li>
-		<li> <b>Select a reference sample</b>. It is usually T cells cultured with cytokines but without peptide.</li>
-		<li> <b>Select a baseline sample</b>. It is uncultured T cells. This sample will be used to calculate a minimum template threshold for clones in uncultured T cells. 
-		Only clones that passed this threshold will be analyzed. If you do not want to apply this threshold, select the <b> Ignore baseline threshold</b> checkbox. If you do not specify a baseline sample, the reference sample will be used to calculate the baseline threshold</li>
-		<li> <b>Select sample(s) to exclude</b>. The samples will be excluded from analysis, but information about them will be included in the output file</li>
-		<li> <b>Specify the minimal number of templates</b>. A threshold for the number of templates in cultures of interest</li>
-		<li> <b>Ignore baseline threshold</b>. If this option is selected, only <b>the minimal number of templates</b> threshold will be used. If you select this option, we recommend you to increase the minimal number of templates to reduce the number of clones to analyze. Smaller number of templates leads to bigger number of clones to analize and slows down the analysis</li>
-		<li> <b>Specify clone confidence</b>. The confidence will be used to calculate a minimum template threshold for clones in uncultured T cells, 
-			if <b>Ignore baseline threshold</b> is selected. The lower the confidence, the more clones will be analyzed</li>
-		<li> <b>Estimated number of CD8+ T cells per well</b>. This number will be used to calculate a minimum template threshold for clones in uncultured T cells, 
-			if <b>Ignore baseline threshold</b> is selected.</li>
 		<li> <b>Use nucleotide level data</b>. Select this option if you want to perform analysis on the nucleotide level data instead of amino acid level data. 
 			By default, the analysis is performed on amino acid level.</li>
+		<li> <b>Select a reference sample</b>. It is usually T cells cultured with cytokines but without peptide.</li>
+		<li> <b>Select sample(s) to exclude</b>. The samples will be excluded from analysis, but information about 
+			them will be included in the output file</li>
+		<li> <b>Specify the minimal number of templates</b>. A threshold for the number of templates in cultures of interest</li>
 	</ul>
 	After setting all parameters, press the <b>Run Analysis</b> button.
 	
@@ -87,7 +102,8 @@
 	<a href="#top"><font size="2">Top of Page</font></a>
 
 <h2><a name="outputParams">Output</a></h2>
-		<p>	After the analysis is done, you can specify FDR, odds ratio, and percentage thresholds that will be used to determine FEST positive clones. 
+		<p>	After the analysis is done, go to the <b>Save results</b> tab and specify FDR, odds ratio, and percentage thresholds 
+			that will be used to determine FEST positive clones. 
 		The positive odds ratio corresponds to the expansion of a clone in cultures of interest. 
 		The results are saved by clicking the <b>Download Results</b> button in an Excel file with the following spreadsheets:
 		<ul>
@@ -117,7 +133,7 @@ Ludmila Danilova, Valsamo Anagnostou, Justina X Caushi, John-William Sidhom, Hai
 <br>Cancer Immunol Res June 12 2018 DOI: 10.1158/2326-6066.CIR-18-0129
 <p></p>
 	<p>This shiny app is publicly available at <a href="http://www.stat-apps.onc.jhmi.edu/FEST/">http://www.stat-apps.onc.jhmi.edu/FEST/</a>
-and the current version of is available at <a href="https://github.com/OncologyQS/replicateFest>	and the current version of is available at GitHub<a href="https://github.com/OncologyQS/replicateFest">
+and the current version of is available at <a href="https://github.com/OncologyQS/replicateFest>	and the current version is available at GitHub <a href="https://github.com/OncologyQS/replicateFest">
 		https://github.com/OncologyQS/replicateFest</a>.</p>
 
 		<p>The older version of the app has been deposited at <a href="https://sourceforge.net/projects/manafest/">https://sourceforge.net/projects/manafest/</a></p>
@@ -126,17 +142,29 @@ and the current version of is available at <a href="https://github.com/OncologyQ
 
 	<h2><a name="releases">News and releases</a></h2>
 	<p>	<ul>
-		<li> <b>Version 14</b> (2025-03-05)
+		<li> <b>Version 15</b> (2025-06-10)
+			<ol>
+				<li>separated load data, run analysis, and save the results to the different tabs</li>
+				<li>added analysis with replicates</li>
+				<li>increased the default for the number of reads to 50</li>
+				<li>removed the baseline option</li>
+				<li>switched to openxlsx for saving results into an Excel file</li>
+				<li>made a list with analysis results and parameters that were used for the analysis 
+					insted of just analysis results (the analysisRes object)</li>				
+			</ol>	
+		</li><li> <b>Version 14</b> (2025-03-05) 
+			<a href=https://dobbs-onc-jhmi.shinyapps.io/Manafest_analysis_v14/> https://dobbs-onc-jhmi.shinyapps.io/Manafest_analysis_v14/</a>
 			<ol>
 				<li>use the immunarch package for reading input tab-delimited files</li>
 				<li>split loading the data and analysis to different tabs</li>
 				<li>added percentage threshold to the version without replicates</li>
-				<li>fixed output to heatmap when there are no or one clone</li>
+				<li>fixed output to heatmap when there is no or one clone</li>
 				<li>added all functions to the replicateFest package</li>
 			</ol>	
 		</li>
 	</ul>
 	<a href="#top"><font size="2">Top of Page</font></a></P>
 
+	
 </body>
 </html>
