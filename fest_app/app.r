@@ -488,7 +488,7 @@ server <- function(input, output,session) {
             updateSelectInput(session, "excludeSamp", choices=sampAnnot$condition)
 
             # get clones to test
-            clonesToTest = getClonesToTest(obj, ctThresh = input$nReads)
+            clonesToTest = getClonesToTest(obj, nReads = input$nReads)
             # check if there are enought clones to analyze
             if (length(clonesToTest)<1)
             {
@@ -540,7 +540,6 @@ server <- function(input, output,session) {
         posClones = NULL
         if(input$compareToRef) #if there is comparison to the ref sample
         {
-#browser()
 
          # if analyzed data with replicate
           if(input$replicates)
@@ -571,7 +570,7 @@ server <- function(input, output,session) {
 
         #===============================
         # change "None" to NULL for reference sample
-        refSamp = analysisRes$input$refSamp
+        refSamp = analysisRes$params$refSamp
         if(input$refSamp == 'None') refSamp = NULL
 
         #========================
@@ -627,21 +626,23 @@ server <- function(input, output,session) {
             tablesToXls$ref_comparison_only =
               data.frame(res = 'There are no significant clones')
           }
-
         #============
         # add a sheet with parameters
         #============
         s = names(productiveReadCounts)
         param = c("Data with replicates",
                   'Reference sample',
-                  'Excluded samples','Compare to reference',
-                  'n template threshold','FDR threshold',
-                  'OR threshold','percent threshold',
+                  'Excluded samples',
+                  'Compare to reference',
+                  'n template threshold',
+                  'FDR threshold',
+                  'OR threshold',
+                  'percent threshold',
                   'Nucleotide level analysis',
                   'n samples',
                   paste(s, 'n templates',sep = '_'))
         value = c(analysisRes$params$replicates,
-                  analysisRes$input$refSamp,
+                  analysisRes$params$refSamp,
                   paste(analysisRes$params$excludeSamp, collapse = ', '),
                   analysisRes$params$compareToRef,
                   analysisRes$params$nReads,
