@@ -235,6 +235,8 @@ server <- function(input, output,session) {
   if (!require(openxlsx)) install.packages("openxlsx")
   if(!require(immunarch)) install.packages("immunarch")
   if (!require(devtools)) install.packages("devtools")
+  if (!require(contrast)) install.packages("contrast")
+  if (!require(multcomp)) install.packages("multcomp")
   if (!require(replicateFest)) devtools::install_github("OncologyQS/replicateFest")
   library(replicateFest)
 
