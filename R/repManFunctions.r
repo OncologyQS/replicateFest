@@ -314,7 +314,7 @@ fitModel = function(clone,countData,peptides,control,
 
 runExperiment=function(files, peptides, nReads=50, control,
                        orThr=1, fdrThr = 0.05, excludeCond = NA,
-                       xrCond = NA, percentThr = 0,
+                       xrCond = NULL, percentThr = 0,
                        outputFile = "output.xlsx",
                        saveToFile = T, permute = FALSE)
 {
@@ -389,11 +389,30 @@ runExperiment=function(files, peptides, nReads=50, control,
     tablesToXls$ref_comparison_only =
       data.frame(res = 'There are no significant clones')
   }
+
+  # add a spreadsheet with cross-reactive clones if specified
+  if(!is.null(xrCond))
+  {
+    tablesToXls$cross_reactive = getXR(fitResults,
+                                       peptides,
+                                       control,
+                                       xrCond = xrCond,
+                                       excludeCond = excludeCond,
+                                       percentThr = percentThr,
+                                       countData = mergeData,
+                                       orThr = orThr,
+                                       fdrThr = fdrThr)
+
+  }
+
+
+  # save parameters of analysis
   s = names(mergeData)
-  productiveReadCounts = sapply(mergedData, sum)
+  productiveReadCounts = sapply(mergeData, sum)
   param = c("Data with replicates",
-            'Reference sample',
-            'Excluded samples','Compare to reference',
+            'Reference condition',
+            'Excluded conditions',
+            'Cross-reactive conditions',
             'n template threshold','FDR threshold',
             'OR threshold','percent threshold',
             'Nucleotide level analysis',
@@ -402,7 +421,7 @@ runExperiment=function(files, peptides, nReads=50, control,
   value = c(TRUE,
             control,
             paste(excludeCond, collapse = ', '),
-            TRUE,
+            paste(xrCond, collapse = ', '),
             nReads,
             fdrThr,
             orThr,
@@ -523,7 +542,9 @@ fitModelSet = function(clones, countData, peptides, excludeCond = NA,...)
 #'
 # input: a data frame with ORs, p-values and FDRs
 # output: a data frame with expanded clones
-getExpanded = function(fitResults, countData, orThr = 1, fdrThr = 0.05)
+getExpanded = function(fitResults, countData,
+                       orThr = 1,
+                       fdrThr = 0.05)
 {
   # find all significantly expanded clones
   # find comparison names
@@ -578,19 +599,42 @@ getExpanded = function(fitResults, countData, orThr = 1, fdrThr = 0.05)
 # and a vector of cross-reactive conditions
 # output: a data frame with cross-reactive clones
 
-getXR = function(res, conditions, xrCond = xrCond)
+getXR = function(res, conditions, control, xrCond,
+                 excludeCond = NULL,percentThr = 0, ...)
 {
-  # a vector of conditions that shouldn't be cross-reactive
+  # get all expanded clones relative to the control
+  # find colunms with control to get clones expanded relative to reference
+  contCol = grep(control,colnames(res), value = T)
+  res_exp = getExpanded(res[,c("clone",contCol)],
+                        ...)
+
+  #=================
+  # keep clones with maximum percentage across
+  # all analyzed samples higher that a specified threshold
+  #=================
+  # grep columns with percentage
+  percCol = grep("percent",colnames(res_exp), value = T)
+  #browser()
+  # exclude columns with excludeCond
+  if(!is.null(excludeCond))
+    percCol = percCol[!grepl(paste(excludeCond,collapse = "|"),
+                             percCol)]
+  # get clones with maximum percentage higher than specified threshold
+  res_exp_filtered = res_exp[apply(res_exp[,percCol],1,max) > percentThr,]
+
+  if(nrow(res_exp_filtered) == 0) return(NULL)
+
+    # a vector of conditions that shouldn't be cross-reactive
   # find all and take difference
-  allCond = res %>% filter(n_significant_comparisons == 1) %>%
+  allCond = res_exp_filtered %>% filter(n_significant_comparisons == 1) %>%
     dplyr::select(significant_condition) %>% unlist() %>% unique()
 
   # conditions that shouldn't be cross-reactive
   excludeCond = setdiff(conditions, xrCond)
 
-  # find cross-reactive clones
-  res_xr = res %>% filter(n_significant_comparisons > 1)
-  # find clone that are cross-reactive fo xrCond
+  # find clones that are reactive in more than 1 condition (cross-reactive clones)
+  res_xr = res_exp_filtered %>% filter(n_significant_comparisons > 1)
+  # find clone that are cross-reactive for conditions in xrCond
   inclXR = res_xr %>% filter(grepl(paste(xrCond,collapse = "|"),significant_condition))
 
   # exclude conditions that are not in xrCond

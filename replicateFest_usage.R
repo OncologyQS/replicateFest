@@ -1,6 +1,8 @@
 # 2025-01-24
 # Ludmila Danilova, Leslie Cope
-# Usage of replicateFest
+#================================================================
+# usage of replicateFest on experimental data with replicates
+#================================================================
 
 library(tools)
 library(dplyr)
@@ -9,9 +11,6 @@ devtools::install_github("OncologyQS/replicateFest")
 library(replicateFest)
 
 
-#================================================================
-# usage of replicateFest on experimental data with replicates
-#================================================================
 # load data
 # list files with data
 files=list.files("Data/",pattern = ".txt", full.name=T, recursive=T)
@@ -24,7 +23,7 @@ sampAnnot = splitFileName(filenames)
 #====================
 # run all clones in a patient and time point and return the results
 res = runExperiment(files,
-                    peptides = timeSamples$condition,
+                    peptides = sampAnnot$condition,
                     cont= "DMSO",
                     fdrThr = 0.05,
                     xrCond = NA,
