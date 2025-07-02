@@ -781,23 +781,26 @@ createResTableReplicates = function(res,mergedData,
                           percentThr = 0)
 {
   # calculate the total number of reads for each sample
-  totalReadCountPerSample = sapply(mergedData, sum)
-  # keep clones that are significant in at least one comparison
-  # find columns with OR and FRD
-  orCols = grep("OR:", colnames(res), value = T)
-  fdrCols = grep("FDR:", colnames(res), value = T)
+  # totalReadCountPerSample = sapply(mergedData, sum)
+  # # keep clones that are significant in at least one comparison
+  # # find columns with OR and FRD
+  # orCols = grep("OR:", colnames(res), value = T)
+  # fdrCols = grep("FDR:", colnames(res), value = T)
+  #
+  # # a table with significant clones only
+  # resSig = res[which(res[,orCols]>= orThr & res[,fdrCols]< fdrThr),]
+  #
+  # if(nrow(resSig)==0){print('There is no significant clones'); return(NULL)}
+  # # get abundances and percentages
+  # tab = getCountsPercent(resSig$clone, mergedData,
+  #   samp = names(mergedData))
 
-  # a table with significant clones only
-  resSig = res[which(res[,orCols]>= orThr & res[,fdrCols]< fdrThr),]
-
-  if(nrow(resSig)==0){print('There is no significant clones'); return(NULL)}
-  # get abundances and percentages
-  tab = getCountsPercent(resSig$clone, mergedData,
-    samp = names(mergedData))
+  tab = getExpanded(res,mergedData, orThr,
+                    fdrThr)
   # grep columns with percentage
   percCol = grep("percent",colnames(tab), value = T)
   # get clones with maximum percentage higher than specified threshold
   tab = tab[apply(tab[,percCol],1,max) >percentThr,]
 
-  return(cbind(resSig[rownames(tab),],tab))
+  return(tab)
 }
