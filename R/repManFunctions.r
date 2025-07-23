@@ -551,6 +551,14 @@ getExpanded = function(fitResults, countData,
   comp = grep("OR",colnames(fitResults), value = T)
   comp = gsub("OR: ","",comp)
 
+  # convert OR and FDR columns of fitResults into numeric values
+  orCols = grep("OR:", colnames(fitResults), value = T)
+  fdrCols = grep("FDR:", colnames(fitResults), value = T)
+  fitResults[,orCols] = sapply(fitResults[,orCols],
+                                            as.numeric)
+  fitResults[,fdrCols] = sapply(fitResults[,fdrCols],
+                               as.numeric)
+  # find expanded clones
   expandedClones = c()
   for (i in comp){
     #print(i)
@@ -560,11 +568,17 @@ getExpanded = function(fitResults, countData,
   }
   # get the results for expanded clones only
   res_exp = fitResults[expandedClones,]
+
+
+  # #
+  # # # a table with significant clones only
+  # res_exp = fitResults[which(fitResults[,orCols]>= orThr &
+  #                              fitResults[,fdrCols]< fdrThr),]
+
   # add columns that indicates how many and what comparisons were significant
   # get T/F matrix for significant comparisons
-  sig = (res_exp[,paste0("FDR: ",comp)] < fdrThr &
-           res_exp[,paste0("OR: ",comp)] > orThr)
- # browser()
+  sig = (res_exp[,fdrCols] < fdrThr &
+           res_exp[,orCols] >= orThr)
   # list significant comparisons
   sigComp = apply(sig, 1, function(x){
     # select significant comparisons and get first condition before "vs"
@@ -800,7 +814,7 @@ createResTableReplicates = function(res,mergedData,
   # grep columns with percentage
   percCol = grep("percent",colnames(tab), value = T)
   # get clones with maximum percentage higher than specified threshold
-  tab = tab[apply(tab[,percCol],1,max) >percentThr,]
+  tab = tab[apply(tab[,percCol],1,max) > percentThr,]
 
   return(tab)
 }

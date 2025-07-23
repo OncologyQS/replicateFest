@@ -81,9 +81,10 @@ ui <- fluidPage(
               object with data")),
       tags$li(HTML("After the data is successfully loaded,
               select the <b>Run analysis</b>
-                   tab to run the analysis. Please make sure to specify
+                   tab to run the analysis.
+                   <br><b>Important!</b> Please make sure to specify
                    whether the input data has replicates or not.
-                   <br><b>Important!</b> If the input data has replicates, the conditions
+                   If the input data has replicates, the conditions
                    will be extracted from the input file names.
                    To be able to correctly extract the conditions, file names should
                    follow the format 'sampleID_condition_replicate.ext'.
@@ -551,21 +552,21 @@ server <- function(input, output,session) {
                                                     control = analysisRes$params$refSamp,
                                                     samp = sampForAnalysis,
                                                     excludeCond = analysisRes$params$excludeSamp,
-                                                    orThr = as.numeric(analysisRes$params$orThr),
-                                                    fdrThr = as.numeric(analysisRes$params$fdrThr),
-                                                    percentThr = as.numeric(analysisRes$params$percentThr))
+                                                    orThr = as.numeric(input$orThr),
+                                                    fdrThr = as.numeric(input$fdrThr),
+                                                    percentThr = as.numeric(input$percentThr))
             }else{ # if analyzed data without replicates
               posClones = getPositiveClones(analysisRes$res, obj,
                                         samp = sampForAnalysis,
-                                        orThr = as.numeric(analysisRes$params$orThr),
-                                        fdrThr = as.numeric(analysisRes$params$fdrThr),
-                                        percentThr = as.numeric(analysisRes$params$percentThr))
+                                        orThr = as.numeric(input$orThr),
+                                        fdrThr = as.numeric(input$fdrThr),
+                                        percentThr = as.numeric(input$percentThr))
             }
         }else{ # if there is no comparison to ref sample
           posClones = getPositiveClonesFromTopConditions(analysisRes$res,
-                                                         orThr = as.numeric(analysisRes$params$orThr),
-                                                         fdrThr=as.numeric(analysisRes$params$fdrThr),
-                                                         percentThr = as.numeric(analysisRes$params$percentThr),
+                                                         orThr = as.numeric(input$orThr),
+                                                         fdrThr=as.numeric(input$fdrThr),
+                                                         percentThr = as.numeric(input$percentThr),
                                                          mergedData = obj,
                                                          samp = sampForAnalysis)
         }
@@ -604,16 +605,16 @@ server <- function(input, output,session) {
           {
             resTable = createResTableReplicates(analysisRes$res,
                                                 obj,
-                                      orThr = as.numeric(analysisRes$params$orThr),
-                                      fdrThr = as.numeric(analysisRes$params$fdrThr),
-                                      percentThr = as.numeric(analysisRes$params$percentThr))
+                                      orThr = as.numeric(input$orThr),
+                                      fdrThr = as.numeric(input$fdrThr),
+                                      percentThr = as.numeric(input$percentThr))
 
           }else{ # if without replicates
           # create a table with results
             resTable = createResTable(analysisRes$res,obj,
-                                    orThr = as.numeric(analysisRes$params$orThr),
-                                    fdrThr = as.numeric(analysisRes$params$fdrThr),
-                                    percentThr = as.numeric(analysisRes$params$percentThr),
+                                    orThr = as.numeric(input$orThr),
+                                    fdrThr = as.numeric(input$fdrThr),
+                                    percentThr = as.numeric(input$percentThr),
                                     saveCI = F)
           }
            #===========================
@@ -648,9 +649,9 @@ server <- function(input, output,session) {
                   paste(analysisRes$params$excludeSamp, collapse = ', '),
                   analysisRes$params$compareToRef,
                   analysisRes$params$nReads,
-                  analysisRes$params$fdrThr,
-                  analysisRes$params$orThr,
-                  analysisRes$params$percentThr,
+                  input$fdrThr,
+                  input$orThr,
+                  input$percentThr,
                   analysisRes$params$nuctleotideFlag,
                   length(s), productiveReadCounts[s])
 
