@@ -149,7 +149,7 @@ ui <- fluidPage(
   	   # the left side panel
   		sidebarPanel(
   		  # check box that specifies the input data format
-    		checkboxInput('replicates','The input with replicates',
+    		checkboxInput('replicates','Analyze with replicates',
     		              value = FALSE),
 
     		# check box that controls the type of analysis - if the comparison with a reference should be performed or not
@@ -512,7 +512,7 @@ server <- function(input, output,session) {
      # check if there are any results to save
     if (!is.null(analysisRes$res))
     {
-        output$message_analysis = renderText('Analysis is done. Click Download Results to save the results')
+        output$message_analysis = renderText('Analysis is done. Go to the Save Results tab')
         assign('analysisRes',analysisRes, envir = .GlobalEnv)
     }	else{
         output$message_analysis = renderText('There are no clones to analyze. Try to reduce the number of templates')
