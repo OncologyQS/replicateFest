@@ -491,15 +491,14 @@ server <- function(input, output,session) {
             updateSelectInput(session, "excludeSamp", choices=sampAnnot$condition)
 
             # get clones to test
-            clonesToTest = getClonesToTest(obj, nReads = input$nReads)
+            clonesToTest = getClonesToTest(obj, nReads = as.numeric(input$nReads))
+
             # check if there are enought clones to analyze
             if (length(clonesToTest)<1)
             {
               output$message_analysis = renderText('There are no clones to analyze. Try to reduce confidence or the number of templates 1')
               return()
             }
-
-            res = NULL
             # run the analysis for selected clones
             analysisRes$res = fitModelSet(clonesToTest, obj,
                                      sampAnnot$condition,
