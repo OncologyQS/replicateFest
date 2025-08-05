@@ -512,7 +512,7 @@ server <- function(input, output,session) {
      # check if there are any results to save
     if (!is.null(analysisRes$res))
     {
-        output$message_analysis = renderText('Analysis is done. Go to the Save Results tab')
+        output$message_analysis = renderText('Analysis is done. Go to the Save results tab')
         assign('analysisRes',analysisRes, envir = .GlobalEnv)
     }	else{
         output$message_analysis = renderText('There are no clones to analyze. Try to reduce the number of templates')

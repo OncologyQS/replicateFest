@@ -680,12 +680,13 @@ saveResults = function(results, outputFile = "output.xlsx")
 #' from the file names. The condition and replicate should
 #' be separated by "_" and be the last two elements.
 #' @param filenames a vector of file names
+#' @param sep a separator to split the file names, default is "_"
 #' @return a data frame with condition and replicate information
 
-splitFileName = function(filenames)
+splitFileName = function(filenames, sep = "_")
 {
   # split the file names by "_"
-  splitNames = strsplit(filenames, "_")
+  splitNames = strsplit(filenames, sep = sep)
   # create a data frame with condition and replicate information
   condRep = data.frame(matrix(nrow = length(filenames), ncol = 2,
                        dimnames = list(filenames,c("condition","replicate"))))
