@@ -34,13 +34,15 @@
 # productiveReadCounts is the total number of reads of productive sequencies
 readMergeSave = function(files, filenames = NULL)
 {
-	if (length(files) == 0)
+	if (is.null(files))
 	{
 		print('There is no files to read')
 			return(NULL);
 	}
-		require(tools)
-		require(immunarch)
+  # TODO add check if files are exist
+
+		library(tools)
+    library(immunarch)
 
   # output objects
 		mergedData = ntData = list()

@@ -57,6 +57,30 @@
 # removed the baseline option
 # switched to openxlsx for saving results
 # made a list with analysis results and parameters that were used for the analysis
+# made custom separator for file names to separate replicates
+
+# TODO:
+# - add custom separator into interface
+#   Couldn't easily add, because that the getPerSampleSummary function
+#   also requires separator, but it's not straightforward to pass it
+#   Probably, need to save that as another element in analysisRes object
+
+# - In cases where there are not replicates,
+# can you add a filter to only show clones that are detected
+# in X% of other wells? For example, sometimes when there are
+# a lot of clones that are only found in one well, I implement
+# a threshold of 20%, meaning the clone should be detected
+# in at least 20% of wells. detected would mean that there is
+# a non-zero abundance
+
+# - what do you think about removing the “compare to reference* button
+# in favor of  testing reference==’none’?
+# (Maybe want to reinitialize when new data is loaded
+# to avoid errors)
+
+# - A message saying “Analysis in progress” would help,
+# to be replaced with “Analysis is done” , maybe also a
+# note about expected wait
 
 #==============================
 # User interface
@@ -152,6 +176,16 @@ ui <- fluidPage(
     		checkboxInput('replicates','Analyze with replicates',
     		              value = FALSE),
 
+    		# if analysis with replicates, then specify separator
+    		# conditionalPanel(
+    		#   condition = "replicates == TRUE",
+    		#   tags$span("Specify a separator:"),
+    		#   textInput('separator', NULL,
+    		#             value = "_", width = "3em",
+    		#             placeholder = NULL),
+    		# ),
+
+
     		# check box that controls the type of analysis - if the comparison with a reference should be performed or not
     		shinyjs::useShinyjs(),
     		checkboxInput('compareToRef','Compare to reference', value = TRUE),
@@ -193,7 +227,11 @@ ui <- fluidPage(
                           max = 1, step= 0.01),
              textInput('orThr', 'for odds ratio', value = "5",
                        width = NULL, placeholder = NULL),
-             textInput('percentThr', 'for percentage',
+             # keep clones that have maximal abundance above that values
+             textInput('percentThr', 'for clone abundance (in percent)',
+                       value = "0"),
+             # a threshold for percent of wells where a clone has non-zero abundance
+             textInput('wellsThr', 'for wells with non-zero abundance (in percent)',
                        value = "0"),
              downloadButton('saveResults', 'Download Results'),
              downloadButton('saveHeatmaps', 'Create heatmaps')
@@ -406,7 +444,8 @@ server <- function(input, output,session) {
       if (!input$nuctleotideFlag){
         sampNames = names(mergedData)
         obj = mergedData
-      }else{ # run analysis on nucleotide level data if 'Use nucleotide level data' checkbox is selected
+      }else{ # run analysis on nucleotide level data
+        #if 'Use nucleotide level data' checkbox is selected
         sampNames = names(ntData)
         obj = ntData
       }
@@ -472,6 +511,9 @@ server <- function(input, output,session) {
       #================================
         # extract conditions from the file names
         sampAnnot = splitFileName(names(obj))
+        # add that to the analysisRes object to be used in generating output
+        analysisRes$sampAnnot = sampAnnot
+
         # check if there are conditions
         if (all(is.na(sampAnnot$condition)))
         {

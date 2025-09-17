@@ -611,7 +611,7 @@ createPosClonesOutput = function(posClones,
 }
 
 #' getPerSampleSummary
-#' returns per sample summary of positive clones a table with the
+#' returns per sample summary of positive clones as a table with the
 #' number of positive clones per sample and the sum of their frequencies
 #' @params posClones a data frame with positive clones in the first column
 #' and their conditions to be summarized in the second.
