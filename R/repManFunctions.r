@@ -41,8 +41,8 @@ readMergeSave = function(files, filenames = NULL)
 	}
   # TODO add check if files are exist
 
-		library(tools)
-    library(immunarch)
+		require(tools)
+    require(immunarch)
 
   # output objects
 		mergedData = ntData = list()

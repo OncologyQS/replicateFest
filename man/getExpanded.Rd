@@ -4,16 +4,16 @@
 \alias{getExpanded}
 \title{function that returns the expanded clones}
 \usage{
-getExpanded(fitResults, countData, ORthr = 1, FDRthr = 0.05)
+getExpanded(fitResults, countData, orThr = 1, fdrThr = 0.05)
 }
 \arguments{
 \item{fitResults}{a data frame with ORs, p-values and FDRs}
 
 \item{countData}{a list of counts for all samples}
 
-\item{ORthr}{threshold for OR to consider a clone expanded}
+\item{orThr}{threshold for OR to consider a clone expanded}
 
-\item{FDRthr}{threshold for FDR to consider a clone expanded}
+\item{fdrThr}{threshold for FDR to consider a clone expanded}
 }
 \value{
 a data frame with expanded clones

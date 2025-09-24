@@ -237,21 +237,23 @@ getDiff = function(clones, mergedData, samp = names(mergedData), refSamp)
 #' @return a data frame with frequencies in percent for selected clones and samples
 #' @export
 #'
-getFreq = function(clones, mergedData, samp = names(mergedData), colSuf = 'percent', minRead = 0)
-{
-  totalReadCountPerSample = sapply(mergedData, sum)
-  output_freq = matrix(minRead,nrow = length(clones), ncol = length(samp))
-	rownames(output_freq) = clones
-	colnames(output_freq) = samp
-	for (i in samp)
-	{
-		rows = intersect(names(mergedData[[i]]),clones)
-		output_freq[rows,i] = mergedData[[i]][rows]
-		output_freq[,i] = (output_freq[,i]/totalReadCountPerSample[i])*100
-	}
-	if (colSuf != '') colnames(output_freq) = paste(samp,colSuf, sep = '_')
-	else colnames(output_freq) = samp
-	return(data.frame(output_freq,check.names = F))
+getFreq <- function(clones, mergedData, samp = names(mergedData), colSuf = "percent", minRead = 0) {
+  totalReadCountPerSample <- sapply(mergedData, sum)
+  output_freq <- matrix(minRead, nrow = length(clones), ncol = length(samp))
+  rownames(output_freq) <- clones
+  colnames(output_freq) <- samp
+  for (i in samp)
+  {
+    rows <- intersect(names(mergedData[[i]]), clones)
+    output_freq[rows, i] <- mergedData[[i]][rows]
+    output_freq[, i] <- (output_freq[, i] / totalReadCountPerSample[i]) * 100
+  }
+  if (colSuf != "") {
+    colnames(output_freq) <- paste(samp, colSuf, sep = "_")
+  } else {
+    colnames(output_freq) <- samp
+  }
+  return(data.frame(output_freq, check.names = F))
 }
 
 #' @title getFreqOrCount
@@ -296,19 +298,18 @@ getFreqOrCount = function(clones, mergedData,
 #' @param samp a vector of sample names for which FC should be calculated
 #' @param colSuf a string to be used at the beginning of columns with FC
 
-getFC = function(clones, mergedData, refSamp,
-                 samp = names(mergedData), colSuf = 'FC:')
+getFC <- function(clones, mergedData, refSamp,
+                  samp = names(mergedData), colSuf = "FC:")
 {
-  totalReadCountPerSample = sapply(mergedData, sum)
-  samp = setdiff(samp,refSamp)
-	freq = getFreq(clones, mergedData, union(refSamp,samp), colSuf = '', minRead = 1)
-	# reference samples frequencies
-	ref = freq[,refSamp]
-	# divide to reference samples frequencies
-	fc = round(sweep(data.frame(freq[,samp]),1, ref, "/"))
-	colnames(fc) = paste0(colSuf,samp)
-	rownames(fc) = clones
-	return(fc)
+  samp <- setdiff(samp, refSamp)
+  freq <- getFreq(clones, mergedData, union(refSamp, samp), colSuf = "", minRead = 1)
+  # reference samples frequencies
+  ref <- freq[, refSamp]
+  # divide to reference samples frequencies
+  fc <- round(sweep(data.frame(freq[, samp]), 1, ref, "/"))
+  colnames(fc) <- paste0(colSuf, samp)
+  rownames(fc) <- clones
+  return(fc)
 }
 
 # returns clones that unique for a selected condition
@@ -611,13 +612,13 @@ createPosClonesOutput = function(posClones,
 }
 
 #' getPerSampleSummary
-#' returns per sample summary of positive clones as a table with the
+#' @description returns per sample summary of positive clones as a table with the
 #' number of positive clones per sample and the sum of their frequencies
-#' @params posClones a data frame with positive clones in the first column
+#' @param posClones a data frame with positive clones in the first column
 #' and their conditions to be summarized in the second.
 #' In the replication version, these should be samples
-#' @params mergedData a list of data frames with read counts for each sample
-#' @params replicates a logical value indicating if there are replicates
+#' @param mergedData a list of data frames with read counts for each sample
+#' @param replicates a logical value indicating if there are replicates
 getPerSampleSummary = function(posClones, mergedData, replicates = FALSE)
 {
   library(dplyr)

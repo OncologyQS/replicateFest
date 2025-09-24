@@ -4,16 +4,16 @@
 \alias{getClonesToTest}
 \title{getClonesToTest}
 \usage{
-getClonesToTest(countDat, ctThresh = 50)
+getClonesToTest(countDat, nReads = 50)
 }
 \arguments{
 \item{countDat}{a list of merged data}
 
-\item{ctThresh}{a minimal number of reads required to consider a clone}
+\item{nReads}{a minimal number of reads required to consider a clone}
 }
 \value{
 a vector of clones of interest
 }
 \description{
-function that returns the read counts for clones of interest in all samples
+function that returns clones of interest in all samples
 }

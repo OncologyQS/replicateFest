@@ -8,7 +8,8 @@ createResTable(
   res,
   mergedData,
   orThr = 1,
-  FDR_threshold = 0.05,
+  fdrThr = 0.05,
+  percentThr = 0,
   saveCI = T,
   significanceTable = F
 )
@@ -20,7 +21,7 @@ createResTable(
 
 \item{orThr}{a threshold for odds ratio}
 
-\item{FDR_threshold}{a threshold for FDR}
+\item{fdrThr}{a threshold for FDR}
 
 \item{saveCI}{a logical value indicating if confidence intervals should be saved}
 

@@ -7,12 +7,12 @@
 runExperiment(
   files,
   peptides,
-  ctThresh = 50,
+  nReads = 50,
   control,
-  ORthr = 1,
-  FDRthr = 0.05,
+  orThr = 1,
+  fdrThr = 0.05,
   excludeCond = NA,
-  xrCond = NA,
+  xrCond = NULL,
   percentThr = 0,
   outputFile = "output.xlsx",
   saveToFile = T,
@@ -24,13 +24,13 @@ runExperiment(
 
 \item{peptides}{a vector of peptides corresponding to columns in merged data}
 
-\item{ctThresh}{minimal number of reads required to consider a clone}
+\item{nReads}{minimal number of reads required to consider a clone}
 
 \item{control}{name of control/reference condition}
 
-\item{ORthr}{threshold for OR to consider a clone expanded}
+\item{orThr}{threshold for OR to consider a clone expanded}
 
-\item{FDRthr}{threshold for FDR to consider a clone expanded}
+\item{fdrThr}{threshold for FDR to consider a clone expanded}
 
 \item{excludeCond}{a vector of conditions to exclude from the analysis}
 
