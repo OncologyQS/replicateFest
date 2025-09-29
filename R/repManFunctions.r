@@ -1,17 +1,3 @@
-#' @import tools
-#' @import immunarch
-#' @import lme4
-#' @import contrast
-#' @import multcomp
-#' @import MASS
-#' @import dplyr
-#' @import openxlsx
-#' @import stats
-#'
-#import description end
-0
-
-
 # Functions for analysis of FEST data in shiny app
 # using input with replicates
 # based on Leslie's development for the Cervical SPORE project
@@ -183,11 +169,6 @@ fitModel = function(clone,countData,peptides,control,
   #### peptides is a vector, equal in length to merged data indicating
   ####  which peptide is represented in each rep.
   #### could extend with a matrix of covariates, rows = length merged data
-  require(lme4)
-  require(contrast)
-  require(multcomp)
-  require(MASS)
-  require(dplyr)
 
   #  print(clone)
   ### make the count matrix for a clone across all samples
@@ -662,7 +643,6 @@ getXR = function(res, conditions, control, xrCond,
 # input: a list of data frames with results
 saveResults = function(results, outputFile = "output.xlsx")
 {
-  library(openxlsx)
   # create a workbook
   wb = createWorkbook()
 
