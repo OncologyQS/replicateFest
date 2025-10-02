@@ -9,7 +9,12 @@
 The package contains functions to analyze TCR-sequencing data from FEST (Functional Expansion of Specific T-cells) assay. TCR sequencing data is generated from short-term, peptide-stimulated cultures to identify antigen-specific clonotypic amplifications.
 }
 \author{
-\strong{Maintainer}: Leslie Cope \email{lcope1@jhmi.edu}
+\strong{Maintainer}: Ludmila Danilova \email{ldanilo1@jhmi.edu}
+
+Authors:
+\itemize{
+  \item Leslie Cope \email{lcope1@jhmi.edu}
+}
 
 }
 \keyword{internal}

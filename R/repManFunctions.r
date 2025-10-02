@@ -27,8 +27,8 @@ readMergeSave = function(files, filenames = NULL)
 	}
   # TODO add check if files are exist
 
-#		require(tools)
-#    require(immunarch)
+		require(tools)
+    require(immunarch)
 
   # output objects
 		mergedData = ntData = list()
@@ -643,6 +643,7 @@ getXR = function(res, conditions, control, xrCond,
 # input: a list of data frames with results
 saveResults = function(results, outputFile = "output.xlsx")
 {
+  library(openxlsx)
   # create a workbook
   wb = createWorkbook()
 

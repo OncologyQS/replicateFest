@@ -23,7 +23,7 @@ runFisher = function(pair, mergedData,
                      nReadFilter = c(10,0), dir = T,
                      clones = NULL)
 {
-#  browser()
+ # browser()
   # calculate the number of reads for each sample
   totalReadCounts = sapply(mergedData, sum)
   # get sample IDs to compare
@@ -89,7 +89,7 @@ runFisher = function(pair, mergedData,
 
 #' createResTable
 #' @description Creates a table with significant clones and conditions
-#' @param res a table with results of Fisher's test
+#' @param res a list of tables with results of Fisher's test for each pair of comparisons
 #' @param mergedData a list of data frames with read counts for each sample
 #' @param orThr a threshold for odds ratio
 #' @param fdrThr a threshold for FDR
@@ -110,6 +110,7 @@ createResTable = function(res,mergedData,
   # get all clones for output
   clones = c()
 	notNullComp = names(res)[!sapply(res,is.null)]
+#browser()
 	# get all clones for output
 	for (i in notNullComp){
 #print(i)
@@ -775,9 +776,11 @@ runExperimentFisher=function(files,
       fisherRes = apply(compPairs,1,runFisher,mergedData,
                           clones = clonesToTest,
                           nReadFilter = c(nReads,0))
+      #browser()
     if (!is.null(fisherRes))
     {
-     # add names of compared conditions
+     browser()
+      # add names of compared conditions
       names(fisherRes) = apply(compPairs,1,paste,collapse = '_vs_')
       # select positive clones with specified thresholds
       posClones = getPositiveClones(fisherRes, mergedData,

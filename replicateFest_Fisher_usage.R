@@ -13,7 +13,7 @@ library(replicateFest)
 # usage of replicateFest on experimental data without replicates
 #================================================================#========================
 # specify a folder with an input data
-inputDir = "/Data"
+inputDir = "Data/No_replicate_data"
 # list paths to files with data
 files = list.files(inputDir, full.names = T, pattern = "txt")
 # specify sample names that should be excluded from analysis
