@@ -35,7 +35,7 @@ generate_vdjtools_df <- function(expanded_clonotype = NULL,
                                  expanded_count = 1000,
                                  base_count = 10,
                                  n_clonotypes = 50) {
-  total_count <- expanded_count + base_count * (n_clonotypes - 1)
+#  total_count <- expanded_count + base_count * (n_clonotypes - 1)
   df <- data.frame(
     count = rep(base_count, n_clonotypes),
     freq = NA,
@@ -53,12 +53,14 @@ generate_vdjtools_df <- function(expanded_clonotype = NULL,
   )
 
   if (!is.null(expanded_clonotype)) {
-    df$cdr3aa[1] <- expanded_clonotype
-    df$cdr3nt[1] <- generate_cdr3_nt()
-    df$v[1] <- generate_v_name()
-    df$j[1] <- generate_j_name()
-    df$d[1] <- generate_d_name()
-    df$count[1] <- expanded_count
+    # get random index for a clone to be expanded
+    i = sample(1:n_clonotypes, 1)
+    df$cdr3aa[i] <- expanded_clonotype
+    df$cdr3nt[i] <- generate_cdr3_nt()
+    df$v[i] <- generate_v_name()
+    df$j[i] <- generate_j_name()
+    df$d[i] <- generate_d_name()
+    df$count[i] <- expanded_count
   }
 
   df$freq <- round(df$count / sum(df$count), 6)

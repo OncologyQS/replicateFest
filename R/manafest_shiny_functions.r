@@ -159,7 +159,7 @@ createResTable = function(res,mergedData,
 	clones = rownames(output_counts_percent)
 
 	outTab = data.frame(clone = clones,
-	                    n_significant_comparisons =significant_comparisons[clones],
+	                    n_significant_comparisons = significant_comparisons[clones],
 	                    output_fdr[clones,],
 	                    output_OR_CI[clones,],
 	                    output_counts_percent, check.names = F)
@@ -771,15 +771,16 @@ runExperimentFisher=function(files,
     # create comparing pairs (to refSamp)
     compPairs = cbind(sampForAnalysis,rep(refSamp,
                                           length(sampForAnalysis)))
-    # run pair-wise Fisher's test
-#browser()
-      fisherRes = apply(compPairs,1,runFisher,mergedData,
-                          clones = clonesToTest,
-                          nReadFilter = c(nReads,0))
-      #browser()
+    # run pair-wise Fisher's test for each row in compPairs
+    fisherRes = lapply(1:nrow(compPairs),
+                       function(i) runFisher(compPairs[i,],
+                                             mergedData,
+                                             clones = clonesToTest,
+                                             nReadFilter = c(nReads,0)))
+
     if (!is.null(fisherRes))
     {
-     browser()
+#     browser()
       # add names of compared conditions
       names(fisherRes) = apply(compPairs,1,paste,collapse = '_vs_')
       # select positive clones with specified thresholds
@@ -820,18 +821,14 @@ runExperimentFisher=function(files,
   if(compareToRef) #if there is comparison to the ref sample
   {
     # create a table with results
+
     resTable = createResTable(fisherRes,mergedData,
                               orThr = orThr,
                               fdrThr = fdrThr, saveCI = F)
     if (!is.null(resTable))
     {
-      # make a numeric table to save in an Excel spreadsheet
-      refCompRes = resTable[,2:ncol(resTable)]
-      refCompRes = t(do.call('rbind',refCompRes))
-      rownames(refCompRes) = rownames(resTable)
+      tablesToXls$ref_comparison_only = resTable
 
-      # table with results of comparison to the reference sample only
-      tablesToXls$ref_comparison_only = data.frame(refCompRes,check.names = F)
     }else{
       tablesToXls$ref_comparison_only = data.frame(res = 'There are no significant clones')
     }
