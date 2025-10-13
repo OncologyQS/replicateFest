@@ -189,7 +189,7 @@ fitModel = function(clone,countData,peptides,control,
     return(NULL)
   })
   # if the model doesn't fail, extract coefficients
-  #browser()
+browser()
   if(!exists("mhcMod")){return(NULL)}
 
   # if the model fits fine, extract coefficients
@@ -325,7 +325,7 @@ runExperiment=function(files, peptides, nReads=50, control,
     print("There are not clones to analyze. Try to reduce the number of tempaltes.")
     return(NULL)
   }
-
+#browser()
   # run the analysis for selected clones
   fitResults = fitModelSet(goodClones,
                            mergeData,
@@ -493,7 +493,7 @@ fitModelSet = function(clones, countData, peptides, excludeCond = NA,...)
                   peptides=peptides,...)
   }
 
- #  browser()
+  browser()
 
   # remove enties with NULL
   fitResults = fitResults[!sapply(fitResults, is.null)]
@@ -669,7 +669,7 @@ saveResults = function(results, outputFile = "output.xlsx")
 splitFileName = function(filenames, sep = "_")
 {
   # split the file names by "_"
-  splitNames = strsplit(filenames, sep = sep)
+  splitNames = strsplit(filenames, split = sep)
   # create a data frame with condition and replicate information
   condRep = data.frame(matrix(nrow = length(filenames), ncol = 2,
                        dimnames = list(filenames,c("condition","replicate"))))

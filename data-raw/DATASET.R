@@ -82,4 +82,22 @@ write.table(df_control, file = "sample1_control.tsv",  sep = '\t',
 
 
 
+# Generate data with replicates
+rep = c("A","B","C")
+for (i in 1:5) {
+  clonotype <- generate_cdr3_aa()
+  for(j in rep){
+    df <- generate_vdjtools_df(expanded_clonotype = clonotype)
+    write.table(df, file = paste0("replicates/sample1_peptide", i, "_",j,".tsv"), sep = '\t',
+                row.names = FALSE, quote = FALSE)
+  }
+}
+
+# Generate and save reolicates of control sample
+for(j in rep){
+  df_control <- generate_vdjtools_df()
+write.table(df_control, file = paste0("replicates/sample1_control", "_",j,".tsv"),  sep = '\t',
+            row.names = FALSE, quote = FALSE)
+}
+
 #usethis::use_data(DATASET, overwrite = TRUE)
