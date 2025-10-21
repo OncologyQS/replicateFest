@@ -76,7 +76,7 @@ readMergeSave = function(files, filenames = NULL)
 #' @param clone a clone to get counts for
 #' @param countData a list of per clone counts for all samples from readMergeSave
 #' @param correct a parameter to add to all counts to avoid 0s
-#' @return a matrix with counts for a clone across all samples
+#' @return a vector with counts for a clone across all samples
 #'
 #'
 #### requires 1 input:
@@ -189,7 +189,7 @@ fitModel = function(clone,countData,peptides,control,
     return(NULL)
   })
   # if the model doesn't fail, extract coefficients
-browser()
+#browser()
   if(!exists("mhcMod")){return(NULL)}
 
   # if the model fits fine, extract coefficients
@@ -400,7 +400,8 @@ runExperiment=function(files, peptides, nReads=50, control,
             'OR threshold','percent threshold',
             'Nucleotide level analysis',
             'n samples',
-            paste(s, 'n templates',sep = '_'))
+            paste(s, 'n templates',sep = '_'),
+            "timestamp")
   value = c(TRUE,
             control,
             paste(excludeCond, collapse = ', '),
@@ -410,17 +411,17 @@ runExperiment=function(files, peptides, nReads=50, control,
             orThr,
             percentThr,
             FALSE,
-            length(s), productiveReadCounts[s])
+            length(s), productiveReadCounts[s],
+            Sys.time)
 
   tablesToXls$parameters = data.frame(param, value)
-
-
 
   # save into Excel file
   if(saveToFile)
   {
     saveResults(tablesToXls, outputFile = outputFile)
-  } else return(tablesToXls)
+  }
+  return(tablesToXls)
 }
 
 #' @export
@@ -493,7 +494,7 @@ fitModelSet = function(clones, countData, peptides, excludeCond = NA,...)
                   peptides=peptides,...)
   }
 
-  browser()
+  #browser()
 
   # remove enties with NULL
   fitResults = fitResults[!sapply(fitResults, is.null)]
