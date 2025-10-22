@@ -844,15 +844,13 @@ runExperimentFisher=function(files,
             'OR threshold','percent threshold',
             'Nucleotide level analysis',
             'n analyzed samples',
-            paste(s, 'n templates',sep = '_'),
-            "timestamp")
+            paste(s, 'n templates',sep = '_'))
   value = c(toString(refSamp),
             paste(excludeSamp, collapse = ', '),
             compareToRef, nReads,fdrThr,
             orThr, percentThr,
             FALSE,
-            length(s), productiveReadCounts[s],
-            Sys.time())
+            length(s), productiveReadCounts[s])
 
   tablesToXls$parameters = data.frame(param, value)
 
@@ -860,6 +858,7 @@ runExperimentFisher=function(files,
   if(saveToFile)
   {
     saveResults(tablesToXls,outputFile)
-  } else return(tablesToXls)
+  }
+  return(tablesToXls)
 
 }

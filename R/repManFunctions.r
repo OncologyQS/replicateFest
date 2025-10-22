@@ -325,7 +325,7 @@ runExperiment=function(files, peptides, nReads=50, control,
     print("There are not clones to analyze. Try to reduce the number of tempaltes.")
     return(NULL)
   }
-#browser()
+browser()
   # run the analysis for selected clones
   fitResults = fitModelSet(goodClones,
                            mergeData,
@@ -400,8 +400,7 @@ runExperiment=function(files, peptides, nReads=50, control,
             'OR threshold','percent threshold',
             'Nucleotide level analysis',
             'n samples',
-            paste(s, 'n templates',sep = '_'),
-            "timestamp")
+            paste(s, 'n templates',sep = '_'))
   value = c(TRUE,
             control,
             paste(excludeCond, collapse = ', '),
@@ -411,8 +410,7 @@ runExperiment=function(files, peptides, nReads=50, control,
             orThr,
             percentThr,
             FALSE,
-            length(s), productiveReadCounts[s],
-            Sys.time)
+            length(s), productiveReadCounts[s])
 
   tablesToXls$parameters = data.frame(param, value)
 
@@ -429,12 +427,13 @@ runExperiment=function(files, peptides, nReads=50, control,
 #' @description returns the read count for clones of interest in all samples
 #' @param clones a vector of clones of interest
 #' @param countData a list of counts for all samples
-#' @return a matrix of clone abundances across samples in `countData`
+#' @return a data.frame of clone abundances across samples in `countData`
 # input: a list of merged data, a vector of clones of interest
 getAbundances = function(clones,countData)
 {
   # create output matrices
-  output_counts = matrix(0,nrow = length(clones), ncol = length(countData))
+  output_counts = data.frame(matrix(0,nrow = length(clones),
+                                    ncol = length(countData)))
   rownames(output_counts) = clones
   colnames(output_counts) = names(countData)
 
@@ -550,6 +549,7 @@ getExpanded = function(fitResults, countData,
                            rownames(fitResults)[which(as.numeric(fitResults[,paste0("OR: ",i)]) >= orThr & # expanded
                                                     as.numeric(fitResults[,paste0("FDR: ",i)]) < fdrThr)])# significant
   }
+
   # get the results for expanded clones only
   res_exp = fitResults[expandedClones,]
 
@@ -576,6 +576,7 @@ getExpanded = function(fitResults, countData,
                   significant_condition = sigComp,
                   res_exp[,setdiff(colnames(res_exp),c("clone"))])
    # add abundance and percentage of the top clones in each condition
+
   # get abundance for the top clones
   abundance = getAbundances(rownames(res_exp), countData)
   # get total read count for each sample
@@ -713,7 +714,7 @@ getPositiveClonesReplicates = function(analysisRes,
   contCol = grep(control,colnames(analysisRes), value = T)
   res_exp = getExpanded(analysisRes[,c("clone",contCol)], mergedData,
                         orThr = orThr, fdrThr = fdrThr)
-
+#browser()
   #=================
   # keep clones with maximum percentage across
   # all analyzed samples higher that a specified threshold

@@ -684,8 +684,7 @@ server <- function(input, output,session) {
                   'percent threshold',
                   'Nucleotide level analysis',
                   'n samples',
-                  paste(s, 'n templates',sep = '_'),
-                  'timestamp')
+                  paste(s, 'n templates',sep = '_'))
         value = c(analysisRes$params$replicates,
                   analysisRes$params$refSamp,
                   paste(analysisRes$params$excludeSamp, collapse = ', '),
@@ -695,8 +694,7 @@ server <- function(input, output,session) {
                   input$orThr,
                   input$percentThr,
                   analysisRes$params$nuctleotideFlag,
-                  length(s), productiveReadCounts[s],
-                  Sys.time())
+                  length(s), productiveReadCounts[s])
 
         tablesToXls$parameters = data.frame(param, value)
 
