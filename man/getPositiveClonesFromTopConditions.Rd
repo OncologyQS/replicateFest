@@ -22,6 +22,8 @@ This table is an output from compareWithOtherTopConditions function}
 \item{fdrThr}{a threshold for FDR}
 
 \item{percentThr}{a threshold for percentage}
+
+\item{...}{additional parameters passed to getFreqOrCount function}
 }
 \value{
 a vector with positive clones as names and conditions,

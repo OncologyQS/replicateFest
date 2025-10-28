@@ -14,6 +14,8 @@ fitModelSet(clones, countData, peptides, excludeCond = NA, ...)
 \item{peptides}{a vector of peptides corresponding to columns in merged data}
 
 \item{excludeCond}{a vector of conditions to exclude from the analysis}
+
+\item{...}{additional parameters to pass to fitModel}
 }
 \value{
 a matrix with all ORs, p-values and FDRs

@@ -9,10 +9,10 @@ Description: The package contains functions to analyze TCR-sequencing data
   from FEST (Functional Expansion of Specific T-cells) assay. TCR sequencing 
   data is generated from short-term, peptide-stimulated cultures to identify 
   antigen-specific clonotypic amplifications.
-License: Artistic-2.0
+License: Apache-2.0
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.3.2
+RoxygenNote: 7.3.3
 Suggests: 
     testthat (>= 3.0.0)
 Config/testthat/edition: 3

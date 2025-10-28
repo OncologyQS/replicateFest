@@ -21,7 +21,3 @@ readMergeSave
 Reads files, removes non-productive sequences, extracts counts,
 creates all necessary objects for further analysis
 }
-\examples{
-readMergeSave(files = c("data/0.csv","data/1.csv","data/2.csv"))
-
-}

@@ -545,7 +545,7 @@ server <- function(input, output,session) {
             analysisRes$res = fitModelSet(clonesToTest, obj,
                                      sampAnnot$condition,
                                      excludeCond = input$excludeSamp,
-                                     control=input$refSamp,
+                                     refSamp=input$refSamp,
                                      c.corr=1)
             rownames(analysisRes$res) = analysisRes$res$clone
 
@@ -590,7 +590,7 @@ server <- function(input, output,session) {
           {
             posClones = getPositiveClonesReplicates(analysisRes$res,
                                                     obj,
-                                                    control = analysisRes$params$refSamp,
+                                                    refSamp = analysisRes$params$refSamp,
                                                     samp = sampForAnalysis,
                                                     excludeCond = analysisRes$params$excludeSamp,
                                                     orThr = as.numeric(input$orThr),

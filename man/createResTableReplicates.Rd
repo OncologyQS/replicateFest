@@ -4,24 +4,16 @@
 \alias{createResTableReplicates}
 \title{createResTableReplicates}
 \usage{
-createResTableReplicates(
-  res,
-  mergedData,
-  orThr = 1,
-  fdrThr = 0.05,
-  percentThr = 0
-)
+createResTableReplicates(res, mergedData, percentThr = 0, ...)
 }
 \arguments{
 \item{res}{a table with results of analysis}
 
 \item{mergedData}{a list of data frames with read counts for each sample}
 
-\item{orThr}{a threshold for odds ratio}
-
-\item{fdrThr}{a threshold for FDR}
-
 \item{percentThr}{a threshold for percentage of reads in a sample to consider a clone expanded}
+
+\item{...}{additional parameters to pass to getExpanded function}
 }
 \value{
 a data frame with significant clones and the corresponding
@@ -29,6 +21,6 @@ a data frame with significant clones and the corresponding
 }
 \description{
 Creates a table with significantly expanded clones
-relative to the control condition and all corresponding data,
+relative to the reference condition and all corresponding data,
 such as OR, FDR, abundances, and percentages
 }

@@ -2,14 +2,16 @@
 % Please edit documentation in R/repManFunctions.r
 \name{getExpanded}
 \alias{getExpanded}
-\title{function that returns the expanded clones}
+\title{function that returns the expanded clones relative to reference}
 \usage{
-getExpanded(fitResults, countData, orThr = 1, fdrThr = 0.05)
+getExpanded(fitResults, countData, refSamp, orThr = 1, fdrThr = 0.05)
 }
 \arguments{
 \item{fitResults}{a data frame with ORs, p-values and FDRs}
 
 \item{countData}{a list of counts for all samples}
+
+\item{refSamp}{name of reference sample}
 
 \item{orThr}{threshold for OR to consider a clone expanded}
 
@@ -19,5 +21,5 @@ getExpanded(fitResults, countData, orThr = 1, fdrThr = 0.05)
 a data frame with expanded clones
 }
 \description{
-function that returns the expanded clones
+function that returns the expanded clones relative to reference
 }

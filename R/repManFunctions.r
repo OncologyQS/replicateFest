@@ -1,23 +1,23 @@
+
 # Functions for analysis of FEST data in shiny app
 # using input with replicates
 # based on Leslie's development for the Cervical SPORE project
 
-
 #' readMergeSave
 #' Reads files, removes non-productive sequences, extracts counts,
 #' creates all necessary objects for further analysis
+#'
+#' @import contrast
+#' @import dplyr
+#' @import lme4
+#' @import multcomp
+#' @import stats
+
 #' @export
 #' @param files a list of filenames with full paths
 #' @param filenames a vector of filenames
 #' @return a list of AA level counts, nucleotide level counts, and total number of reads
-#' @examples
-#' readMergeSave(files = c("data/0.csv","data/1.csv","data/2.csv"))
-#'
-# input: a path to folder with input files
-# output:
-# countData is AA level counts (merged by AA sequences)
-# ntData is nucleotide level counts
-# productiveReadCounts is the total number of reads of productive sequencies
+#
 readMergeSave = function(files, filenames = NULL)
 {
 	if (is.null(files))
@@ -474,13 +474,14 @@ getClonesToTest = function(countDat, nReads = 50)
 #' @param countData a list of counts for all samples
 #' @param peptides a vector of peptides corresponding to columns in merged data
 #' @param excludeCond a vector of conditions to exclude from the analysis
+#' @param ... additional parameters to pass to fitModel
 #' @return a matrix with all ORs, p-values and FDRs
 #'
 # return a matrix with all ORs, p-values and FDRs
 # input: a list of clones, merged data, peptides,
 
 fitModelSet = function(clones, countData, peptides,
-                       excludeCond = NA,...)
+                       excludeCond = NA, ...)
 {
     # run model for "good" clones
   if (length(excludeCond)>0)
@@ -655,11 +656,16 @@ getXR = function(res, conditions, refSamp, xrCond,
   return(excl)
 }
 
-# function that saves the results to an excel file
-# input: a list of data frames with results
+#' saveResults
+#' @export
+#' @title saveResults
+#' @description Saves results to an excel file
+#' @param results a list of data frames with results
+#' @param outputFile name of the output file
+
 saveResults = function(results, outputFile = "output.xlsx")
 {
-  library(openxlsx)
+#  library(openxlsx)
   # create a workbook
   wb = createWorkbook()
 
@@ -780,6 +786,7 @@ getPositiveClonesReplicates = function(analysisRes,
 #' @param res a table with results of analysis
 #' @param mergedData a list of data frames with read counts for each sample
 #' @param percentThr a threshold for percentage of reads in a sample to consider a clone expanded
+#' @param ... additional parameters to pass to getExpanded function
 #' @return a data frame with significant clones and the corresponding
 #'  OR, FDR, counts, and percentages for all conditions
 #' @export

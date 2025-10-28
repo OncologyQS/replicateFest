@@ -8,7 +8,7 @@ returns positive clones for version with replicates}
 getPositiveClonesReplicates(
   analysisRes,
   mergedData,
-  control,
+  refSamp,
   samp = names(mergedData),
   excludeCond = NA,
   orThr = 1,
@@ -21,7 +21,7 @@ getPositiveClonesReplicates(
 
 \item{mergedData}{a list of data frames with read counts for each sample}
 
-\item{control}{a name of control condition to compare to}
+\item{refSamp}{a name of reference condition to compare to}
 
 \item{samp}{a vector of sample names to include in the analysis}
 

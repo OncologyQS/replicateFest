@@ -15,7 +15,7 @@ cTabPR(clone, countData, correct = 0.5)
 \item{correct}{a parameter to add to all counts to avoid 0s}
 }
 \value{
-a matrix with counts for a clone across all samples
+a vector with counts for a clone across all samples
 }
 \description{
 cTabPR

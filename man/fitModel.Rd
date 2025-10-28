@@ -5,7 +5,7 @@
 \title{fitModel
 Perform analysis for one clone}
 \usage{
-fitModel(clone, countData, peptides, control, c.corr = 1)
+fitModel(clone, countData, peptides, refSamp, c.corr = 1)
 }
 \arguments{
 \item{clone}{a clone to get counts for}
@@ -14,12 +14,12 @@ fitModel(clone, countData, peptides, control, c.corr = 1)
 
 \item{peptides}{a vector of peptides corresponding to columns in merged data}
 
-\item{control}{name of control/reference condition}
+\item{refSamp}{name of reference condition}
 
 \item{c.corr}{a parameter to add to all counts to avoid 0s}
 }
 \value{
-odds ratios and p-values of regression for comparisons to the control condition
+odds ratios and p-values of regression for comparisons to the reference condition
 and comparison of the best to the second best condition
 }
 \description{

@@ -27,8 +27,6 @@ for each sample}
 \item{fdrThr}{a threshold for FDR}
 
 \item{percentThr}{a threshold for the percentage of reads}
-
-\item{nReads}{a threshold for the number of reads}
 }
 \value{
 a vector with positive clones as names and conditions,

@@ -15,13 +15,15 @@ createResTable(
 )
 }
 \arguments{
-\item{res}{a table with results of Fisher's test}
+\item{res}{a list of tables with results of Fisher's test for each pair of comparisons}
 
 \item{mergedData}{a list of data frames with read counts for each sample}
 
 \item{orThr}{a threshold for odds ratio}
 
 \item{fdrThr}{a threshold for FDR}
+
+\item{percentThr}{a threshold for the percentage of reads}
 
 \item{saveCI}{a logical value indicating if confidence intervals should be saved}
 

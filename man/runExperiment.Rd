@@ -8,7 +8,7 @@ runExperiment(
   files,
   peptides,
   nReads = 50,
-  control,
+  refSamp,
   orThr = 1,
   fdrThr = 0.05,
   excludeCond = NA,
@@ -26,7 +26,7 @@ runExperiment(
 
 \item{nReads}{minimal number of reads required to consider a clone}
 
-\item{control}{name of control/reference condition}
+\item{refSamp}{name of reference condition}
 
 \item{orThr}{threshold for OR to consider a clone expanded}
 

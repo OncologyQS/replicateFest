@@ -6,6 +6,16 @@
 \usage{
 getFreqThreshold(n, p)
 }
+\arguments{
+\item{n}{number of cells per well}
+
+\item{p}{selected probability}
+}
+\value{
+frequency threshold
+}
 \description{
-getFreqThreshold
+Calculates frequency threshold using the number of cells and probability
+(1-((1-p)^(1/n)))
+where n=number of cells per well and p=selected probability
 }

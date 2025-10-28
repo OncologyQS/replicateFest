@@ -12,7 +12,7 @@ getAbundances(clones, countData)
 \item{countData}{a list of counts for all samples}
 }
 \value{
-a matrix of clone abundances across samples in `countData`
+a data.frame of clone abundances across samples in `countData`
 }
 \description{
 returns the read count for clones of interest in all samples

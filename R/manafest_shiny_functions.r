@@ -93,6 +93,7 @@ runFisher = function(pair, mergedData,
 #' @param mergedData a list of data frames with read counts for each sample
 #' @param orThr a threshold for odds ratio
 #' @param fdrThr a threshold for FDR
+#' @param percentThr a threshold for the percentage of reads
 #' @param saveCI a logical value indicating if confidence intervals should be saved
 #' @param significanceTable a logical value indicating if a table with significant clones should be returned
 #' @return a data frame with significant clones and the corresponding
@@ -363,6 +364,7 @@ makeHeatmaps = function(listOfclones, mergedData,
 		title(main = names(listOfclones)[[i]], cex=0.2)
 	}
 	dev.off()
+	NULL
 }
 
 runSingleFisher = function(clone, pair, mergedData)
@@ -391,7 +393,6 @@ runSingleFisher = function(clone, pair, mergedData)
 #' @param samp a vector with sample IDs to analyze
 #' @param orThr a threshold for odds ratio
 #' @param fdrThr a threshold for FDR
-#' @param nReads a threshold for the number of reads
 #' @param percentThr a threshold for the percentage of reads
 #' @return a vector with positive clones as names and conditions,
 #' in which a clone is significant, as values
@@ -489,6 +490,7 @@ getPositiveClones = function(analysisRes, mergedData,
 #' @param orThr a threshold for odds ratio
 #' @param fdrThr a threshold for FDR
 #' @param percentThr a threshold for percentage
+#' @param ... additional parameters passed to getFreqOrCount function
 #' @return a vector with positive clones as names and conditions,
 #' in which a clone is significant, as values
 #' @export
@@ -622,7 +624,7 @@ createPosClonesOutput = function(posClones,
 #' @param replicates a logical value indicating if there are replicates
 getPerSampleSummary = function(posClones, mergedData, replicates = FALSE)
 {
-  library(dplyr)
+#  library(dplyr)
   clones = unique(posClones[,1])
   # write peptide summary of positive clones
   # get frequencies of positive clones across all samples
@@ -652,9 +654,15 @@ getPerSampleSummary = function(posClones, mergedData, replicates = FALSE)
   return(peptideTab)
 }
 #' getFreqThreshold
-# calculate frequency threshold using the number of cells and probability
-# (1-((1-p)^(1/n)))
-# where n=number of cells per well and p=selected probability
+#' @description
+#' Calculates frequency threshold using the number of cells and probability
+#' (1-((1-p)^(1/n)))
+#' where n=number of cells per well and p=selected probability
+#' @param n number of cells per well
+#' @param p selected probability
+#' @return frequency threshold
+#' @export
+
 getFreqThreshold = function(n, p)
 {
 	return (1-((1-p)^(1/n)))
