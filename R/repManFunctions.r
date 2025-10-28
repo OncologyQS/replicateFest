@@ -102,14 +102,14 @@ cTabPR=function(clone,countData,correct=.5){
 ###### 1) cTab = counts object created by cTabPR,
 ###### a matrix with two columns: counts of a clone and sums minus counts of the clone in all samples
 ###### 2) peps = vector of peptides corresponding to columns in merged data
-###### 3) control=name of control peptide
-cDfPR=function(cTab,peps,control="NPA"){
-  # if(!(control%in%peps)){ break("control peptide not found")}else{
+###### 3) refSamp=name of refSamp peptide
+cDfPR=function(cTab,peps,refSamp="NPA"){
+  # if(!(refSamp%in%peps)){ break("refSamp peptide not found")}else{
   datPR=data.frame(as.vector(cTab), ## convert matrix to vector: counts of a clone (c+) come first, then sums minus counts of the clone (c-)
                                     ## then sums minus counts of the clone (c-)
                    factor(rep(c("c+","c-"),rep(nrow(cTab),2)),levels=c("c-","c+")),
                    factor(rep(peps,2),
-                          levels=c(control,sort(setdiff(peps,control)))))
+                          levels=c(refSamp,sort(setdiff(peps,refSamp)))))
   colnames(datPR)=c("cts","clone","pep")
   return(datPR)
 }
@@ -156,14 +156,14 @@ dfResultPR=function(cts,cfs){
 #' @param clone a clone to get counts for
 #' @param countData a list of per clone counts for all samples from readMergeSave
 #' @param peptides a vector of peptides corresponding to columns in merged data
-#' @param control name of control/reference condition
+#' @param refSamp name of reference condition
 #' @param c.corr a parameter to add to all counts to avoid 0s
-#' @return odds ratios and p-values of regression for comparisons to the control condition
+#' @return odds ratios and p-values of regression for comparisons to the reference condition
 #' and comparison of the best to the second best condition
 #'
 
 
-fitModel = function(clone,countData,peptides,control,
+fitModel = function(clone,countData,peptides,refSamp,
                     c.corr=1){
 
   #### peptides is a vector, equal in length to merged data indicating
@@ -174,7 +174,7 @@ fitModel = function(clone,countData,peptides,control,
   ### make the count matrix for a clone across all samples
   ctsPR=cTabPR(clone,countData,correct=c.corr)
   ### make the regression data
-  datPR=cDfPR(ctsPR,peps=peptides, control=control)
+  datPR=cDfPR(ctsPR,peps=peptides, refSamp=refSamp)
 
   ### perform the regression
   #mhcMod <- glm(cts ~ clone*pep, data = datPR, family = poisson(link = "log"))
@@ -195,15 +195,15 @@ fitModel = function(clone,countData,peptides,control,
   coefs=summary(mhcMod)$coef
   # find interactions to include in the output
   interact=grep(":",rownames(coefs),fixed=T)
-  # subset coefficients for interactions that represents results of comparison to control
+  # subset coefficients for interactions that represents results of comparison to refSamp
   coefs_int = coefs[interact,]
   # add condition from which coefficients were extracted
   # and convert coefficients to OR
   condition = gsub("clonec+:pep","",rownames(coefs_int), fixed = T)
   OR = setNames(round(exp(coefs_int[,"Estimate"]),3),
-                paste0("OR: ", condition, "_vs_",control))
+                paste0("OR: ", condition, "_vs_",refSamp))
   pval = setNames(coefs_int[,"Pr(>|z|)"],
-                paste0("pval: ", condition, "_vs_",control))
+                paste0("pval: ", condition, "_vs_",refSamp))
 
 #browser()
   # compare with the second best clone and output OR and p-value
@@ -267,7 +267,7 @@ fitModel = function(clone,countData,peptides,control,
 #' @param files a list of filenames with full paths
 #' @param peptides a vector of peptides corresponding to columns in merged data
 #' @param nReads minimal number of reads required to consider a clone
-#' @param control name of control/reference condition
+#' @param refSamp name of reference condition
 #' @param orThr threshold for OR to consider a clone expanded
 #' @param fdrThr threshold for FDR to consider a clone expanded
 #' @param excludeCond a vector of conditions to exclude from the analysis
@@ -287,7 +287,7 @@ fitModel = function(clone,countData,peptides,control,
 #### and a vector of peptide ids for each file.
 #### additional arguments include a minimal number of reads required
 #### to consider a clone
-#### the control peptide ID,
+#### the reference peptide ID,
 #### a vector of conditions to exclude from the analysis
 #### a threshold for OR and FDR to consider a clone expanded
 #### a vector of cross-reactive conditions
@@ -295,7 +295,7 @@ fitModel = function(clone,countData,peptides,control,
 
 #### 2025-01-29 added comparison to the second best to find unique expansions
 
-runExperiment=function(files, peptides, nReads=50, control,
+runExperiment=function(files, peptides, nReads=50, refSamp,
                        orThr=1, fdrThr = 0.05, excludeCond = NA,
                        xrCond = NULL, percentThr = 0,
                        outputFile = "output.xlsx",
@@ -331,14 +331,14 @@ runExperiment=function(files, peptides, nReads=50, control,
                            mergeData,
                            peptides,
                            excludeCond = excludeCond,
-                           control=control,c.corr=1)
+                           refSamp=refSamp,c.corr=1)
   rownames(fitResults) = fitResults$clone
 
 
   # get positive (uniquely expanded) clones
   posClones = getPositiveClonesReplicates(fitResults,
                                           mergeData,
-                                          control = control,
+                                          refSamp = refSamp,
                                           excludeCond = excludeCond,
                                           orThr = orThr,
                                           fdrThr = fdrThr,
@@ -354,7 +354,7 @@ runExperiment=function(files, peptides, nReads=50, control,
   # create table with results
   tablesToXls = createPosClonesOutput(posClones,
                                       mergeData,
-                                      control,
+                                      refSamp,
                                       replicates = TRUE)
 
   }
@@ -362,7 +362,7 @@ runExperiment=function(files, peptides, nReads=50, control,
   resTable = createResTableReplicates(fitResults,
                                       mergeData,
                                       percentThr,
-                                      control,
+                                      refSamp,
                                       orThr,
                                       fdrThr)
   # if there are clones
@@ -379,7 +379,7 @@ runExperiment=function(files, peptides, nReads=50, control,
   {
     tablesToXls$cross_reactive = getXR(fitResults,
                                        peptides,
-                                       control,
+                                       refSamp,
                                        xrCond = xrCond,
                                        excludeCond = excludeCond,
                                        percentThr = percentThr,
@@ -403,7 +403,7 @@ runExperiment=function(files, peptides, nReads=50, control,
             'n samples',
             paste(s, 'n templates',sep = '_'))
   value = c(TRUE,
-            control,
+            refSamp,
             paste(excludeCond, collapse = ', '),
             paste(xrCond, collapse = ', '),
             nReads,
@@ -521,7 +521,7 @@ fitModelSet = function(clones, countData, peptides,
 #' function that returns the expanded clones relative to reference
 #' @param fitResults a data frame with ORs, p-values and FDRs
 #' @param countData a list of counts for all samples
-#' @param control name of reference sample
+#' @param refSamp name of reference sample
 #' @param orThr threshold for OR to consider a clone expanded
 #' @param fdrThr threshold for FDR to consider a clone expanded
 #' @return a data frame with expanded clones
@@ -529,13 +529,13 @@ fitModelSet = function(clones, countData, peptides,
 # input: a data frame with ORs, p-values and FDRs
 # output: a data frame with expanded clones
 getExpanded = function(fitResults, countData,
-                       control,
+                       refSamp,
                        orThr = 1,
                        fdrThr = 0.05)
 {
 #  browser()
-  # find colunms related to comparison to control condition
-  contCol = grep(control,colnames(fitResults), value = T)
+  # find colunms related to comparison to reference condition
+  contCol = grep(refSamp,colnames(fitResults), value = T)
   # subset for those columns only
   fitResults = fitResults[,c("clone",contCol)]
   # find all significantly expanded clones
@@ -614,10 +614,10 @@ getExpanded = function(fitResults, countData,
 # and a vector of cross-reactive conditions
 # output: a data frame with cross-reactive clones
 
-getXR = function(res, conditions, control, xrCond,
+getXR = function(res, conditions, refSamp, xrCond,
                  excludeCond = NULL,percentThr = 0, ...)
 {
-  # get all expanded clones relative to the control
+  # get all expanded clones relative to the refSamp
    res_exp = getExpanded(res,
                         ...)
 
@@ -705,7 +705,7 @@ splitFileName = function(filenames, sep = "_")
 #' returns positive clones for version with replicates
 #' @param analysisRes a data frame with results of analysis
 #' @param mergedData a list of data frames with read counts for each sample
-#' @param control a name of control condition to compare to
+#' @param refSamp a name of reference condition to compare to
 #' @param samp a vector of sample names to include in the analysis
 #' @param excludeCond a vector of conditions to exclude from the analysis
 #' @param orThr a threshold for odds ratio
@@ -716,15 +716,15 @@ splitFileName = function(filenames, sep = "_")
 
 getPositiveClonesReplicates = function(analysisRes,
                                        mergedData,
-                                       control,
+                                       refSamp,
                                        samp = names(mergedData),
                                        excludeCond = NA,
                                        orThr = 1,
                                        fdrThr = 0.05,
                                        percentThr = 0)
 {
-  # get all expanded clones relative to the control
-  res_exp = getExpanded(analysisRes, mergedData, control,
+  # get all expanded clones relative to the refSamp
+  res_exp = getExpanded(analysisRes, mergedData, refSamp,
                         orThr = orThr, fdrThr = fdrThr)
 #browser()
   #=================
@@ -775,7 +775,7 @@ getPositiveClonesReplicates = function(analysisRes,
 
 #' createResTableReplicates
 #' @description Creates a table with significantly expanded clones
-#' relative to the control condition and all corresponding data,
+#' relative to the reference condition and all corresponding data,
 #' such as OR, FDR, abundances, and percentages
 #' @param res a table with results of analysis
 #' @param mergedData a list of data frames with read counts for each sample
