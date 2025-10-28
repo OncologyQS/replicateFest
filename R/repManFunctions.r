@@ -189,7 +189,6 @@ fitModel = function(clone,countData,peptides,control,
     return(NULL)
   })
   # if the model doesn't fail, extract coefficients
-#browser()
   if(!exists("mhcMod")){return(NULL)}
 
   # if the model fits fine, extract coefficients
@@ -225,7 +224,8 @@ fitModel = function(clone,countData,peptides,control,
   ### specify contrast top peptide to second
   cMat[1,c(best,scnd)]=c(1,-1)
 
-  ### fit the contrast using glht function, requires the original model,
+  ### fit the contrast using glht function,
+  # requires the original model,
   # “mhcMod” and the new contrast matrix
   # get an estimate
   pepComp<- glht(mhcMod, linfct=cMat)  ### fit
@@ -325,7 +325,7 @@ runExperiment=function(files, peptides, nReads=50, control,
     print("There are not clones to analyze. Try to reduce the number of tempaltes.")
     return(NULL)
   }
-browser()
+#browser()
   # run the analysis for selected clones
   fitResults = fitModelSet(goodClones,
                            mergeData,
@@ -361,9 +361,10 @@ browser()
 
   resTable = createResTableReplicates(fitResults,
                                       mergeData,
+                                      percentThr,
+                                      control,
                                       orThr,
-                                      fdrThr,
-                                      percentThr)
+                                      fdrThr)
   # if there are clones
   if(nrow(resTable) > 0)
   {
@@ -478,7 +479,8 @@ getClonesToTest = function(countDat, nReads = 50)
 # return a matrix with all ORs, p-values and FDRs
 # input: a list of clones, merged data, peptides,
 
-fitModelSet = function(clones, countData, peptides, excludeCond = NA,...)
+fitModelSet = function(clones, countData, peptides,
+                       excludeCond = NA,...)
 {
     # run model for "good" clones
   if (length(excludeCond)>0)
@@ -516,9 +518,10 @@ fitModelSet = function(clones, countData, peptides, excludeCond = NA,...)
   return(fitResults)
 }
 
-#' function that returns the expanded clones
+#' function that returns the expanded clones relative to reference
 #' @param fitResults a data frame with ORs, p-values and FDRs
 #' @param countData a list of counts for all samples
+#' @param control name of reference sample
 #' @param orThr threshold for OR to consider a clone expanded
 #' @param fdrThr threshold for FDR to consider a clone expanded
 #' @return a data frame with expanded clones
@@ -526,9 +529,15 @@ fitModelSet = function(clones, countData, peptides, excludeCond = NA,...)
 # input: a data frame with ORs, p-values and FDRs
 # output: a data frame with expanded clones
 getExpanded = function(fitResults, countData,
+                       control,
                        orThr = 1,
                        fdrThr = 0.05)
 {
+#  browser()
+  # find colunms related to comparison to control condition
+  contCol = grep(control,colnames(fitResults), value = T)
+  # subset for those columns only
+  fitResults = fitResults[,c("clone",contCol)]
   # find all significantly expanded clones
   # find comparison names
   comp = grep("OR",colnames(fitResults), value = T)
@@ -537,6 +546,13 @@ getExpanded = function(fitResults, countData,
   # convert OR and FDR columns of fitResults into numeric values
   orCols = grep("OR:", colnames(fitResults), value = T)
   fdrCols = grep("FDR:", colnames(fitResults), value = T)
+
+#   # remove columns corresponding to best_vs_second
+#   orCols = orCols[!grepl("best_vs_second", orCols)]
+#   fdrCols = fdrCols[!grepl("best_vs_second", fdrCols)]
+#   comp = comp[!grepl("best_vs_second", comp)]
+
+  # convert those columns to numeric values
   fitResults[,orCols] = sapply(fitResults[,orCols],
                                             as.numeric)
   fitResults[,fdrCols] = sapply(fitResults[,fdrCols],
@@ -602,9 +618,7 @@ getXR = function(res, conditions, control, xrCond,
                  excludeCond = NULL,percentThr = 0, ...)
 {
   # get all expanded clones relative to the control
-  # find colunms with control to get clones expanded relative to reference
-  contCol = grep(control,colnames(res), value = T)
-  res_exp = getExpanded(res[,c("clone",contCol)],
+   res_exp = getExpanded(res,
                         ...)
 
   #=================
@@ -710,9 +724,7 @@ getPositiveClonesReplicates = function(analysisRes,
                                        percentThr = 0)
 {
   # get all expanded clones relative to the control
-  # find colunms with control to get clones expanded relative to reference
-  contCol = grep(control,colnames(analysisRes), value = T)
-  res_exp = getExpanded(analysisRes[,c("clone",contCol)], mergedData,
+  res_exp = getExpanded(analysisRes, mergedData, control,
                         orThr = orThr, fdrThr = fdrThr)
 #browser()
   #=================
@@ -732,7 +744,7 @@ getPositiveClonesReplicates = function(analysisRes,
   # save the second best comparison results
   # these are the rest of the columns that are not comparison to reference
   screen_scndBest = analysisRes[rownames(res_exp_filtered),
-                                setdiff(colnames(analysisRes),contCol)]
+                                grepl("second",colnames(analysisRes))]
   # check for uniqueness. it should be expanded and significant in comparison to the second best as well
   unique_exp = (screen_scndBest[,grep("OR", colnames(screen_scndBest))]>1 &
                   screen_scndBest[,grep("FDR", colnames(screen_scndBest))]<fdrThr)
@@ -767,8 +779,6 @@ getPositiveClonesReplicates = function(analysisRes,
 #' such as OR, FDR, abundances, and percentages
 #' @param res a table with results of analysis
 #' @param mergedData a list of data frames with read counts for each sample
-#' @param orThr a threshold for odds ratio
-#' @param fdrThr a threshold for FDR
 #' @param percentThr a threshold for percentage of reads in a sample to consider a clone expanded
 #' @return a data frame with significant clones and the corresponding
 #'  OR, FDR, counts, and percentages for all conditions
@@ -776,27 +786,13 @@ getPositiveClonesReplicates = function(analysisRes,
 # write output
 # OR, p-value, FDR, abundance, percent
 createResTableReplicates = function(res,mergedData,
-                          orThr = 1,
-                          fdrThr = 0.05,
-                          percentThr = 0)
+                          percentThr = 0,
+                          ...)
 {
-  # calculate the total number of reads for each sample
-  # totalReadCountPerSample = sapply(mergedData, sum)
-  # # keep clones that are significant in at least one comparison
-  # # find columns with OR and FRD
-  # orCols = grep("OR:", colnames(res), value = T)
-  # fdrCols = grep("FDR:", colnames(res), value = T)
-  #
-  # # a table with significant clones only
-  # resSig = res[which(res[,orCols]>= orThr & res[,fdrCols]< fdrThr),]
-  #
-  # if(nrow(resSig)==0){print('There is no significant clones'); return(NULL)}
-  # # get abundances and percentages
-  # tab = getCountsPercent(resSig$clone, mergedData,
-  #   samp = names(mergedData))
 
-  tab = getExpanded(res,mergedData, orThr,
-                    fdrThr)
+  # get all expanded clones
+  tab = getExpanded(res,mergedData, ...)
+
   # grep columns with percentage
   percCol = grep("percent",colnames(tab), value = T)
   # get clones with maximum percentage higher than specified threshold
