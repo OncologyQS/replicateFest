@@ -94,6 +94,7 @@ runFisher = function(pair, mergedData,
 #' @param orThr a threshold for odds ratio
 #' @param fdrThr a threshold for FDR
 #' @param percentThr a threshold for the percentage of reads
+#' @param condThr a threshold for the percent of conditions with non-zero counts
 #' @param saveCI a logical value indicating if confidence intervals should be saved
 #' @param significanceTable a logical value indicating if a table with significant clones should be returned
 #' @return a data frame with significant clones and the corresponding
@@ -105,6 +106,7 @@ createResTable = function(res,mergedData,
                           orThr = 1,
                           fdrThr = 0.05,
                           percentThr = 0,
+                          condThr = 0,
                           saveCI = T,
                           significanceTable = F)
 {
@@ -151,14 +153,35 @@ createResTable = function(res,mergedData,
 	# get abundances and percentages
 	output_counts_percent = getCountsPercent(clones, mergedData,
 	                         samp = names(mergedData))
+	#=============
+	# apply threshold for percent of reads
 	# grep columns with percentage
 	percCol = grep("percent",colnames(output_counts_percent), value = T)
 	# get clones with maximum percentage higher than specified threshold
 	output_counts_percent = output_counts_percent[apply(output_counts_percent[,percCol],1,max) >percentThr,]
 
+	#browser()
+	#=============
+	# apply threshold for conditions with non-zero counts
+	# grep columns with counts
+	countCol = grep("abundance",colnames(output_counts_percent), value = T)
+	# get clones with percent of conditions with non-zero counts higher than specified threshold
+	nonZeroCounts = apply(output_counts_percent[,countCol]>0,1,sum)
+	condThreshold = ceiling(condThr*length(countCol)/100)
+	output_counts_percent = output_counts_percent[which(nonZeroCounts >= condThreshold),]
+
+	# add check if there are any rows in output_counts_percent
+	if (nrow(output_counts_percent) == 0)
+	{
+	  m = 'There is no significant clones after applying percent and condition thresholds'
+	  print(m)
+	  return (data.frame(m))
+	}
+	#================
 	# update clones to output
 	clones = rownames(output_counts_percent)
 
+  # generate the output table with clones, significant conditions, ORs, FDRs, counts and percentages
 	outTab = data.frame(clone = clones,
 	                    n_significant_comparisons = significant_comparisons[clones],
 	                    output_fdr[clones,],
@@ -170,7 +193,8 @@ createResTable = function(res,mergedData,
 	# if significanceTable return a binary table clones vs conditions specifying which clone is significant in what condition
 	if (significanceTable)
 	{
-		signTab = matrix(as.numeric(output_fdr[rownames(outTab),]) < fdrThr & output_OR[rownames(outTab),] > orThr,
+		signTab = matrix(as.numeric(output_fdr[rownames(outTab),]) < fdrThr &
+		                   output_OR[rownames(outTab),] > orThr,
 			nrow = nrow(outTab), ncol = length(res),
 			dimnames = list(rownames(outTab),names(res)))
 		return(signTab)
@@ -206,28 +230,6 @@ getCountsPercent = function(clones, mergedData, samp = names(mergedData))
 	return(tab)
 }
 
-
-# returns difference in percent for selected clones and samples
-getDiff = function(clones, mergedData, samp = names(mergedData), refSamp)
-{
-  totalReadCountPerSample = sapply(mergedData, sum)
-  output_freq = matrix(0,nrow = length(clones), ncol = length(samp)+1, dimnames = list(clones, c(samp,refSamp)))
-	# get frequincies for all samples
-	for (i in c(samp,refSamp))
-	{
-		rows = intersect(names(mergedData[[i]]),clones)
-		output_freq[rows,i] = (mergedData[[i]][rows]/totalReadCountPerSample[i])*100
-	}
-	if (ncol(output_freq) == 2)
-	{
-		output_diff = data.frame(output_freq[,samp] - output_freq[,refSamp])
-		colnames(output_diff) = paste0('DIFF:',samp)
-	}else{
-		output_diff = apply(output_freq[,samp],2,function(x) x-output_freq[,refSamp])
-		colnames(output_diff) = paste0('DIFF:',colnames(output_diff))
-	}
-	return(output_diff)
-}
 
 #' @title getFreq
 #' @description Returns frequencies in percent for selected clones and samples
@@ -394,27 +396,26 @@ runSingleFisher = function(clone, pair, mergedData)
 #' @param orThr a threshold for odds ratio
 #' @param fdrThr a threshold for FDR
 #' @param percentThr a threshold for the percentage of reads
+#' @param condThr a threshold for the percent of conditions with non-zero counts
 #' @return a vector with positive clones as names and conditions,
 #' in which a clone is significant, as values
 #' @export
 #'
 getPositiveClones = function(analysisRes, mergedData,
                              samp = names(mergedData),
-                             orThr = 1,
-                             fdrThr = 0.05,
-                             percentThr = 0)
+                             ...)
 {
-  totalReadCounts = sapply(mergedData, sum)
-  resTable = createResTable(analysisRes, mergedData, orThr = orThr,
-				fdrThr=fdrThr, saveCI =F)
+  resTable = createResTable(analysisRes, mergedData, saveCI =F, ...)
 	if(is.null(resTable)) return(NULL)
 
 	# find significant expansions in one condition
 	clones = rownames(resTable)[which(resTable[,'n_significant_comparisons'] == 1)]
 	#================
 	# find condition in which it's expanded
-	signTable = createResTable(analysisRes, mergedData, orThr = orThr,
-				fdrThr=fdrThr, saveCI =F, significanceTable = T)
+	signTable = createResTable(analysisRes, mergedData,
+	                           saveCI = F,
+	                           significanceTable = T,
+	                           ...)
 #	signTable = data.frame(signTable[clones,])
 	signMatrix = matrix(signTable[clones,],
 			nrow = length(clones),
@@ -442,7 +443,7 @@ getPositiveClones = function(analysisRes, mergedData,
 
 	#==============================
 	# select clones with max percentage more than percentThr
-	 freqMatrix = freqMatrix[apply(freqMatrix,1,max) > percentThr,]
+#	 freqMatrix = freqMatrix[apply(freqMatrix,1,max) > percentThr,]
 
 	#===============================
 	# compare with the second highest
@@ -458,7 +459,7 @@ getPositiveClones = function(analysisRes, mergedData,
 	# that this clone appears in only one condition and
 	# there is nothing to compare
 	# check if there is a condition that is also significantly expanded
-	fdrClones2 = apply(fishResComb,1,function(x) any(as.numeric(x[1:2])>fdrThr|as.numeric(x[3:4])<orThr))
+	fdrClones2 = applyThresholds(fishResComb, ...)
 
 	# select clones that have maximum frequency across conditions
 	# more than the threshold
@@ -470,6 +471,13 @@ getPositiveClones = function(analysisRes, mergedData,
 	  return(data.frame(clone = posClones,
 	                    significant_condition = signCond[posClones]))
 	}else{return(NULL)}
+}
+
+# auxiliary function to apply thresholds for comparison to the second best
+applyThresholds = function(tab, fdrThr = 0.05, orThr = 1, ...)
+{
+  fdrClones2 = apply(tab,1,function(x)
+    any(as.numeric(x[1:2])>fdrThr|as.numeric(x[3:4])<orThr))
 }
 
 #' @title getPositiveClonesFromTopConditions
@@ -661,7 +669,6 @@ getPerSampleSummary = function(posClones, mergedData, replicates = FALSE)
 #' @param n number of cells per well
 #' @param p selected probability
 #' @return frequency threshold
-#' @export
 
 getFreqThreshold = function(n, p)
 {
@@ -737,6 +744,7 @@ compareWithOtherTopConditions = function(mergedData,
 #' @param fdrThr a threshold for FDR
 #' @param orThr a threshold for OR
 #' @param percentThr a threshold for percentage
+#' @param condThr a threshold for the percent of conditions with non-zero counts
 #' @param excludeSamp a sample ID to exclude from analysis
 #' @param compareToRef a logical value indicating if the comparison to the reference sample should be performed
 #' @param outputFile a name of the output file
@@ -750,6 +758,7 @@ runExperimentFisher=function(files,
                              fdrThr = .05,
                              orThr = 5,
                              percentThr = 0,
+                             condThr = 0,
                              excludeSamp = '',
                              compareToRef = TRUE,
                              outputFile = "output.xlsx",
@@ -788,15 +797,16 @@ runExperimentFisher=function(files,
 
     if (!is.null(fisherRes))
     {
-#     browser()
+ #   browser()
       # add names of compared conditions
       names(fisherRes) = apply(compPairs,1,paste,collapse = '_vs_')
       # select positive clones with specified thresholds
       posClones = getPositiveClones(fisherRes, mergedData,
                                     samp = sampForAnalysis,
                                     orThr = orThr,
-                                    fdrThr=fdrThr,
-                                    percentThr = percentThr)
+                                    fdrThr = fdrThr,
+                                    percentThr = percentThr,
+                                    condThr = condThr)
     }	else{
       print('There are no clones to analyze. Try to reduce confidence or the number of templates 1')
       return(NULL)
@@ -832,7 +842,9 @@ runExperimentFisher=function(files,
 
     resTable = createResTable(fisherRes,mergedData,
                               orThr = orThr,
-                              fdrThr = fdrThr, saveCI = F)
+                              fdrThr = fdrThr,
+                              condThr = condThr,
+                              saveCI = F)
     if (!is.null(resTable))
     {
       tablesToXls$ref_comparison_only = resTable

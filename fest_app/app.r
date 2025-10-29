@@ -51,17 +51,17 @@
 # added all functions to the replicateFest package
 
 # 2025-05-06 (v15)
-# made load data, run analysis, and save the results to the different tabs
-# added analysis with replicates
-# increased the default for the number of reads
-# removed the baseline option
-# switched to openxlsx for saving results
-# made a list with analysis results and parameters that were used for the analysis
-# made custom separator for file names to separate replicates
+# - made load data, run analysis, and save the results to the different tabs
+# - added analysis with replicates
+# - increased the default for the number of reads
+# - removed the baseline option
+# - switched to openxlsx for saving results
+# - made a list with analysis results and parameters that were used for the analysis
+# - made custom separator for file names in the splitFileName function to separate replicates
 
 # TODO:
 # - add custom separator into interface
-#   Couldn't easily add, because that the getPerSampleSummary function
+#   Couldn't easily add, because the getPerSampleSummary function
 #   also requires separator, but it's not straightforward to pass it
 #   Probably, need to save that as another element in analysisRes object
 
@@ -186,14 +186,16 @@ ui <- fluidPage(
     		# ),
 
 
-    		# check box that controls the type of analysis - if the comparison with a reference should be performed or not
-    		shinyjs::useShinyjs(),
-    		checkboxInput('compareToRef','Compare to reference', value = TRUE),
 
     		  		# specify if analysis should be performed on nucleotide level data
     		checkboxInput('nuctleotideFlag','Use nucleotide level data'),
 
-      	# drop down menu to select a reference
+    		# check box that controls the type of analysis -
+    		# if the comparison with a reference should be performed or not
+    		shinyjs::useShinyjs(),
+    		checkboxInput('compareToRef','Compare to reference', value = TRUE),
+
+    		# drop down menu to select a reference
     		selectInput('refSamp', 'Select a reference', choices = list('None'), selected = NULL, multiple = FALSE,
     			selectize = TRUE, width = NULL, size = NULL),
 
@@ -230,8 +232,9 @@ ui <- fluidPage(
              # keep clones that have maximal abundance above that values
              textInput('percentThr', 'for clone abundance (in percent)',
                        value = "0"),
-             # a threshold for percent of wells where a clone has non-zero abundance
-             textInput('wellsThr', 'for wells with non-zero abundance (in percent)',
+             # a threshold for percent of conditions where a clone has non-zero abundance
+             shinyjs::useShinyjs(),
+             textInput('condsThr', 'for conditions with non-zero abundance (in percent)',
                        value = "0"),
              downloadButton('saveResults', 'Download Results'),
              downloadButton('saveHeatmaps', 'Create heatmaps')
@@ -384,6 +387,17 @@ server <- function(input, output,session) {
    #==================
   # an observerEvent for checking the The input with replicates checkbox
   observeEvent(input$replicates, {
+    # if the checkbox is selected
+    if (input$replicates == TRUE){
+    # disable the Compare to reference option and condition threshold
+      shinyjs::disable('compareToRef')
+      # and enable
+      shinyjs::disable('condsThr')
+    }else{ # and enable otherwise
+      shinyjs::enable('compareToRef')
+      shinyjs::enable('condsThr')
+    }
+    # if data is loaded
     if(exists('mergedData', envir = .GlobalEnv))
     {
 
@@ -772,6 +786,14 @@ server <- function(input, output,session) {
 
       }
     })
-}
+
+  # Register cleanup code when session ends
+  session$onSessionEnded(function() {
+    rm(list = ls(envir = .GlobalEnv), envir = .GlobalEnv)
+    gc()
+#    message("Global environment cleaned up.")
+  })
+
+}# end the sever function
 
 shinyApp(ui = ui, server = server)

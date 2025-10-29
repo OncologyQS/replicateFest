@@ -40,7 +40,7 @@ test_that("running analysis with replicates", {
                       peptides = sampAnnot$condition,
                       refSamp= "control",
                       fdrThr = 0.05,
-                      nReads = 10,
+                      nReads = 20,
                       percentThr = 0,
                       xrCond = NULL,
                       saveToFile = F)
