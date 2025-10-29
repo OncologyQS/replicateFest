@@ -175,7 +175,7 @@ createResTable = function(res,mergedData,
 	{
 	  m = 'There is no significant clones after applying percent and condition thresholds'
 	  print(m)
-	  return (data.frame(m))
+	  return (NULL)
 	}
 	#================
 	# update clones to output
@@ -393,10 +393,7 @@ runSingleFisher = function(clone, pair, mergedData)
 #' @param mergedData a list of data frames with read counts
 #' for each sample
 #' @param samp a vector with sample IDs to analyze
-#' @param orThr a threshold for odds ratio
-#' @param fdrThr a threshold for FDR
-#' @param percentThr a threshold for the percentage of reads
-#' @param condThr a threshold for the percent of conditions with non-zero counts
+#' @param ... additional parameters passed to createResTable function
 #' @return a vector with positive clones as names and conditions,
 #' in which a clone is significant, as values
 #' @export
@@ -567,6 +564,16 @@ createPosClonesOutput = function(posClones,
                                  replicates = FALSE)
 {
   output = vector(mode = 'list')
+
+  # check if there are positive clones
+  if (is.null(posClones))
+  {
+    m = 'There are no positive clones found with the selected thresholds'
+    print(m)
+    output$positive_clones_summary = data.frame(m)
+    return(output)
+  }
+
 
   # get per sample summary of positive clones
   # a table with the number of positive clones per sample
@@ -829,10 +836,9 @@ runExperimentFisher=function(files,
                                                    sampForAnalysis)
   }
 
-
-  # create  output
+  # output for positive clones
   tablesToXls = createPosClonesOutput(posClones, mergedData,
-                                      refSamp)
+                                  refSamp)
   #===================
   # add the ref_comparison_only sheet
   #===================
