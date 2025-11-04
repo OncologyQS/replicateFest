@@ -13,22 +13,36 @@ library(replicateFest)
 # usage of replicateFest on experimental data without replicates
 #================================================================#========================
 # specify a folder with an input data
-inputDir = "Data/No_replicate_data"
+inputDir = "./tests/testthat/testdata/no_replicates/"
+
 # list paths to files with data
-files = list.files(inputDir, full.names = T, pattern = "txt")
-# specify sample names that should be excluded from analysis
-exSamp = "FW1525_Baseline_1"
+files = list.files(inputDir, full.names = T,
+                   pattern = "tsv", recursive = TRUE)
 # run analysis and save results
-runExperimentFisher(files,
-                    refSamp = "FW1525_NoPep",
-                    nReads = 50,
-                    fdrThr = .05,
-                    orThr = 5,
-                    percentThr = 0,
-                    excludeSamp = exSamp,
-                    compareToRef = TRUE,
-                    outputFile = "FW1525_output.xlsx",
-                    saveToFile = T)
+res = runExperimentFisher(files,
+                          refSamp = "sample1_control",
+                          nReads = 10,
+                          fdrThr = .05,
+                          orThr = 1,
+                          percentThr = 0,
+                          condThr = 20,
+                          excludeSamp = "",
+                          compareToRef = TRUE,
+                          outputFile = "testdata-output.xlsx",
+                          saveToFile = T)
+#==================
+# when there is no comparison to ref
+res = runExperimentFisher(files,
+                          refSamp = NULL,
+                          nReads = 10,
+                          fdrThr = .05,
+                          orThr = 1,
+                          percentThr = 0,
+                          condThr = 0,
+                          excludeSamp = "sample1_control",
+                          compareToRef = FALSE,
+                          outputFile = "testdata-output_noRef.xlsx",
+                          saveToFile = T)
 
 
 #==============================

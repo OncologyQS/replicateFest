@@ -5,6 +5,7 @@ Version: 0.1.0
 Authors@R: c(
   person("Leslie", "Cope", email = "lcope1@jhmi.edu", role = c("aut")),
   person("Ludmila", "Danilova", email = "ldanilo1@jhmi.edu", role = c("aut", "cre")))
+  person("Alexander", "Favorov", email = "avf@jhmi.edu", role = c("aut"))
 Description: The package contains functions to analyze TCR-sequencing data 
   from FEST (Functional Expansion of Specific T-cells) assay. TCR sequencing 
   data is generated from short-term, peptide-stimulated cultures to identify 

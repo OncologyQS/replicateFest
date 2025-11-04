@@ -158,7 +158,8 @@ createResTable = function(res,mergedData,
 	# grep columns with percentage
 	percCol = grep("percent",colnames(output_counts_percent), value = T)
 	# get clones with maximum percentage higher than specified threshold
-	output_counts_percent = output_counts_percent[apply(output_counts_percent[,percCol],1,max) >percentThr,]
+	output_counts_percent = output_counts_percent[
+	  apply(output_counts_percent[,percCol],1,max) >percentThr,]
 
 	#browser()
 	#=============
@@ -168,7 +169,8 @@ createResTable = function(res,mergedData,
 	# get clones with percent of conditions with non-zero counts higher than specified threshold
 	nonZeroCounts = apply(output_counts_percent[,countCol]>0,1,sum)
 	condThreshold = ceiling(condThr*length(countCol)/100)
-	output_counts_percent = output_counts_percent[which(nonZeroCounts >= condThreshold),]
+	output_counts_percent = output_counts_percent[
+	  which(nonZeroCounts >= condThreshold),]
 
 	# add check if there are any rows in output_counts_percent
 	if (nrow(output_counts_percent) == 0)
@@ -268,14 +270,17 @@ getFreq <- function(clones, mergedData, samp = names(mergedData), colSuf = "perc
 #' @param samp a vector with sample IDs
 #' @param colSuf a suffix for column names
 #' @param minRead a threshold for the number of reads
-#' @param returnFreq a logical value indicating if frequencies should be returned
+#' @param returnFreq a logical value indicating if
+#' frequencies should be returned. Default is TRUE,
+#' which means the frequencies will be retured.
+#' Otherwise, counts will be returned
 #' @return a data frame with frequencies or abundances in percent for selected clones and samples
 #' @export
 getFreqOrCount = function(clones, mergedData,
                           samp = names(mergedData),
                           colSuf = 'percent',
                           minRead = 0,
-                          returnFreq = T)
+                          returnFreq = TRUE)
 {
   totalReadCountPerSample = sapply(mergedData, sum)
   output_freq = matrix(minRead,nrow = length(clones), ncol = length(samp))
@@ -326,45 +331,42 @@ getUniqueClones = function(samp, mergedData, readCountThr = 0)
 
 #' @title makeHeatmaps
 #' @description Makes heatmaps of frequencies of each element
-#' of input list of clones and samples
+#' of input clones and samples
 #' and plots fold change if refSamp is specified
-#' @param listOfclones a list of clones to plot
+#' @param clones a vector of clones to plot
 #' @param mergedData a list of data frames with read counts for each sample
 #' @param samp a vector with sample IDs
 #' @param refSamp a reference sample ID
 #' @param fileName a name of the output file
 #' @param size a height and width of heatmap in the output PDF file
 # make heatmaps of frequencies (if refSamp is not specified) of each element of input list of clones and samples and plot FC if refSamp is specified
-makeHeatmaps = function(listOfclones, mergedData,
+makeHeatmaps = function(clones, mergedData,
                         samp = names(mergedData), refSamp = NULL,
                         fileName = 'heatmap.pdf',size = 7)
 {
-  totalReadCountPerSample = sapply(mergedData, sum)
-	if (length(listOfclones)==0)
+	if (length(clones)==0 | is.null(clones))
 	{
 		print('There are no clones to plots')
 		return;
 	}
-	require(gplots)
-	pdf(fileName, width = size, height = size)
+  # specify a vector of samples excluding reference
 	samp = setdiff(samp, refSamp)
-	for(i in 1:length(listOfclones))
+  # open a pdf file
+	pdf(fileName, width = size, height = size)
+  # get frequencies for those samples or FC, if there is a reference
+	if (is.null(refSamp))
 	{
-		clones = listOfclones[[i]]
-		if(length(clones)< 2) next;
-		plotData = getFreq(clones, mergedData, samp)
-		if (!is.null(refSamp))
-		{
-			freqRef = getFreq(clones, mergedData, refSamp)
-			freqRef[freqRef == 0] = min(plotData[plotData > 0]) - 1e-10
-			plotData = sweep(plotData,1,unlist(freqRef),'/')
-		}
+	  plotData = getFreq(clones, mergedData, samp)
+
+	}else{	# if there is a reference sample, get FC relative to reference
+	  plotData = getFC(clones, mergedData, refSamp)
+	}
 #		par(oma = c(.1,.1,.1,3))
-		heatmap(as.matrix(plotData), col = bluered(100),
+	heatmap(as.matrix(plotData), col = bluered(100),
 		        labCol = lapply(strsplit(colnames(plotData),'_percent'),getElement,1),
 			scale = 'row', cexCol = .5, cexRow = .3)
-		title(main = names(listOfclones)[[i]], cex=0.2)
-	}
+		title(main = "Positive clones", cex=0.2)
+
 	dev.off()
 	NULL
 }
@@ -495,6 +497,8 @@ applyThresholds = function(tab, fdrThr = 0.05, orThr = 1, ...)
 #' @param orThr a threshold for odds ratio
 #' @param fdrThr a threshold for FDR
 #' @param percentThr a threshold for percentage
+#' @param condThr a threshold for the percent of conditions with
+#' non-zero counts
 #' @param ... additional parameters passed to getFreqOrCount function
 #' @return a vector with positive clones as names and conditions,
 #' in which a clone is significant, as values
@@ -502,23 +506,40 @@ applyThresholds = function(tab, fdrThr = 0.05, orThr = 1, ...)
 getPositiveClonesFromTopConditions = function(fisherResTable,
                                               orThr = 1,
                                               fdrThr = 0.05,
-                                              percentThr = 0, ...)
+                                              percentThr = 0,
+                                              condThr = 0, ...)
 {
   # apply FDR and OR thresholds
   fdrClones2 = apply(fisherResTable,1,function(x) any(as.numeric(x[1:2])>fdrThr|as.numeric(x[3:4])<orThr))
   # find positive clones
   posClones = names(fdrClones2)[which(!fdrClones2|is.na(fdrClones2))]
 
-  #=============================
-  # check if they are unique by checking top two conditions with the highest number of reads
-  freqMatrix = getFreqOrCount(posClones,
-                              colSuf = '',
-                              returnFreq = T, ...)
+#browser()
 
   #==============================
-  # select clones with max percentage more than percentThr
-  freqMatrix = freqMatrix[apply(freqMatrix,1,max) > percentThr,]
-  posClones = rownames(freqMatrix)
+  # get abundances and percentages
+  output_counts_percent = getCountsPercent(posClones,...)
+   #=============
+  # apply threshold for percent of reads
+  # grep columns with percentage
+  percCol = grep("percent",colnames(output_counts_percent), value = T)
+  # get clones with maximum percentage higher than specified threshold
+  output_counts_percent = output_counts_percent[
+    apply(output_counts_percent[,percCol],1,max) >percentThr,]
+
+   #=============
+  # apply threshold for conditions with non-zero counts
+  # grep columns with counts
+  countCol = grep("abundance",colnames(output_counts_percent), value = T)
+  # get clones with percent of conditions with non-zero counts higher than specified threshold
+  nonZeroCounts = apply(output_counts_percent[,countCol]>0,1,sum)
+  condThreshold = ceiling(condThr*length(countCol)/100)
+  output_counts_percent = output_counts_percent[
+    which(nonZeroCounts >= condThreshold),]
+
+  #=====
+  posClones = rownames(output_counts_percent)
+
 
   if(length(posClones)>0)
   {
@@ -821,17 +842,19 @@ runExperimentFisher=function(files,
 
 
   }else{ # if there is no comparison to ref sample
-
+    refSamp = NULL
     fisherRes = compareWithOtherTopConditions(mergedData,
                                               sampForAnalysis,
                                               nReads = nReads,
                                               clones = NULL)
 
     # select positive clones with specified thresholds
+
     posClones = getPositiveClonesFromTopConditions(fisherRes,
                                                    orThr = orThr,
                                                    fdrThr = fdrThr,
                                                    percentThr = percentThr,
+                                                   condThr = condThr,
                                                    mergedData,
                                                    sampForAnalysis)
   }
