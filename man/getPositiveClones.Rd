@@ -4,14 +4,7 @@
 \alias{getPositiveClones}
 \title{getPositiveClones}
 \usage{
-getPositiveClones(
-  analysisRes,
-  mergedData,
-  samp = names(mergedData),
-  orThr = 1,
-  fdrThr = 0.05,
-  percentThr = 0
-)
+getPositiveClones(analysisRes, mergedData, samp = names(mergedData), ...)
 }
 \arguments{
 \item{analysisRes}{a list with results of Fisher's test
@@ -22,11 +15,7 @@ for each sample}
 
 \item{samp}{a vector with sample IDs to analyze}
 
-\item{orThr}{a threshold for odds ratio}
-
-\item{fdrThr}{a threshold for FDR}
-
-\item{percentThr}{a threshold for the percentage of reads}
+\item{...}{additional parameters passed to createResTable function}
 }
 \value{
 a vector with positive clones as names and conditions,

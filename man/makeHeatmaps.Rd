@@ -5,7 +5,7 @@
 \title{makeHeatmaps}
 \usage{
 makeHeatmaps(
-  listOfclones,
+  clones,
   mergedData,
   samp = names(mergedData),
   refSamp = NULL,
@@ -14,7 +14,7 @@ makeHeatmaps(
 )
 }
 \arguments{
-\item{listOfclones}{a list of clones to plot}
+\item{clones}{a vector of clones to plot}
 
 \item{mergedData}{a list of data frames with read counts for each sample}
 
@@ -28,6 +28,6 @@ makeHeatmaps(
 }
 \description{
 Makes heatmaps of frequencies of each element
-of input list of clones and samples
+of input clones and samples
 and plots fold change if refSamp is specified
 }

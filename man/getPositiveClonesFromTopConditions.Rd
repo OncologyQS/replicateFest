@@ -9,6 +9,7 @@ getPositiveClonesFromTopConditions(
   orThr = 1,
   fdrThr = 0.05,
   percentThr = 0,
+  condsThr = 0,
   ...
 )
 }
@@ -22,6 +23,9 @@ This table is an output from compareWithOtherTopConditions function}
 \item{fdrThr}{a threshold for FDR}
 
 \item{percentThr}{a threshold for percentage}
+
+\item{condsThr}{a threshold for the percent of conditions with
+non-zero counts}
 
 \item{...}{additional parameters passed to getFreqOrCount function}
 }

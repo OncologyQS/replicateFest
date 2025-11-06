@@ -11,8 +11,10 @@ runExperimentFisher(
   fdrThr = 0.05,
   orThr = 5,
   percentThr = 0,
+  condsThr = 0,
   excludeSamp = "",
   compareToRef = TRUE,
+  ntLevel = FALSE,
   outputFile = "output.xlsx",
   saveToFile = T
 )
@@ -30,9 +32,13 @@ runExperimentFisher(
 
 \item{percentThr}{a threshold for percentage}
 
+\item{condsThr}{a threshold for the percent of conditions with non-zero counts}
+
 \item{excludeSamp}{a sample ID to exclude from analysis}
 
 \item{compareToRef}{a logical value indicating if the comparison to the reference sample should be performed}
+
+\item{ntLevel}{a logical value indicating if the analysis should be performed at the nucleotide level}
 
 \item{outputFile}{a name of the output file}
 

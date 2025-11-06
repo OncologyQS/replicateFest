@@ -14,6 +14,7 @@ runExperiment(
   excludeCond = NA,
   xrCond = NULL,
   percentThr = 0,
+  ntLevel = FALSE,
   outputFile = "output.xlsx",
   saveToFile = T,
   permute = FALSE

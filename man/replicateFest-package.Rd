@@ -14,6 +14,7 @@ The package contains functions to analyze TCR-sequencing data from FEST (Functio
 Authors:
 \itemize{
   \item Leslie Cope \email{lcope1@jhmi.edu}
+  \item Alexander Favorov \email{avf@jhmi.edu}
 }
 
 }

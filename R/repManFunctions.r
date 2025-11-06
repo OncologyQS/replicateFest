@@ -313,21 +313,21 @@ runExperiment=function(files,
   #### start algorithm read data
   inputData = readMergeSave(files, filenames = NULL)
   # extract aa or nt level data for the downstream analysis
-  ifelse (ntLevel, mergedData = inputData$ntData, mergedData = inputData$mergedData)
+  if (ntLevel) mergedData = inputData$ntData else mergedData = inputData$mergedData
 
-  # permute sample labels in mergeData to run permutation test
+  # permute sample labels in mergedData to run permutation test
   if (permute){
     set.seed(123456)
     # create sampling
-    s = sample(1:length(mergeData),size = length(mergeData), replace = F)
+    s = sample(1:length(mergedData),size = length(mergedData), replace = F)
     # update sample names
-    names(mergeData) = names(mergeData)[s]
+    names(mergedData) = names(mergedData)[s]
     # update peptides
     peptides = peptides[s]
   }
 
   # get clones to test
-  goodClones = getClonesToTest(mergeData, nReads = nReads)
+  goodClones = getClonesToTest(mergedData, nReads = nReads)
   print(c("good clones #",length(goodClones)))
 
   if(length(goodClones) == 0)
@@ -338,7 +338,7 @@ runExperiment=function(files,
 #browser()
   # run the analysis for selected clones
   fitResults = fitModelSet(goodClones,
-                           mergeData,
+                           mergedData,
                            peptides,
                            excludeCond = excludeCond,
                            refSamp=refSamp,c.corr=1)
@@ -347,7 +347,7 @@ runExperiment=function(files,
 
   # get positive (uniquely expanded) clones
   posClones = getPositiveClonesReplicates(fitResults,
-                                          mergeData,
+                                          mergedData,
                                           refSamp = refSamp,
                                           excludeCond = excludeCond,
                                           orThr = orThr,
@@ -364,14 +364,14 @@ runExperiment=function(files,
   # create table with results
 #    browser()
   tablesToXls = createPosClonesOutput(posClones,
-                                      mergeData,
+                                      mergedData,
                                       refSamp,
                                       replicates = TRUE)
 
   }
 
   resTable = createResTableReplicates(fitResults,
-                                      mergeData,
+                                      mergedData,
                                       percentThr,
                                       refSamp,
                                       orThr,
@@ -394,7 +394,7 @@ runExperiment=function(files,
                                        xrCond = xrCond,
                                        excludeCond = excludeCond,
                                        percentThr = percentThr,
-                                       countData = mergeData,
+                                       countData = mergedData,
                                        orThr = orThr,
                                        fdrThr = fdrThr)
 
@@ -402,8 +402,8 @@ runExperiment=function(files,
 
 
   # save parameters of analysis
-  s = names(mergeData)
-  productiveReadCounts = sapply(mergeData, sum)
+  s = names(mergedData)
+  productiveReadCounts = sapply(mergedData, sum)
   param = c("Data with replicates",
             'Reference condition',
             'Excluded conditions',

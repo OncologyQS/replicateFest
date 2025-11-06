@@ -10,7 +10,7 @@ getFreqOrCount(
   samp = names(mergedData),
   colSuf = "percent",
   minRead = 0,
-  returnFreq = T
+  returnFreq = TRUE
 )
 }
 \arguments{
@@ -24,7 +24,10 @@ getFreqOrCount(
 
 \item{minRead}{a threshold for the number of reads}
 
-\item{returnFreq}{a logical value indicating if frequencies should be returned}
+\item{returnFreq}{a logical value indicating if
+frequencies should be returned. Default is TRUE,
+which means the frequencies will be retured.
+Otherwise, counts will be returned}
 }
 \value{
 a data frame with frequencies or abundances in percent for selected clones and samples

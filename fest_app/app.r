@@ -590,17 +590,14 @@ server <- function(input, output,session) {
     content=function(file){
       if (exists('analysisRes', envir = .GlobalEnv))
       {
+        browser()
         # get parameters for output results from the interface
         saveParams = reactiveValuesToList(input)
         # convert value to numeric
         saveParams$orThr = as.numeric(saveParams$orThr)
         saveParams$fdrThr = as.numeric(saveParams$fdrThr)
         saveParams$percentThr = as.numeric(saveParams$percentThr)
-        saveParams$condThr = as.numeric(saveParams$condThr)
-        # check if condThr is empty then replace with 0
-        saveParams$condThr = ifelse(identical(saveParams$condThr, numeric(0)),
-                                    0,
-                                    saveParams$condThr)
+        saveParams$condsThr = as.numeric(saveParams$condsThr)
 
         # check if analysis was done on aa or nt level
         if (analysisRes$params$nuctleotideFlag) obj = ntData else obj = mergedData
@@ -629,14 +626,14 @@ server <- function(input, output,session) {
                                         orThr = saveParams$orThr,
                                         fdrThr = saveParams$fdrThr,
                                         percentThr = saveParams$percentThr,
-                                        condThr = saveParams$condThr)
+                                        condsThr = saveParams$condsThr)
             }
         }else{ # if there is no comparison to ref sample
           posClones = getPositiveClonesFromTopConditions(analysisRes$res,
                                                          orThr = saveParams$orThr,
                                                          fdrThr=saveParams$fdrThr,
                                                          percentThr = saveParams$percentThr,
-                                                         condThr =  saveParams$condThr,
+                                                         condsThr =  saveParams$condsThr,
                                                          mergedData = obj,
                                                          samp = sampForAnalysis)
         }
@@ -682,7 +679,7 @@ server <- function(input, output,session) {
                                     orThr = saveParams$orThr,
                                     fdrThr = saveParams$fdrThr,
                                     percentThr = saveParams$percentThr,
-                                    condThr = saveParams$condThr,
+                                    condsThr = saveParams$condsThr,
                                     saveCI = F)
           }
            #===========================
@@ -721,7 +718,7 @@ server <- function(input, output,session) {
                   saveParams$fdrThr,
                   saveParams$orThr,
                   saveParams$percentThr,
-                  ifelse(is.null(saveParams$condThr),"",saveParams$condThr),
+                  ifelse(is.null(saveParams$condsThr),"",saveParams$condsThr),
                   analysisRes$params$nuctleotideFlag,
                   length(s),
                   productiveReadCounts[s])
@@ -747,16 +744,17 @@ server <- function(input, output,session) {
     content=function(file){
       if (exists('analysisRes', envir = .GlobalEnv))
       {
+        browser()
         saveParams = reactiveValuesToList(input)
         # convert value to numeric
         saveParams$orThr = as.numeric(saveParams$orThr)
         saveParams$fdrThr = as.numeric(saveParams$fdrThr)
         saveParams$percentThr = as.numeric(saveParams$percentThr)
-        saveParams$condThr = as.numeric(saveParams$condThr)
-        # check if condThr is empty then replace with 0
-        saveParams$condThr = ifelse(identical(saveParams$condThr, numeric(0)),
+        saveParams$condsThr = as.numeric(saveParams$condsThr)
+        # check if condsThr is empty then replace with 0
+        saveParams$condsThr = ifelse(identical(saveParams$condsThr, numeric(0)),
                                     0,
-                                    saveParams$condThr)
+                                    saveParams$condsThr)
         # check if analysis was done on aa or nt level
         if (analysisRes$params$nuctleotideFlag) obj = ntData else obj = mergedData
         sampForAnalysis = setdiff(names(obj),
@@ -785,14 +783,14 @@ server <- function(input, output,session) {
                                           orThr = saveParams$orThr,
                                           fdrThr = saveParams$fdrThr,
                                           percentThr = saveParams$percentThr,
-                                          condThr =  saveParams$condThr)
+                                          condsThr =  saveParams$condsThr)
           }
         }else{ # if there is no comparison to ref sample
           posClones = getPositiveClonesFromTopConditions(analysisRes$res,
                                                          orThr = saveParams$orThr,
                                                          fdrThr = saveParams$fdrThr,
                                                          percentThr = saveParams$percentThr,
-                                                         condThr = saveParams$condThr,
+                                                         condsThr = saveParams$condsThr,
                                                          mergedData = obj,
                                                          samp = sampForAnalysis)
         }

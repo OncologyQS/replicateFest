@@ -94,7 +94,7 @@ runFisher = function(pair, mergedData,
 #' @param orThr a threshold for odds ratio
 #' @param fdrThr a threshold for FDR
 #' @param percentThr a threshold for the percentage of reads
-#' @param condThr a threshold for the percent of conditions with non-zero counts
+#' @param condsThr a threshold for the percent of conditions with non-zero counts
 #' @param saveCI a logical value indicating if confidence intervals should be saved
 #' @param significanceTable a logical value indicating if a table with significant clones should be returned
 #' @return a data frame with significant clones and the corresponding
@@ -106,7 +106,7 @@ createResTable = function(res,mergedData,
                           orThr = 1,
                           fdrThr = 0.05,
                           percentThr = 0,
-                          condThr = 0,
+                          condsThr = 0,
                           saveCI = T,
                           significanceTable = F)
 {
@@ -168,7 +168,7 @@ createResTable = function(res,mergedData,
 	countCol = grep("abundance",colnames(output_counts_percent), value = T)
 	# get clones with percent of conditions with non-zero counts higher than specified threshold
 	nonZeroCounts = apply(output_counts_percent[,countCol]>0,1,sum)
-	condThreshold = ceiling(condThr*length(countCol)/100)
+	condThreshold = ceiling(condsThr*length(countCol)/100)
 	output_counts_percent = output_counts_percent[
 	  which(nonZeroCounts >= condThreshold),]
 
@@ -349,6 +349,7 @@ makeHeatmaps = function(clones, mergedData,
 		print('There are no clones to plots')
 		return;
 	}
+  browser()
   # specify a vector of samples excluding reference
 	samp = setdiff(samp, refSamp)
  # get frequencies for those samples or FC, if there is a reference
@@ -497,7 +498,7 @@ applyThresholds = function(tab, fdrThr = 0.05, orThr = 1, ...)
 #' @param orThr a threshold for odds ratio
 #' @param fdrThr a threshold for FDR
 #' @param percentThr a threshold for percentage
-#' @param condThr a threshold for the percent of conditions with
+#' @param condsThr a threshold for the percent of conditions with
 #' non-zero counts
 #' @param ... additional parameters passed to getFreqOrCount function
 #' @return a vector with positive clones as names and conditions,
@@ -507,7 +508,7 @@ getPositiveClonesFromTopConditions = function(fisherResTable,
                                               orThr = 1,
                                               fdrThr = 0.05,
                                               percentThr = 0,
-                                              condThr = 0, ...)
+                                              condsThr = 0, ...)
 {
   # apply FDR and OR thresholds
   fdrClones2 = apply(fisherResTable,1,function(x) any(as.numeric(x[1:2])>fdrThr|as.numeric(x[3:4])<orThr))
@@ -533,7 +534,7 @@ getPositiveClonesFromTopConditions = function(fisherResTable,
   countCol = grep("abundance",colnames(output_counts_percent), value = T)
   # get clones with percent of conditions with non-zero counts higher than specified threshold
   nonZeroCounts = apply(output_counts_percent[,countCol]>0,1,sum)
-  condThreshold = ceiling(condThr*length(countCol)/100)
+  condThreshold = ceiling(condsThr*length(countCol)/100)
   output_counts_percent = output_counts_percent[
     which(nonZeroCounts >= condThreshold),]
 
@@ -772,7 +773,7 @@ compareWithOtherTopConditions = function(mergedData,
 #' @param fdrThr a threshold for FDR
 #' @param orThr a threshold for OR
 #' @param percentThr a threshold for percentage
-#' @param condThr a threshold for the percent of conditions with non-zero counts
+#' @param condsThr a threshold for the percent of conditions with non-zero counts
 #' @param excludeSamp a sample ID to exclude from analysis
 #' @param compareToRef a logical value indicating if the comparison to the reference sample should be performed
 #' @param ntLevel a logical value indicating if the analysis should be performed at the nucleotide level
@@ -787,7 +788,7 @@ runExperimentFisher=function(files,
                              fdrThr = .05,
                              orThr = 5,
                              percentThr = 0,
-                             condThr = 0,
+                             condsThr = 0,
                              excludeSamp = '',
                              compareToRef = TRUE,
                              ntLevel = FALSE,
@@ -797,7 +798,7 @@ runExperimentFisher=function(files,
   #### start algorithm read data
   inputData = readMergeSave(files, filenames = NULL)
   # extract aa or nt level data for the downstream analysis
-  ifelse (ntLevel, mergedData = inputData$ntData, mergedData = inputData$mergedData)
+  if (ntLevel) mergedData = inputData$ntData else mergedData = inputData$mergedData
 
   # specify samples to analyze
   sampForAnalysis = setdiff(names(mergedData),
@@ -839,7 +840,7 @@ runExperimentFisher=function(files,
                                     orThr = orThr,
                                     fdrThr = fdrThr,
                                     percentThr = percentThr,
-                                    condThr = condThr)
+                                    condsThr = condsThr)
     }	else{
       print('There are no clones to analyze. Try to reduce confidence or the number of templates 1')
       return(NULL)
@@ -859,7 +860,7 @@ runExperimentFisher=function(files,
                                                    orThr = orThr,
                                                    fdrThr = fdrThr,
                                                    percentThr = percentThr,
-                                                   condThr = condThr,
+                                                   condsThr = condsThr,
                                                    mergedData,
                                                    sampForAnalysis)
   }
@@ -877,7 +878,7 @@ runExperimentFisher=function(files,
     resTable = createResTable(fisherRes,mergedData,
                               orThr = orThr,
                               fdrThr = fdrThr,
-                              condThr = condThr,
+                              condsThr = condsThr,
                               saveCI = F)
     if (!is.null(resTable))
     {

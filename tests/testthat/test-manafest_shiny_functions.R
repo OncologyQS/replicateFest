@@ -15,7 +15,7 @@ test_that("running analysis without replicates", {
                             fdrThr = .05,
                             orThr = 1,
                             percentThr = 0,
-                            condThr = 0,
+                            condsThr = 0,
                             excludeSamp = "",
                             compareToRef = TRUE,
                             saveToFile = F)
@@ -38,7 +38,7 @@ test_that("running analysis without replicates and no comparison to reference", 
                             fdrThr = .05,
                             orThr = 1,
                             percentThr = 0,
-                            condThr = 0,
+                            condsThr = 0,
                             excludeSamp = "sample1_control",
                             compareToRef = FALSE,
                             saveToFile = F)

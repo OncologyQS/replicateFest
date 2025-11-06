@@ -10,6 +10,7 @@ createResTable(
   orThr = 1,
   fdrThr = 0.05,
   percentThr = 0,
+  condsThr = 0,
   saveCI = T,
   significanceTable = F
 )
@@ -24,6 +25,8 @@ createResTable(
 \item{fdrThr}{a threshold for FDR}
 
 \item{percentThr}{a threshold for the percentage of reads}
+
+\item{condsThr}{a threshold for the percent of conditions with non-zero counts}
 
 \item{saveCI}{a logical value indicating if confidence intervals should be saved}
 
