@@ -590,40 +590,53 @@ server <- function(input, output,session) {
     content=function(file){
       if (exists('analysisRes', envir = .GlobalEnv))
       {
+        # get parameters for output results from the interface
+        saveParams = reactiveValuesToList(input)
+        # convert value to numeric
+        saveParams$orThr = as.numeric(saveParams$orThr)
+        saveParams$fdrThr = as.numeric(saveParams$fdrThr)
+        saveParams$percentThr = as.numeric(saveParams$percentThr)
+        saveParams$condThr = as.numeric(saveParams$condThr)
+        # check if condThr is empty then replace with 0
+        saveParams$condThr = ifelse(identical(saveParams$condThr, numeric(0)),
+                                    0,
+                                    saveParams$condThr)
+
         # check if analysis was done on aa or nt level
-        if (input$nuctleotideFlag) obj = ntData else obj = mergedData
-        sampForAnalysis = setdiff(names(obj), c(input$excludeSamp,input$refSamp))
+        if (analysisRes$params$nuctleotideFlag) obj = ntData else obj = mergedData
+        sampForAnalysis = setdiff(names(obj), c(analysisRes$params$excludeSamp,analysisRes$params$refSamp))
         #======================
         # get positive clones
         posClones = NULL
-        if(input$compareToRef) #if there is comparison to the ref sample
+        if(analysisRes$params$compareToRef) #if there is comparison to the ref sample
         {
 
          # if analyzed data with replicate
-          if(input$replicates)
+          if(analysisRes$params$replicates)
           {
             posClones = getPositiveClonesReplicates(analysisRes$res,
                                                     obj,
                                                     refSamp = analysisRes$params$refSamp,
                                                     samp = sampForAnalysis,
                                                     excludeCond = analysisRes$params$excludeSamp,
-                                                    orThr = as.numeric(input$orThr),
-                                                    fdrThr = as.numeric(input$fdrThr),
-                                                    percentThr = as.numeric(input$percentThr))
+                                                    orThr = saveParams$orThr,
+                                                    fdrThr = saveParams$fdrThr,
+                                                    percentThr = saveParams$percentThr)
             }else{ # if analyzed data without replicates
+              #browser()
               posClones = getPositiveClones(analysisRes$res, obj,
                                         samp = sampForAnalysis,
-                                        orThr = as.numeric(input$orThr),
-                                        fdrThr = as.numeric(input$fdrThr),
-                                        percentThr = as.numeric(input$percentThr),
-                                        condThr =  as.numeric(input$condThr))
+                                        orThr = saveParams$orThr,
+                                        fdrThr = saveParams$fdrThr,
+                                        percentThr = saveParams$percentThr,
+                                        condThr = saveParams$condThr)
             }
         }else{ # if there is no comparison to ref sample
           posClones = getPositiveClonesFromTopConditions(analysisRes$res,
-                                                         orThr = as.numeric(input$orThr),
-                                                         fdrThr=as.numeric(input$fdrThr),
-                                                         percentThr = as.numeric(input$percentThr),
-                                                         condThr =  as.numeric(input$condThr),
+                                                         orThr = saveParams$orThr,
+                                                         fdrThr=saveParams$fdrThr,
+                                                         percentThr = saveParams$percentThr,
+                                                         condThr =  saveParams$condThr,
                                                          mergedData = obj,
                                                          samp = sampForAnalysis)
         }
@@ -631,7 +644,7 @@ server <- function(input, output,session) {
         #===============================
         # change "None" to NULL for reference sample
         refSamp = analysisRes$params$refSamp
-        if(input$refSamp == 'None') refSamp = NULL
+        if(refSamp == 'None') refSamp = NULL
 
         #========================
         # create object with results to write to Excel
@@ -657,17 +670,19 @@ server <- function(input, output,session) {
             resTable = createResTableReplicates(
               analysisRes$res,
               obj,
-              orThr = as.numeric(input$orThr),
-              fdrThr = as.numeric(input$fdrThr),
-              percentThr = as.numeric(input$percentThr))
+              percentThr = saveParams$percentThr,
+              refSamp = analysisRes$params$refSamp,
+              orThr = saveParams$orThr,
+              fdrThr = saveParams$fdrThr)
 
           }else{ # if without replicates
           # create a table with results
+#            browser()
             resTable = createResTable(analysisRes$res,obj,
-                                    orThr = as.numeric(input$orThr),
-                                    fdrThr = as.numeric(input$fdrThr),
-                                    percentThr = as.numeric(input$percentThr),
-                                    condThr = as.numeric(input$condThr),
+                                    orThr = saveParams$orThr,
+                                    fdrThr = saveParams$fdrThr,
+                                    percentThr = saveParams$percentThr,
+                                    condThr = saveParams$condThr,
                                     saveCI = F)
           }
            #===========================
@@ -685,7 +700,7 @@ server <- function(input, output,session) {
         #============
         # add a sheet with parameters
         #============
-        s = names(productiveReadCounts)
+        s = names(obj)
         param = c("Data with replicates",
                   'Reference sample',
                   'Excluded samples',
@@ -694,6 +709,7 @@ server <- function(input, output,session) {
                   'FDR threshold',
                   'OR threshold',
                   'percent threshold',
+                  'percent non-zero conditions',
                   'Nucleotide level analysis',
                   'n samples',
                   paste(s, 'n templates',sep = '_'))
@@ -702,11 +718,13 @@ server <- function(input, output,session) {
                   paste(analysisRes$params$excludeSamp, collapse = ', '),
                   analysisRes$params$compareToRef,
                   analysisRes$params$nReads,
-                  input$fdrThr,
-                  input$orThr,
-                  input$percentThr,
+                  saveParams$fdrThr,
+                  saveParams$orThr,
+                  saveParams$percentThr,
+                  ifelse(is.null(saveParams$condThr),"",saveParams$condThr),
                   analysisRes$params$nuctleotideFlag,
-                  length(s), productiveReadCounts[s])
+                  length(s),
+                  productiveReadCounts[s])
 
         tablesToXls$parameters = data.frame(param, value)
 
@@ -729,50 +747,61 @@ server <- function(input, output,session) {
     content=function(file){
       if (exists('analysisRes', envir = .GlobalEnv))
       {
+        saveParams = reactiveValuesToList(input)
+        # convert value to numeric
+        saveParams$orThr = as.numeric(saveParams$orThr)
+        saveParams$fdrThr = as.numeric(saveParams$fdrThr)
+        saveParams$percentThr = as.numeric(saveParams$percentThr)
+        saveParams$condThr = as.numeric(saveParams$condThr)
+        # check if condThr is empty then replace with 0
+        saveParams$condThr = ifelse(identical(saveParams$condThr, numeric(0)),
+                                    0,
+                                    saveParams$condThr)
         # check if analysis was done on aa or nt level
-        if (input$nuctleotideFlag) obj = ntData else obj = mergedData
+        if (analysisRes$params$nuctleotideFlag) obj = ntData else obj = mergedData
         sampForAnalysis = setdiff(names(obj),
-                                  c(analysisRes$params$excludeSamp,analysisRes$params$refSamp))
+                                  c(analysisRes$params$excludeSamp,
+                                    analysisRes$params$refSamp))
         #======================
         # get positive clones
         posClones = NULL
-        if(input$compareToRef) #if there is comparison to the ref sample
+        if(analysisRes$params$compareToRef) #if there is comparison to the ref sample
         {
 
           # if analyzed data with replicate
-          if(input$replicates)
+          if(analysisRes$params$replicates)
           {
             posClones = getPositiveClonesReplicates(analysisRes$res,
                                                     obj,
                                                     refSamp = analysisRes$params$refSamp,
                                                     samp = sampForAnalysis,
                                                     excludeCond = analysisRes$params$excludeSamp,
-                                                    orThr = as.numeric(input$orThr),
-                                                    fdrThr = as.numeric(input$fdrThr),
-                                                    percentThr = as.numeric(input$percentThr))
+                                                    orThr = saveParams$orThr,
+                                                    fdrThr = saveParams$fdrThr,
+                                                    percentThr = saveParams$percentThr)
           }else{ # if analyzed data without replicates
-            posClones = getPositiveClones(analysisRes$res, obj,
+           posClones = getPositiveClones(analysisRes$res, obj,
                                           samp = sampForAnalysis,
-                                          orThr = as.numeric(input$orThr),
-                                          fdrThr = as.numeric(input$fdrThr),
-                                          percentThr = as.numeric(input$percentThr),
-                                          condThr =  as.numeric(input$condThr))
+                                          orThr = saveParams$orThr,
+                                          fdrThr = saveParams$fdrThr,
+                                          percentThr = saveParams$percentThr,
+                                          condThr =  saveParams$condThr)
           }
         }else{ # if there is no comparison to ref sample
           posClones = getPositiveClonesFromTopConditions(analysisRes$res,
-                                                         orThr = as.numeric(input$orThr),
-                                                         fdrThr=as.numeric(input$fdrThr),
-                                                         percentThr = as.numeric(input$percentThr),
-                                                         condThr =  as.numeric(input$condThr),
+                                                         orThr = saveParams$orThr,
+                                                         fdrThr = saveParams$fdrThr,
+                                                         percentThr = saveParams$percentThr,
+                                                         condThr = saveParams$condThr,
                                                          mergedData = obj,
                                                          samp = sampForAnalysis)
         }
         # if there is no positive clones,
         # with a message about that
-        if (length(posClones)==0)
+        if (nrow(posClones) <= 1)
         {
           # message
-          m = 'There are no positive clones. Try to adjust thresholds'
+          m = 'There are not enough positive clones to plot. Try to adjust thresholds'
           # show in the app
           output$save_results = renderText(m)
           # save in pdf
@@ -781,21 +810,11 @@ server <- function(input, output,session) {
           text(0.5,0.5,m)
           dev.off()
         }
-        if(length(posClones)==1)
-        {
-          m = 'There is only one positive clone. Try to adjust thresholds to get more clones to plot'
-          # show in the app
-          output$save_results = renderText(m)
-          # save in pdf
-          pdf(file)
-          plot.new()
-          text(0.5,0.5,m)
-          dev.off()
-        }
-        if (length(posClones)>1)
+      if (nrow(posClones)>1)
         {
           # make heatmap with positive clones
-          makeHeatmaps(posClones, obj,
+        browser()
+          makeHeatmaps(posClones$clone, obj,
                        samp = sampForAnalysis,
                        refSamp = analysisRes$params$refSamp,
                        fileName = file, size = 7)

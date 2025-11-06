@@ -295,15 +295,25 @@ fitModel = function(clone,countData,peptides,refSamp,
 
 #### 2025-01-29 added comparison to the second best to find unique expansions
 
-runExperiment=function(files, peptides, nReads=50, refSamp,
-                       orThr=1, fdrThr = 0.05, excludeCond = NA,
-                       xrCond = NULL, percentThr = 0,
+runExperiment=function(files,
+                       peptides,
+                       nReads=50,
+                       refSamp,
+                       orThr=1,
+                       fdrThr = 0.05,
+                       excludeCond = NA,
+                       xrCond = NULL,
+                       percentThr = 0,
+                       ntLevel = FALSE,
                        outputFile = "output.xlsx",
                        saveToFile = T, permute = FALSE)
 {
 
   #### start algorithm read data
-  mergeData=readMergeSave(files, filenames = NULL)$mergedData
+  #### start algorithm read data
+  inputData = readMergeSave(files, filenames = NULL)
+  # extract aa or nt level data for the downstream analysis
+  ifelse (ntLevel, mergedData = inputData$ntData, mergedData = inputData$mergedData)
 
   # permute sample labels in mergeData to run permutation test
   if (permute){
@@ -352,6 +362,7 @@ runExperiment=function(files, peptides, nReads=50, refSamp,
   }else{
     # if there are positive clones, save them in to Excel file
   # create table with results
+#    browser()
   tablesToXls = createPosClonesOutput(posClones,
                                       mergeData,
                                       refSamp,
@@ -410,7 +421,7 @@ runExperiment=function(files, peptides, nReads=50, refSamp,
             fdrThr,
             orThr,
             percentThr,
-            FALSE,
+            ntLevel,
             length(s), productiveReadCounts[s])
 
   tablesToXls$parameters = data.frame(param, value)
@@ -534,7 +545,6 @@ getExpanded = function(fitResults, countData,
                        orThr = 1,
                        fdrThr = 0.05)
 {
-#  browser()
   # find colunms related to comparison to reference condition
   contCol = grep(refSamp,colnames(fitResults), value = T)
   # subset for those columns only
@@ -578,6 +588,8 @@ getExpanded = function(fitResults, countData,
 
   # add columns that indicates how many and what comparisons were significant
   # get T/F matrix for significant comparisons
+
+ # browser()
   sig = (res_exp[,fdrCols] < fdrThr &
            res_exp[,orCols] >= orThr)
   # list significant comparisons
@@ -594,6 +606,8 @@ getExpanded = function(fitResults, countData,
                   res_exp[,setdiff(colnames(res_exp),c("clone"))])
    # add abundance and percentage of the top clones in each condition
 
+  #================
+  # TODO replace with getCountsPercent
   # get abundance for the top clones
   abundance = getAbundances(rownames(res_exp), countData)
   # get total read count for each sample
@@ -619,7 +633,7 @@ getXR = function(res, conditions, refSamp, xrCond,
                  excludeCond = NULL,percentThr = 0, ...)
 {
   # get all expanded clones relative to the refSamp
-   res_exp = getExpanded(res,
+   res_exp = getExpanded(res,refSamp,
                         ...)
 
   #=================
@@ -798,12 +812,23 @@ createResTableReplicates = function(res,mergedData,
 {
 
   # get all expanded clones
+  #browser()
   tab = getExpanded(res,mergedData, ...)
 
   # grep columns with percentage
   percCol = grep("percent",colnames(tab), value = T)
   # get clones with maximum percentage higher than specified threshold
   tab = tab[apply(tab[,percCol],1,max) > percentThr,]
+
+
+  # add check if there are any rows in tab
+  if (nrow(tab) == 0)
+  {
+    m = 'There is no significant clones after applying percent and condition thresholds'
+    print(m)
+    return (NULL)
+  }
+
 
   return(tab)
 }

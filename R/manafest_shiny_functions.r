@@ -351,9 +351,7 @@ makeHeatmaps = function(clones, mergedData,
 	}
   # specify a vector of samples excluding reference
 	samp = setdiff(samp, refSamp)
-  # open a pdf file
-	pdf(fileName, width = size, height = size)
-  # get frequencies for those samples or FC, if there is a reference
+ # get frequencies for those samples or FC, if there is a reference
 	if (is.null(refSamp))
 	{
 	  plotData = getFreq(clones, mergedData, samp)
@@ -361,7 +359,9 @@ makeHeatmaps = function(clones, mergedData,
 	}else{	# if there is a reference sample, get FC relative to reference
 	  plotData = getFC(clones, mergedData, refSamp)
 	}
-#		par(oma = c(.1,.1,.1,3))
+	# open a pdf file
+	pdf(fileName, width = size, height = size)
+	#		par(oma = c(.1,.1,.1,3))
 	heatmap(as.matrix(plotData), col = bluered(100),
 		        labCol = lapply(strsplit(colnames(plotData),'_percent'),getElement,1),
 			scale = 'row', cexCol = .5, cexRow = .3)
@@ -612,12 +612,12 @@ createPosClonesOutput = function(posClones,
 		if(!is.null(refSamp))
 		{
 		  # find replicates of refSamp in merged data
-		  refSamp = grep(refSamp, names(mergedData), value = T)
+		  refRep = grep(refSamp, names(mergedData), value = T)
       # a table with a per clone information
 		  tab = data.frame(posClones)
 	    # in case of several samples in the reference condition
 	    # iterate through the samples and add FC for every sample
-	    for( i in refSamp)
+	    for( i in refRep)
 	    {
   		  # calculate FC relative to reference
   		  fc_ref = getFC(unique(clones),mergedData,i, signCond, "")
@@ -775,6 +775,7 @@ compareWithOtherTopConditions = function(mergedData,
 #' @param condThr a threshold for the percent of conditions with non-zero counts
 #' @param excludeSamp a sample ID to exclude from analysis
 #' @param compareToRef a logical value indicating if the comparison to the reference sample should be performed
+#' @param ntLevel a logical value indicating if the analysis should be performed at the nucleotide level
 #' @param outputFile a name of the output file
 #' @param saveToFile a logical value indicating if the output should be saved to a file
 #' @return a list with output tables
@@ -789,11 +790,15 @@ runExperimentFisher=function(files,
                              condThr = 0,
                              excludeSamp = '',
                              compareToRef = TRUE,
+                             ntLevel = FALSE,
                              outputFile = "output.xlsx",
                              saveToFile = T)
 {
   #### start algorithm read data
-  mergedData = readMergeSave(files, filenames = NULL)$mergedData
+  inputData = readMergeSave(files, filenames = NULL)
+  # extract aa or nt level data for the downstream analysis
+  ifelse (ntLevel, mergedData = inputData$ntData, mergedData = inputData$mergedData)
+
   # specify samples to analyze
   sampForAnalysis = setdiff(names(mergedData),
                             c(excludeSamp,refSamp))
@@ -898,7 +903,7 @@ runExperimentFisher=function(files,
             paste(excludeSamp, collapse = ', '),
             compareToRef, nReads,fdrThr,
             orThr, percentThr,
-            FALSE,
+            ntLevel,
             length(s), productiveReadCounts[s])
 
   tablesToXls$parameters = data.frame(param, value)
