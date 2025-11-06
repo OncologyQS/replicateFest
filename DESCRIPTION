@@ -28,4 +28,5 @@ Imports:
     multcomp,
     openxlsx,
     stats,
-    tools
+    tools,
+    ggplots

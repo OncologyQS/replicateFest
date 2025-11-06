@@ -237,7 +237,7 @@ ui <- fluidPage(
              textInput('condsThr', 'for conditions with non-zero abundance (in percent)',
                        value = "0"),
              downloadButton('saveResults', 'Download Results'),
-             downloadButton('saveHeatmaps', 'Create heatmaps')
+             downloadButton('saveHeatmaps', 'Save Heatmap')
            ), # end sidebarPanel
 
            # the main panel
@@ -590,7 +590,6 @@ server <- function(input, output,session) {
     content=function(file){
       if (exists('analysisRes', envir = .GlobalEnv))
       {
-        browser()
         # get parameters for output results from the interface
         saveParams = reactiveValuesToList(input)
         # convert value to numeric
@@ -744,22 +743,19 @@ server <- function(input, output,session) {
     content=function(file){
       if (exists('analysisRes', envir = .GlobalEnv))
       {
-        browser()
         saveParams = reactiveValuesToList(input)
         # convert value to numeric
         saveParams$orThr = as.numeric(saveParams$orThr)
         saveParams$fdrThr = as.numeric(saveParams$fdrThr)
         saveParams$percentThr = as.numeric(saveParams$percentThr)
         saveParams$condsThr = as.numeric(saveParams$condsThr)
-        # check if condsThr is empty then replace with 0
-        saveParams$condsThr = ifelse(identical(saveParams$condsThr, numeric(0)),
-                                    0,
-                                    saveParams$condsThr)
+
         # check if analysis was done on aa or nt level
         if (analysisRes$params$nuctleotideFlag) obj = ntData else obj = mergedData
         sampForAnalysis = setdiff(names(obj),
                                   c(analysisRes$params$excludeSamp,
                                     analysisRes$params$refSamp))
+
         #======================
         # get positive clones
         posClones = NULL
@@ -811,10 +807,13 @@ server <- function(input, output,session) {
       if (nrow(posClones)>1)
         {
           # make heatmap with positive clones
-        browser()
-          makeHeatmaps(posClones$clone, obj,
-                       samp = sampForAnalysis,
-                       refSamp = analysisRes$params$refSamp,
+        # if with replicates, plot abundances, not FC
+        # for this refSamp should be NULL
+        if (analysisRes$params$replicates) ref = NULL else
+          ref = analysisRes$params$refSamp
+        # create a heatmap and save in file
+         makeHeatmaps(unique(posClones$clone), obj,
+                       refSamp = ref,
                        fileName = file, size = 7)
           output$save_results = renderText('The heat map is saved')
         }

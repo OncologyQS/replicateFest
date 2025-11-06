@@ -335,13 +335,11 @@ getUniqueClones = function(samp, mergedData, readCountThr = 0)
 #' and plots fold change if refSamp is specified
 #' @param clones a vector of clones to plot
 #' @param mergedData a list of data frames with read counts for each sample
-#' @param samp a vector with sample IDs
-#' @param refSamp a reference sample ID
+#' @param refSamp a reference sample ID. If NULL, then a heatmap of abundances will be plotted
 #' @param fileName a name of the output file
 #' @param size a height and width of heatmap in the output PDF file
 # make heatmaps of frequencies (if refSamp is not specified) of each element of input list of clones and samples and plot FC if refSamp is specified
-makeHeatmaps = function(clones, mergedData,
-                        samp = names(mergedData), refSamp = NULL,
+makeHeatmaps = function(clones, mergedData, refSamp = NULL,
                         fileName = 'heatmap.pdf',size = 7)
 {
 	if (length(clones)==0 | is.null(clones))
@@ -349,9 +347,8 @@ makeHeatmaps = function(clones, mergedData,
 		print('There are no clones to plots')
 		return;
 	}
-  browser()
   # specify a vector of samples excluding reference
-	samp = setdiff(samp, refSamp)
+	samp = setdiff(names(mergedData), refSamp)
  # get frequencies for those samples or FC, if there is a reference
 	if (is.null(refSamp))
 	{
