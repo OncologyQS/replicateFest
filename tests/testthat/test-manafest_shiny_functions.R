@@ -75,3 +75,22 @@ test_that("running analysis with replicates", {
   #expect_equal(readMergeSave(''), NULL)
 })
 
+
+# make heatmap test
+test_that("making a heatmap", {
+  # find folder with input data
+  dir = testthat::test_path("testdata", "no_replicates")
+  # load input data
+  load(file = file.path(dir,"no_replicate_inputData.rda"))
+  # load previously saved results
+  testRes = readRDS(file.path(dir,"no_replicate_no_ref_results.rds"))
+  posClones = rownames(testRes$positive_clones_all_data)
+  makeHeatmaps(posClones, mergedData = mergedData,
+               refSamp = "sample1_control")
+  expect_equal(makeHeatmaps(posClones, mergedData = mergedData,
+                            refSamp = "sample1_control"), NULL)
+  #expect_equal(readMergeSave(''), NULL)
+})
+
+
+

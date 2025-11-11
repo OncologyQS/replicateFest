@@ -359,11 +359,10 @@ makeHeatmaps = function(clones, mergedData, refSamp = NULL,
 	}
 	# open a pdf file
 	pdf(fileName, width = size, height = size)
-	#		par(oma = c(.1,.1,.1,3))
-	heatmap(as.matrix(plotData), col = bluered(100),
-		        labCol = lapply(strsplit(colnames(plotData),'_percent'),getElement,1),
-			scale = 'row', cexCol = .5, cexRow = .3)
-		title(main = "Positive clones", cex=0.2)
+	pheatmap(plotData,
+	         labels_col = lapply(strsplit(colnames(plotData),'_percent'),
+	                             getElement,1),
+	         scale = 'none',main = "Positive clones")
 
 	dev.off()
 	NULL
