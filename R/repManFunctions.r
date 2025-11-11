@@ -12,7 +12,7 @@
 #' @import lme4
 #' @import multcomp
 #' @import stats
-#' @import gplots
+#' @import pheatmap
 
 #' @export
 #' @param files a list of filenames with full paths
