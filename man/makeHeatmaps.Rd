@@ -7,7 +7,6 @@
 makeHeatmaps(
   clones,
   mergedData,
-  samp = names(mergedData),
   refSamp = NULL,
   fileName = "heatmap.pdf",
   size = 7
@@ -18,9 +17,7 @@ makeHeatmaps(
 
 \item{mergedData}{a list of data frames with read counts for each sample}
 
-\item{samp}{a vector with sample IDs}
-
-\item{refSamp}{a reference sample ID}
+\item{refSamp}{a reference sample ID. If NULL, then a heatmap of abundances will be plotted}
 
 \item{fileName}{a name of the output file}
 
