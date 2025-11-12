@@ -702,6 +702,7 @@ saveResults = function(results, outputFile = "output.xlsx")
 #' @param filenames a vector of file names
 #' @param sep a separator to split the file names, default is "_"
 #' @return a data frame with condition and replicate information
+#' @export
 
 splitFileName = function(filenames, sep = "_")
 {

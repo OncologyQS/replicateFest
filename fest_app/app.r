@@ -264,6 +264,8 @@ server <- function(input, output,session) {
   options(shiny.maxRequestSize=100*1024^2, java.parameters = "-Xmx8000m")
   library(shiny)
   library(tools)
+  if (!require(replicateFest)) devtools::install_github("OncologyQS/replicateFest")
+  library(replicateFest)
   library("Matrix")
   library(DT)
   library(kableExtra)
@@ -274,8 +276,6 @@ server <- function(input, output,session) {
   if (!require(devtools)) install.packages("devtools")
   if (!require(contrast)) install.packages("contrast")
   if (!require(multcomp)) install.packages("multcomp")
-  if (!require(replicateFest)) devtools::install_github("OncologyQS/replicateFest")
-  library(replicateFest)
 
 #  source("R/manafest_shiny_functions.r")
 #  source("R/repManFunctions.r")
