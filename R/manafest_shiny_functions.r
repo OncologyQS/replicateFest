@@ -338,6 +338,8 @@ getUniqueClones = function(samp, mergedData, readCountThr = 0)
 #' @param refSamp a reference sample ID. If NULL, then a heatmap of abundances will be plotted
 #' @param fileName a name of the output file
 #' @param size a height and width of heatmap in the output PDF file
+#' @export
+
 # make heatmaps of frequencies (if refSamp is not specified) of each element of input list of clones and samples and plot FC if refSamp is specified
 makeHeatmaps = function(clones, mergedData, refSamp = NULL,
                         fileName = 'heatmap.pdf',size = 7)
@@ -574,8 +576,23 @@ getFisherForNclone = function(freq, clones, n = 2,mergedData)
 	return(fishResMatrix)
 }
 
-#
-# creates output tables to be saved in Excel
+#' @title createPosClonesOutput
+#' @description
+#' Creates output tables to be saved in Excel
+#' @param posClones a data frame with positive clones in the first column
+#' and their conditions to be summarized in the second.
+#' In the replication version, these should be samples
+#' @param mergedData a list of data frames with read counts for each sample
+#' @param refSamp a reference sample ID. If NULL, then FC columns will not be added
+#' @param replicates a logical value indicating if there are replicates
+#' @return a list with two data frames:
+#' 1) condition_summary - a table with the number of positive clones per sample
+#' and the sum of their frequencies
+#' 2) positive_clones_summary - a table with per clone information
+#' including frequencies and fold changes relative to the reference sample
+#' @export
+#'
+
 createPosClonesOutput = function(posClones,
                                  mergedData,
                                  refSamp = NULL,
