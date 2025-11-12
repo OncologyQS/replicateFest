@@ -58,20 +58,16 @@
 # - switched to openxlsx for saving results
 # - made a list with analysis results and parameters that were used for the analysis
 # - made custom separator for file names in the splitFileName function to separate replicates
+# - switched to pheatmap
+# - added filter for the percent of non-zero wells
+# - added threshold for frequency
 
 # TODO:
 # - add custom separator into interface
 #   Couldn't easily add, because the getPerSampleSummary function
 #   also requires separator, but it's not straightforward to pass it
 #   Probably, need to save that as another element in analysisRes object
-
-# - In cases where there are not replicates,
-# can you add a filter to only show clones that are detected
-# in X% of other wells? For example, sometimes when there are
-# a lot of clones that are only found in one well, I implement
-# a threshold of 20%, meaning the clone should be detected
-# in at least 20% of wells. detected would mean that there is
-# a non-zero abundance
+#  added a custom separatro to the splitFileName function for now
 
 # - what do you think about removing the “compare to reference* button
 # in favor of  testing reference==’none’?
@@ -80,7 +76,7 @@
 
 # - A message saying “Analysis in progress” would help,
 # to be replaced with “Analysis is done” , maybe also a
-# note about expected wait
+# note about expected wait time
 
 #==============================
 # User interface
@@ -268,14 +264,13 @@ server <- function(input, output,session) {
   options(shiny.maxRequestSize=100*1024^2, java.parameters = "-Xmx8000m")
   library(shiny)
   library(tools)
-  library(gplots)
   library("Matrix")
   library(DT)
   library(kableExtra)
   library(dplyr)
   library(shinyjs)
   if (!require(openxlsx)) install.packages("openxlsx")
-  if(!require(immunarch)) install.packages("immunarch")
+  if (!require(immunarch)) install.packages("immunarch")
   if (!require(devtools)) install.packages("devtools")
   if (!require(contrast)) install.packages("contrast")
   if (!require(multcomp)) install.packages("multcomp")
@@ -386,6 +381,7 @@ server <- function(input, output,session) {
 
    #==================
   # an observerEvent for checking the The input with replicates checkbox
+  # if it checked, disable the compare to reference and condition threshold fields
   observeEvent(input$replicates, {
     # if the checkbox is selected
     if (input$replicates == TRUE){
@@ -453,126 +449,127 @@ server <- function(input, output,session) {
     # check if there are objects to run analysis
     if(exists('mergedData', envir = .GlobalEnv) && exists('ntData', envir = .GlobalEnv))
     {
-      # run analysis on aa level data
-      # load object with input data
-      if (!input$nuctleotideFlag){
-        sampNames = names(mergedData)
-        obj = mergedData
-      }else{ # run analysis on nucleotide level data
-        #if 'Use nucleotide level data' checkbox is selected
-        sampNames = names(ntData)
-        obj = ntData
-      }
+        # run analysis on aa level data
+        # load object with input data
+        if (!input$nuctleotideFlag){
+          sampNames = names(mergedData)
+          obj = mergedData
+        }else{ # run analysis on nucleotide level data
+          #if 'Use nucleotide level data' checkbox is selected
+          sampNames = names(ntData)
+          obj = ntData
+        }
 
-      # create an object with results
-      # it's a list with two elements:
-      # one is the analysis output
-      # and the other one is the parameters of the analysis
-      analysisRes = list(res = NULL,
-                         params = reactiveValuesToList(input))
-#browser()
-      #================================
-      ## analysis without replicates
-      #================================
-      if (input$replicates == FALSE)
-      {
-        # list samples to analyze that excludes reference and other
-        # samples that should be excluded from the analysis
-        sampForAnalysis = setdiff(sampNames,
-                                  c(input$excludeSamp,input$refSamp))
-
-        # select clones to test
-        clonesToTest = NULL
-        # if the comparison to reference should be included in the analysis
-        if(input$compareToRef)
+        # create an object with results
+        # it's a list with two elements:
+        # one is the analysis output
+        # and the other one is the parameters of the analysis
+        analysisRes = list(res = NULL,
+                           params = reactiveValuesToList(input))
+  #browser()
+        #================================
+        ## analysis without replicates
+        #================================
+        if (input$replicates == FALSE)
         {
-          if (input$refSamp == 'None')
+          # list samples to analyze that excludes reference and other
+          # samples that should be excluded from the analysis
+          sampForAnalysis = setdiff(sampNames,
+                                    c(input$excludeSamp,input$refSamp))
+
+          # select clones to test
+          clonesToTest = NULL
+#    browser()
+          # if the comparison to reference should be included in the analysis
+          if(input$compareToRef)
           {
-            output$message_analysis = renderText('There is no reference. Please select a reference sample')
-          }else{
-
-            # create comparing pairs (to refSamp)
-            compPairs = cbind(sampForAnalysis,rep(input$refSamp,length(sampForAnalysis)))
-
-            # run Fisher's test
-            if(nrow(compPairs) == 1)
+            if (input$refSamp == 'None')
             {
-              analysisRes$res = list(runFisher(compPairs,obj, clones = clonesToTest, nReadFilter = c(as.numeric(input$nReads),0)))
+              output$message_analysis = renderText('There is no reference. Please select a reference sample')
             }else{
-              analysisRes$res = apply(compPairs,1,runFisher,obj, clones = clonesToTest, nReadFilter = c(as.numeric(input$nReads),0))
+
+              # create comparing pairs (to refSamp)
+              compPairs = cbind(sampForAnalysis,rep(input$refSamp,length(sampForAnalysis)))
+
+              # run Fisher's test
+              if(nrow(compPairs) == 1)
+              {
+                analysisRes$res = list(runFisher(compPairs,obj, clones = clonesToTest, nReadFilter = c(as.numeric(input$nReads),0)))
+              }else{
+                analysisRes$res = apply(compPairs,1,runFisher,obj, clones = clonesToTest, nReadFilter = c(as.numeric(input$nReads),0))
+              }
+              #			browser()
+              if (!is.null(analysisRes$res))
+              {
+                names(analysisRes$res) = apply(compPairs,1,paste,collapse = '_vs_')
+             }
             }
-            #			browser()
-            if (!is.null(analysisRes$res))
-            {
-              names(analysisRes$res) = apply(compPairs,1,paste,collapse = '_vs_')
-           }
-          }
-        }else{
-          # if there is no comparison with the reference, then compare only within conditions
-#          if(input$ignoreBaseline) clonesToTest = NULL
-          # take only clones that have the number of reads more then nReads and compare with top second and top third conditions
-          analysisRes$res = compareWithOtherTopConditions(obj,
-                                                    productiveReadCounts,
-                                                    sampForAnalysis,
-                                                    nReads = as.numeric(input$nReads),
-                                                    clones = clonesToTest)
-       }
-      } else {# end of analysis without replicates
+          }else{
+            # if there is no comparison with the reference, then compare only within conditions
+  #          if(input$ignoreBaseline) clonesToTest = NULL
+            # take only clones that have the number of reads more then nReads and compare with top second and top third conditions
+            analysisRes$res = compareWithOtherTopConditions(obj,
+                                                      productiveReadCounts,
+                                                      sampForAnalysis,
+                                                      nReads = as.numeric(input$nReads),
+                                                      clones = clonesToTest)
+         }
+        } else {# end of analysis without replicates
 
 
-      #================================
-      ## analysis with replicates
-      #================================
-        # extract conditions from the file names
-        sampAnnot = splitFileName(names(obj))
-        # add that to the analysisRes object to be used in generating output
-        analysisRes$sampAnnot = sampAnnot
+        #================================
+        ## analysis with replicates
+        #================================
+          # extract conditions from the file names
+          sampAnnot = splitFileName(names(obj))
+          # add that to the analysisRes object to be used in generating output
+          analysisRes$sampAnnot = sampAnnot
 
-        # check if there are conditions
-        if (all(is.na(sampAnnot$condition)))
-        {
-          output$message_analysis = renderText('There are no conditions to analyze.
-                                               Please check the input file names')
-        }else{
-          # output a table with sample annotations
-          output$message_analysis = renderTable({
-            # Create a table using kable
-            kable(sampAnnot, format = "html") %>%
-              kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))
-          }, sanitize.text.function = function(x) x)
+          # check if there are conditions
+          if (all(is.na(sampAnnot$condition)))
+          {
+            output$message_analysis = renderText('There are no conditions to analyze.
+                                                 Please check the input file names')
+          }else{
+            # output a table with sample annotations
+            output$message_analysis = renderTable({
+              # Create a table using kable
+              kable(sampAnnot, format = "html") %>%
+                kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"))
+            }, sanitize.text.function = function(x) x)
 
-            # update inputs in the dropdowns
-            updateSelectInput(session, "refSamp", choices=c('None',sampAnnot$condition))
-#            updateSelectInput(session, "baselineSamp", choices=c('None',sampAnnot$condition))
-            updateSelectInput(session, "excludeSamp", choices=sampAnnot$condition)
+              # update inputs in the dropdowns
+              updateSelectInput(session, "refSamp", choices=c('None',sampAnnot$condition))
+  #            updateSelectInput(session, "baselineSamp", choices=c('None',sampAnnot$condition))
+              updateSelectInput(session, "excludeSamp", choices=sampAnnot$condition)
 
-            # get clones to test
-            clonesToTest = getClonesToTest(obj, nReads = as.numeric(input$nReads))
+              # get clones to test
+              clonesToTest = getClonesToTest(obj, nReads = as.numeric(input$nReads))
 
-            # check if there are enought clones to analyze
-            if (length(clonesToTest)<1)
-            {
-              output$message_analysis = renderText('There are no clones to analyze. Try to reduce confidence or the number of templates 1')
-              return()
-            }
-            # run the analysis for selected clones
-            analysisRes$res = fitModelSet(clonesToTest, obj,
-                                     sampAnnot$condition,
-                                     excludeCond = input$excludeSamp,
-                                     refSamp=input$refSamp,
-                                     c.corr=1)
-            rownames(analysisRes$res) = analysisRes$res$clone
+              # check if there are enought clones to analyze
+              if (length(clonesToTest)<1)
+              {
+                output$message_analysis = renderText('There are no clones to analyze. Try to reduce confidence or the number of templates 1')
+                return()
+              }
+              # run the analysis for selected clones
+              analysisRes$res = fitModelSet(clonesToTest, obj,
+                                       sampAnnot$condition,
+                                       excludeCond = input$excludeSamp,
+                                       refSamp=input$refSamp,
+                                       c.corr=1)
+              rownames(analysisRes$res) = analysisRes$res$clone
 
+        }
+      }# end of analysis with replicates
+       # check if there are any results to save
+      if (!is.null(analysisRes$res))
+      {
+          output$message_analysis = renderText('Analysis is done. Go to the Save results tab')
+          assign('analysisRes',analysisRes, envir = .GlobalEnv)
+      }	else{
+          output$message_analysis = renderText('There are no clones to analyze. Try to reduce the number of templates')
       }
-    }# end of analysis with replicates
-     # check if there are any results to save
-    if (!is.null(analysisRes$res))
-    {
-        output$message_analysis = renderText('Analysis is done. Go to the Save results tab')
-        assign('analysisRes',analysisRes, envir = .GlobalEnv)
-    }	else{
-        output$message_analysis = renderText('There are no clones to analyze. Try to reduce the number of templates')
-    }
 
 
     } else{
