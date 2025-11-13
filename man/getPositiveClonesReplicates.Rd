@@ -35,7 +35,6 @@ getPositiveClonesReplicates(
 }
 \value{
 a data frame with positive clones, significant condition,
-and significant sample
 }
 \description{
 getPositiveClonesReplicates

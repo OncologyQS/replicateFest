@@ -898,7 +898,8 @@ runExperimentFisher=function(files,
       tablesToXls$ref_comparison_only = resTable
 
     }else{
-      tablesToXls$ref_comparison_only = data.frame(res = 'There are no significant clones')
+      tablesToXls$ref_comparison_only =
+        data.frame(res = 'There are no significant clones')
     }
   }
 

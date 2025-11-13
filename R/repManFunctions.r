@@ -490,7 +490,7 @@ getClonesToTest = function(countDat, nReads = 50)
 #' @param excludeCond a vector of conditions to exclude from the analysis
 #' @param ... additional parameters to pass to fitModel
 #' @return a matrix with all ORs, p-values and FDRs
-#'
+#' @export
 # return a matrix with all ORs, p-values and FDRs
 # input: a list of clones, merged data, peptides,
 
@@ -736,7 +736,7 @@ splitFileName = function(filenames, sep = "_")
 #' @param fdrThr a threshold for FDR
 #' @param percentThr a threshold for percentage of reads in a sample to consider a clone expanded
 #' @return a data frame with positive clones, significant condition,
-#' and significant sample
+#' @export
 
 getPositiveClonesReplicates = function(analysisRes,
                                        mergedData,
