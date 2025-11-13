@@ -466,6 +466,8 @@ getAbundances = function(clones,countData)
 #' @param countDat a list of merged data
 #' @param nReads a minimal number of reads required to consider a clone
 #' @return a vector of clones of interest
+#' @export
+#'
 getClonesToTest = function(countDat, nReads = 50)
 {
   # all clones
