@@ -1,0 +1,1500 @@
+2025-11-13T17:49:00.436172+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:00.443622+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:00.450073+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:00.455702+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:00.460822+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:00.465807+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:00.470825+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:00.476506+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:00.481580+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:00.486585+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:00.491593+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:00.496698+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:00.501606+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:00.506528+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:00.511768+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:00.516822+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:00.521946+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:00.526864+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:00.531672+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:00.536460+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:00.541546+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:00.546561+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:00.551668+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:00.556504+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:00.561133+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:00.566463+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:00.572081+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:00.577349+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:00.582456+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:00.587277+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:00.593531+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:00.598168+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:00.602737+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:00.607946+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:00.613153+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:00.618459+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:00.623501+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:00.628727+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:00.633879+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:00.638531+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:00.643457+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:00.648378+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:00.653420+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:00.658589+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:00.663516+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:00.668538+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:00.673503+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:00.678627+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:00.683949+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:00.689452+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:00.694747+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:00.705135+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:00.710025+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:00.714901+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:00.720096+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:00.725508+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:00.730943+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:00.735653+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:00.741055+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:00.746166+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:00.750943+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:00.756480+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:00.761528+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:00.766250+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:00.771256+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:00.776777+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:00.784511+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:00.789636+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:00.794947+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:00.799782+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:00.804766+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:00.809918+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:00.814662+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:00.819482+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:00.824791+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:00.829634+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:00.836758+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:00.843767+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:00.851252+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:00.859791+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:00.867868+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:00.875498+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:00.880414+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:00.885509+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:00.890583+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:00.895593+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:00.900861+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:00.905751+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:00.910919+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:00.916101+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:00.921007+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:00.926193+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:00.931220+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:00.935895+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:00.940810+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:00.945674+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:00.951009+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:00.956126+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:00.961342+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:00.967097+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:00.972003+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:00.976957+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:00.982018+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:00.986522+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:00.991632+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:00.996429+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:01.001538+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:01.006519+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:01.011691+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:01.016690+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:01.021558+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:01.026543+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:01.031394+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:01.036672+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:01.042276+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:01.055460+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:01.060690+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:01.065774+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:01.070566+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:01.075485+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:01.080444+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:01.085273+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:01.090214+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:01.096254+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:01.101151+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:01.106286+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:01.113008+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:01.117991+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:01.123143+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:01.128090+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:01.133366+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:01.138283+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:01.143296+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:01.148133+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:01.153048+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:01.158082+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:01.163144+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:01.167930+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:01.172858+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:01.177928+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:01.183021+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:01.187886+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:01.193119+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:01.198449+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:01.203507+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:01.215704+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:01.221134+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:01.225949+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:01.230932+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:01.235727+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:01.240607+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:01.245303+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:01.250181+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:01.255065+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:01.260927+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:01.265796+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:01.270837+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:01.275728+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:01.280636+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:01.285676+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:01.290238+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:01.295113+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:01.300154+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:01.305132+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:01.310473+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:01.315870+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:01.320674+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:01.325255+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:01.330288+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:01.335403+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:01.340354+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:01.345462+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:01.350312+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:01.355371+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:01.365341+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:01.370486+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:01.382314+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:01.387221+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:01.392225+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:01.397381+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:01.402231+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:01.407229+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:01.411937+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:01.417188+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:01.422054+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:01.451731+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:01.457191+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:01.462485+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:01.467771+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:01.472792+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:01.478004+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:01.483296+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:01.488488+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:01.493912+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:01.498878+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:01.504140+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:01.509690+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:01.514500+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:01.519643+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:01.525927+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:01.530709+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:01.537244+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:01.542571+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:01.547501+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:01.552726+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:01.558081+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:01.563268+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:01.568360+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:01.573084+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:01.578176+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:01.583382+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:01.589169+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:01.594377+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:01.599100+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:01.604123+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:01.609049+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:01.613891+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:01.619264+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:01.624047+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:01.628644+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:01.634594+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:01.639767+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:01.645282+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:01.651567+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:01.656462+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:01.661642+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:01.666232+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:01.671187+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:01.676213+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:01.681281+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:01.685909+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:01.690866+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:01.695921+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:01.701263+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:01.710749+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:01.715588+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:01.720685+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:01.725645+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:01.730496+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:01.735762+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:01.740512+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:01.745257+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:01.750478+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:01.755416+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:01.761233+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:01.766127+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:01.771227+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:01.776254+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:01.780907+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:01.786040+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:01.790744+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:01.795363+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:01.801297+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:01.809109+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:01.818943+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:01.824072+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:01.828906+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:01.834084+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:01.838984+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:01.844056+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:01.849180+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:01.854494+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:01.859393+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:01.864250+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:01.869220+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:01.874049+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:01.879173+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:01.883969+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:01.888901+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:01.894394+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:01.899178+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:01.904518+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:01.909882+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:01.914928+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:01.919698+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:01.924765+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:01.929605+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:01.934749+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:01.940200+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:01.944941+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:01.949954+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:01.955264+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:01.960197+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:01.965363+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:01.970290+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:01.978081+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:01.983000+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:01.988117+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:01.993178+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:01.998162+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:02.003149+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:02.008027+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:02.012524+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:02.017946+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:02.022958+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:02.033576+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:02.038650+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:02.044741+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:02.049659+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:02.054336+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:02.059373+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:02.065422+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:02.070392+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:02.077563+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:02.107744+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:02.113460+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:02.118238+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:02.123018+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:02.127556+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:02.132144+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:02.136532+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:02.141078+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:02.146044+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:02.150450+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:02.156352+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:02.161163+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:02.166107+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:02.171114+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:02.176682+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:02.181432+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:02.186196+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:02.191376+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:02.195941+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:02.201208+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:02.205907+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:02.210781+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:02.215739+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:02.221024+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:02.226139+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:02.230852+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:02.236492+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:02.241307+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:02.246529+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:02.251414+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:02.265445+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:02.270411+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:02.275507+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:02.280856+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:02.286214+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:02.291401+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:02.297242+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:02.304746+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:02.309505+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:02.314945+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:02.320396+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:02.325549+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:02.330433+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:02.335922+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:02.340953+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:02.345876+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:02.350525+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:02.355924+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:02.360698+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:02.369533+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:02.374950+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:02.379899+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:02.385447+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:02.391163+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:02.396241+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:02.401038+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:02.406100+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:02.411163+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:02.416518+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:02.421817+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:02.427297+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:02.432624+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:02.437480+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:02.444821+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:02.449701+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:02.456006+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:02.460804+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:02.465724+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:02.470850+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:02.475480+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:02.480441+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:02.485165+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:02.490105+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:02.494766+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:02.499942+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:02.504989+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:02.509858+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:02.514703+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:02.522935+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:02.528108+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:02.533254+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:02.538091+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:02.543109+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:02.548489+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:02.554171+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:02.559742+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:02.564589+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:02.569259+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:02.574080+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:02.583165+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:02.587847+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:02.593027+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:02.598000+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:02.603973+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:02.608543+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:02.613716+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:02.618789+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:02.624234+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:02.631456+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:02.636711+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:02.641611+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:02.648029+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:02.655136+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:02.659821+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:02.665737+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:02.670655+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:02.675469+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:02.680680+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:02.685513+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:02.690848+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:02.695940+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:02.700907+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:02.705782+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:02.710535+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:02.716374+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:02.721298+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:02.726126+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:02.730939+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:02.736012+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:02.740554+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:02.745492+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:02.750444+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:02.755221+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:02.760598+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:02.765686+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:02.770903+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:02.775789+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:02.780521+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:02.785295+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:02.789951+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:02.794953+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:02.803613+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:02.808427+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:02.813227+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:02.824232+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:02.829543+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:02.835498+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:02.840783+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:02.847030+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:02.851959+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:02.857824+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:02.863237+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:02.867953+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:02.872956+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:02.878238+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:02.884102+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:02.890178+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:02.895398+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:02.900002+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:02.905184+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:02.909932+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:02.914957+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:02.920086+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:02.925233+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:02.930110+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:02.935485+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:02.940539+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:02.945601+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:02.950815+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:02.956060+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:02.961203+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:02.966665+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:02.971940+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:02.976706+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:02.981556+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:02.986640+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:02.991846+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:02.996518+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:03.001492+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:03.006274+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:03.011584+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:03.016688+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:03.021403+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:03.026143+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:03.032839+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:03.037861+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:03.042970+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:03.048141+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:03.055116+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:03.060140+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:03.064878+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:03.069995+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:03.075040+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:03.080111+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:03.086469+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:03.091387+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:03.096388+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:03.101370+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:03.115540+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:03.120461+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:03.125412+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:03.130588+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:03.145238+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:03.151270+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:03.159758+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:03.164533+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:03.169300+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:03.174525+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:03.179157+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:03.183993+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:03.188961+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:03.194082+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:03.199117+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:03.204198+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:03.209115+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:03.214145+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:03.218997+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:03.224035+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:03.229189+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:03.234161+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:03.239284+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:03.244289+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:03.249360+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:03.254744+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:03.259401+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:03.264267+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:03.268932+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:03.273811+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:03.278858+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:03.283895+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:03.288662+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:03.293795+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:03.298603+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:03.303414+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:03.308282+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:03.313563+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:03.318761+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:03.323692+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:03.328714+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:03.335659+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:03.341151+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:03.346284+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:03.351160+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:03.356119+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:03.361472+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:03.366673+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:03.371720+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:03.376989+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:03.381734+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:03.386928+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:03.391721+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:03.397304+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:03.402404+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:03.407132+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:03.412102+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:03.417382+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:03.422547+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:03.427211+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:03.432271+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:03.437533+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:03.442304+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:03.447417+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:03.452158+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:03.456791+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:03.461684+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:03.466525+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:03.471117+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:03.476695+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:03.481648+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:03.486508+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:03.491696+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:03.497091+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:03.502363+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:03.508119+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:03.513508+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:03.518491+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:03.523395+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:03.528562+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:03.533604+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:03.538774+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:03.544428+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:03.549432+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:03.554402+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:03.559250+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:03.564214+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:03.568928+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:03.573458+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:03.578457+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:03.583787+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:03.588730+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:03.593943+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:03.599164+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:03.604058+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:03.611016+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:03.615842+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:03.620810+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:03.626497+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:03.631708+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:03.636492+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:03.642020+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:03.647371+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:03.653735+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:03.658991+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:03.663968+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:03.669307+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:03.674354+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:03.679420+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:03.689998+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:03.695217+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:03.699915+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:03.704870+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:03.709581+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:03.715186+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:03.720471+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:03.725395+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:03.731121+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:03.736470+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:03.741603+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:03.746291+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:03.751243+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:03.755934+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:03.760931+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:03.766484+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:03.771582+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:03.777517+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:03.782896+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:03.787785+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:03.793163+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:03.798294+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:03.803094+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:03.807824+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:03.812636+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:03.817933+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:03.822829+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:03.828213+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:03.833243+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:03.837954+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:03.842861+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:03.847855+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:03.852656+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:03.857908+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:03.862698+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:03.867692+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:03.872669+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:03.877585+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:03.882202+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:03.887010+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:03.892054+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:03.897052+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:03.902250+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:03.906814+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:03.911788+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:03.916502+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:03.921506+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:03.926544+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:03.931841+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:03.936784+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:03.941838+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:03.946819+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:03.952201+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:03.957245+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:03.961996+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:03.967073+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:03.971828+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:03.976850+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:03.981463+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:03.986135+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:03.991028+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:03.996064+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:04.000907+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:04.006189+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:04.011124+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:04.015861+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:04.020504+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:04.025493+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:04.030641+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:04.035763+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:04.040729+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:04.045310+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:04.050577+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:04.055879+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:04.060549+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:04.065309+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:04.073920+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:04.081004+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:04.086082+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:04.090801+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:04.101733+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:04.106877+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:04.111917+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:04.117299+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:04.122470+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:04.127378+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:04.135218+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:04.140155+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:04.145251+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:04.150471+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:04.155543+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:04.160271+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:04.165193+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:04.170073+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:04.174880+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:04.179957+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:04.184788+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:04.189617+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:04.194514+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:04.199314+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:04.204308+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:04.209214+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:04.213870+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:04.218856+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:04.223999+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:04.228624+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:04.233510+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:04.238603+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:04.245281+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:04.251035+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:04.255978+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:04.261217+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:04.266436+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:04.271576+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:04.276384+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:04.281464+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:04.286093+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:04.290675+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:04.295940+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:04.301116+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:04.328916+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:04.335046+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:04.342412+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:04.347435+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:04.354082+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:04.359144+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:04.364168+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:04.369091+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:04.374609+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:04.379529+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:04.384621+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:04.389600+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:04.394404+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:04.399176+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:04.404016+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:04.408602+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:04.413763+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:04.419414+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:04.424732+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:04.429646+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:04.434512+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:04.439666+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:04.444593+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:04.449844+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:04.455066+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:04.460230+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:04.465281+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:04.470250+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:04.475347+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:04.480485+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:04.485208+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:04.490466+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:04.495443+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:04.500340+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:04.505187+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:04.510104+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:04.515503+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:04.520412+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:04.525230+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:04.530589+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:04.535759+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:04.540797+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:04.546492+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:04.551503+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:04.556398+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:04.562384+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:04.567132+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:04.573387+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:04.578214+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:04.583530+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:04.588301+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:04.594441+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:04.599758+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:04.604771+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:04.609965+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:04.614911+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:04.619673+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:04.624621+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:04.629708+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:04.635179+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:04.641701+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:04.646807+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:04.651731+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:04.656655+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:04.661186+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:04.665852+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:04.670744+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:04.675509+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:04.680538+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:04.685212+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:04.690130+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:04.694974+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:04.700031+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:04.705515+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:04.710185+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:04.714927+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:04.720023+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:04.725063+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:04.729773+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:04.734979+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:04.739977+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:04.744718+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:04.749832+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:04.754779+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:04.759568+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:04.764425+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:04.768994+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:04.773877+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:04.778712+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:04.783746+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:04.788750+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:04.793646+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:04.798781+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:04.803706+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:04.808463+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:04.813395+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:04.818045+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:04.822737+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:04.827717+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:04.832364+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:04.836897+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:04.841802+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:04.846666+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:04.851543+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:04.856169+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:04.861096+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:04.865894+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:04.870823+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:04.876052+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:04.882005+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:04.887414+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:04.892542+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:04.897505+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:04.902436+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:04.907365+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:04.913355+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:04.918120+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:04.923075+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:04.927906+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:04.936790+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:04.941713+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:04.946471+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:04.951541+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:04.956695+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:04.961627+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:04.966545+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:04.972312+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:04.977646+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:04.983039+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:04.988103+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:04.993212+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:04.998038+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:05.002581+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:05.007420+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:05.012620+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:05.017505+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:05.022353+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:05.027206+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:05.032052+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:05.036793+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:05.041533+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:05.046529+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:05.051246+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:05.056150+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:05.061138+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:05.066029+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:05.070872+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:05.075447+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:05.080494+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:05.085499+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:05.090304+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:05.095214+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:05.100224+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:05.104817+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:05.109757+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:05.114540+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:05.119394+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:05.124208+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:05.128999+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:05.133746+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:05.138375+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:05.143454+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:05.154951+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:05.159575+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:05.164275+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:05.169287+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:05.174839+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:05.179779+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:05.184813+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:05.190242+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:05.195352+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:05.201393+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:05.206246+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:05.211409+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:05.216305+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:05.221143+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:05.226449+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:05.231618+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:05.236784+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:05.241994+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:05.246735+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:05.251778+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:05.256520+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:05.261437+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:05.267005+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:05.272222+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:05.277390+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:05.282245+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:05.286933+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:05.291588+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:05.297291+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:05.302143+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:05.307223+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:05.312241+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:05.317062+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:05.321825+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:05.326647+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:05.332601+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:05.337490+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:05.342668+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:05.347607+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:05.352607+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:05.357179+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:05.362210+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:05.366902+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:05.371611+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:05.376384+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:05.381239+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:05.386116+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:05.390984+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:05.395779+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:05.400690+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:05.405425+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:05.410811+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:05.415777+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:05.420657+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:05.425621+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:05.430628+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:05.435753+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:05.440692+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:05.445483+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:05.450071+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:05.454993+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:05.459659+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:05.464276+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:05.468869+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:05.473902+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:05.478580+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:05.483142+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:05.488089+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:05.493054+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:05.497836+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:05.502534+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:05.507302+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:05.512101+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:05.517218+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:05.521976+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:05.526577+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:05.531281+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:05.535913+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:05.540585+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:05.545649+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:05.550164+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:05.555396+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:05.560077+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:05.564990+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:05.569912+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:05.574772+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:05.583571+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:05.588565+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:05.593495+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:05.598303+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:05.603548+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:05.608437+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:05.613173+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:05.618073+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:05.622902+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:05.627724+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:05.632705+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:05.637497+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:05.642162+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:05.648181+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:05.655175+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:05.660090+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:05.665303+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:05.670141+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:05.674984+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:05.679938+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:05.684749+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:05.689508+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:05.694439+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:05.699251+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:05.704369+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:05.710149+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:05.715468+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:05.720148+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:05.724873+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:05.729461+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:05.734171+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:05.739065+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:05.743783+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:05.748468+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:05.753346+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:05.758022+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:05.762918+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:05.767523+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:05.772483+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:05.777400+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:05.782160+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:05.786872+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:05.791775+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:05.796312+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:05.801246+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:05.805714+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:05.810164+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:05.815113+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:05.820223+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:05.825096+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:05.830662+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:05.836227+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:05.841168+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:05.845986+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:05.852124+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:05.857064+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:05.861899+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:05.866517+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:05.871303+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:05.875885+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:05.880523+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:05.885437+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:05.889985+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:05.894745+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:05.899611+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:05.904304+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:05.909067+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:05.914290+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:05.919306+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:05.923837+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:05.928524+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:05.933514+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:05.938203+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:05.943140+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:05.948117+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:05.953117+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:05.957984+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:05.962769+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:05.967542+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:05.975028+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:05.984770+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:05.989627+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:05.994698+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:05.999521+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:06.004233+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:06.008939+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:06.013445+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:06.018145+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:06.023076+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:06.028163+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:06.033402+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:06.037909+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:06.042902+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:06.047526+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:06.052251+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:06.056891+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:06.062201+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:06.067080+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:06.072007+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:06.078137+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:06.085075+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:06.089775+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:06.094842+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:06.099741+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:06.104499+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:06.109354+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:06.114067+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:06.119061+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:06.125039+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:06.129690+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:06.135201+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:06.140067+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:06.145822+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:06.151006+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:06.156271+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:06.161030+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:06.165730+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:06.170398+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:06.175050+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:06.180045+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:06.184822+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:06.189794+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:06.194747+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:06.199467+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:06.204135+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:06.212249+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:06.216839+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:06.221998+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:06.227087+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:06.232102+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:06.236796+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:06.241631+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:06.246207+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:06.250723+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:06.255664+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:06.260403+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:06.265184+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:06.270403+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:06.275373+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:06.280298+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:06.285223+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:06.290036+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:06.294699+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:06.299703+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:06.304694+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:06.309497+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:06.314357+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:06.319409+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:06.324070+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:06.328948+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:06.333955+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:06.338691+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:06.343410+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:06.348266+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:06.353138+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:06.358094+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:06.362722+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:06.367983+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:06.373123+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:06.378741+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:06.384128+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:06.391723+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:06.396508+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:06.401480+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:06.406556+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:06.411206+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:06.416280+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:06.421489+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:06.426137+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:06.430970+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:06.435794+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:06.440769+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:06.453551+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:06.458437+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:06.463560+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:06.468672+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:06.473538+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:06.478505+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:06.483309+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:06.488213+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:06.492931+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:06.497541+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:06.502376+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:06.507247+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:06.511705+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:06.518775+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:06.523505+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:06.528352+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:06.536146+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:06.540902+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:06.545533+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:06.550301+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:06.556846+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:06.562049+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:06.566627+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:06.571172+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:06.575913+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:06.580936+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:06.585587+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:06.590801+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:06.596130+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:06.601155+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:06.605837+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:06.611278+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:06.616224+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:06.621200+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:06.626601+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:06.631642+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:06.636689+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:06.641456+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:06.646460+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:06.651159+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:06.655759+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:06.665036+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:06.669741+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:06.674417+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:06.679152+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:06.684100+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:06.688713+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:06.693879+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:06.698897+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:06.703486+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:06.708367+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:06.713143+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:06.720112+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:06.724742+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:06.729767+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:06.734592+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:06.739210+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:06.744494+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:06.749175+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:06.754721+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:06.759507+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:06.771880+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:06.776923+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:06.781936+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:06.786877+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:06.791461+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:06.796168+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:06.801072+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:06.805908+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:06.811230+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:06.816252+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:06.821408+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:06.826443+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:06.831040+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:06.836016+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:06.841365+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:06.846405+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:06.851127+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:06.856106+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:06.860911+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:06.865634+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:06.870224+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:06.875027+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:06.879911+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:06.884676+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:06.889785+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:06.894779+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:06.899488+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:06.904006+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:06.909158+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:06.913780+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:06.920574+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:06.926012+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:06.930875+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:06.935854+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:06.940556+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:06.949924+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:06.954700+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:06.959412+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:06.964863+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:06.969504+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:06.974367+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:06.979063+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:06.984806+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:06.989931+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:06.994689+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:06.999517+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:07.004265+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:07.009645+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:07.014868+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:07.019861+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:07.024923+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:07.029898+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:07.034870+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:07.039847+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:07.044449+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:07.049494+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:07.054451+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:07.059624+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:07.064768+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:07.069639+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:07.074423+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:07.079450+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:07.084183+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:07.089405+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:07.094300+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:07.099413+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:07.104353+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:07.109003+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:07.113760+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:07.118607+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:07.123270+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:07.128251+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:07.133156+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:07.137823+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:07.142917+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:07.147697+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:07.152666+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:07.157749+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:07.162485+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:07.167660+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:07.172654+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:07.177450+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:07.182428+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:07.187421+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:07.192244+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:07.196980+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:07.201689+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:07.206712+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:07.211697+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:07.216372+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:07.221050+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:07.226123+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:07.231231+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:07.236282+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:07.241401+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:07.246097+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:07.250732+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:07.255758+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:07.260692+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:07.266355+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:07.271180+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:07.276031+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:07.281419+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:07.286131+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:07.292432+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:07.297459+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:07.302000+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:07.306689+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:07.311470+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:07.316117+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:07.320636+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:07.325423+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:07.330305+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:07.335458+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:07.340128+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:07.345092+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:07.350291+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:07.355365+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:07.359922+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:07.364718+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:07.369872+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:07.374692+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:07.380075+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:07.385288+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:07.390397+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:07.395531+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:07.400634+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:07.405432+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:07.410077+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:07.415147+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:07.419819+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:07.424492+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:07.429514+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:07.434625+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:07.439401+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:07.444157+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:07.449253+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:07.454161+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:07.459650+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:07.464428+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:07.469059+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:07.473743+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:07.478792+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:07.483503+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:07.488484+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:07.493434+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:07.498103+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:07.502681+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:07.507413+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:07.511852+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:07.516523+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:07.521504+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:07.526531+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:07.531444+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:07.536578+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:07.542899+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:07.547755+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:07.552491+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:07.557229+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:07.562399+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:07.567268+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:07.572601+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:07.577690+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:07.582670+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:07.587366+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:07.592066+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:07.597050+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:07.602175+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:07.606897+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:07.612036+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:07.617074+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:07.621910+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:07.627011+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:07.632181+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:07.637044+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:07.641840+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:07.646739+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:07.651916+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:07.658940+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:07.663834+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:07.668511+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:07.673247+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:07.678207+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:07.682905+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:07.687818+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:07.692484+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:07.697217+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:07.702102+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:07.706902+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:07.711785+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:07.716694+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:07.721184+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:07.725928+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:07.730873+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:07.735493+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:07.740171+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:07.745131+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:07.750243+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:07.754831+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:07.759456+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:07.764304+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:07.769054+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:07.774351+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:07.779145+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:07.783908+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:07.788747+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:07.793594+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:07.798404+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:07.803173+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:07.807695+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:07.812366+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:07.817519+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:07.822604+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:07.827316+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:07.832091+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:07.836862+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:07.842190+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:07.847243+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:07.852292+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:07.856924+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:07.861723+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:07.866487+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:07.871274+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:07.875938+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:07.880547+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:07.885301+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:07.890364+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:07.895598+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:07.900521+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:07.905541+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:07.910717+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:07.915388+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:07.920363+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:07.925140+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:07.934005+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:07.938839+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:07.943529+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:07.948538+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:07.953700+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:07.958281+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:07.963172+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:07.968005+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:07.972596+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:07.977081+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:07.981948+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:07.986513+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:07.991088+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:07.995865+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:08.000693+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:08.005267+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:08.009964+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:08.014617+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:08.019220+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:08.024277+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:08.028859+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:08.033705+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:08.038470+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:08.043048+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:08.047811+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:08.052894+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:08.058113+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:08.063194+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:08.067946+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:08.072678+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:08.077572+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:08.082273+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:08.089133+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:08.093970+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:08.099017+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:08.103783+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:08.108569+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:08.113461+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:08.118233+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:08.123657+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:08.128550+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:08.133305+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:08.137944+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:08.142726+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:08.148483+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:08.154378+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:08.159313+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:08.164462+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:08.169396+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:08.174259+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:08.179243+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:08.184118+00:00 shinyapps[13918219]: Warning in FUN(newX[, i], ...) :
+2025-11-13T17:49:08.189201+00:00 shinyapps[13918219]:   no non-missing arguments to max; returning -Inf
+2025-11-13T17:49:08.194031+00:00 shinyapps[13918219]: Warning: Error in fix.by: 'by' must specify a uniquely valid column
+2025-11-13T17:49:08.198742+00:00 shinyapps[13918219]:   15: <Anonymous>
+2025-11-13T17:49:08.203837+00:00 shinyapps[13918219]:   13: fn
+2025-11-13T17:49:08.208575+00:00 shinyapps[13918219]:    8: retry
+2025-11-13T17:49:08.213479+00:00 shinyapps[13918219]:    7: connect$retryingStartServer
+2025-11-13T17:49:08.218265+00:00 shinyapps[13918219]:    6: eval
+2025-11-13T17:49:08.223306+00:00 shinyapps[13918219]:    5: eval
+2025-11-13T17:49:08.228671+00:00 shinyapps[13918219]:    4: eval
+2025-11-13T17:49:08.233905+00:00 shinyapps[13918219]:    3: eval
+2025-11-13T17:49:08.238783+00:00 shinyapps[13918219]:    2: eval.parent
+2025-11-13T17:49:08.243560+00:00 shinyapps[13918219]:    1: local

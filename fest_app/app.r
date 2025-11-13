@@ -283,6 +283,9 @@ server <- function(input, output,session) {
   #===================
   # read input files
   observeEvent(input$sourceFiles,{
+    # remove all previously loaded data and analysis
+    rm(list = ls(envir = .GlobalEnv), envir = .GlobalEnv)
+
     output$message_load = renderUI({
     # check if there is file to analyze
     if (length(input$sourceFiles) == 0)
@@ -331,6 +334,9 @@ server <- function(input, output,session) {
   #===================
   # load RDA file with the input data
   observeEvent(input$inputObj,{
+    # remove all previously loaded data and analysis
+    rm(list = ls(envir = .GlobalEnv), envir = .GlobalEnv)
+
     output$message_load = renderUI({
       # check if there is a file to analyze
       if (length(input$inputObj) == 0)
@@ -643,15 +649,19 @@ server <- function(input, output,session) {
         # create object with results to write to Excel
         #=======================
         tablesToXls = vector(mode = 'list')
+
+        # check if there are positive clones
+        # if not, skip positive clone output
         if (nrow(posClones)==0)
         {
           output$save_results = renderText('There are no positive clones. Try to adjust thresholds')
+        }else{
+          # create table with results
+          tablesToXls = createPosClonesOutput(posClones,
+                                              obj,
+                                              analysisRes$params$refSamp,
+                                              replicates = analysisRes$params$replicates)
         }
-        # create table with results
-        tablesToXls = createPosClonesOutput(posClones,
-                                            obj,
-                                            analysisRes$params$refSamp,
-                                            replicates = analysisRes$params$replicates)
         #===================
         # add the ref_comparison_only sheet
         #===================
