@@ -654,6 +654,7 @@ server <- function(input, output,session) {
         # if not, skip positive clone output
         if (nrow(posClones)==0)
         {
+          tablesToXls$summary = "There are no positive clone with the specified thresholds"
           output$save_results = renderText('There are no positive clones. Try to adjust thresholds')
         }else{
           # create table with results
