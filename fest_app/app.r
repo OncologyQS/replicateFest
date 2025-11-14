@@ -24,7 +24,7 @@
 
 # 2018-07-20 (v10)
 # fixed reading function. It doesn't save mergedData and ntData to the disc;
-# it returns a list with two element - mergedData and ntData
+# it returns a list with two elements - mergedData and ntData
 # fixed creating Excel file with no significant clones
 
 # 2019-06-04
@@ -97,10 +97,10 @@ ui <- fluidPage(
            sequence."),
     tags$h3("Steps"),
     tags$ol(
-      tags$li(HTML("<b>Load data</b>: upload FEST files or a previously saved R
+      tags$li(HTML("<b>Load Data</b>: upload FEST files or a previously saved R
               object with data")),
       tags$li(HTML("After the data is successfully loaded,
-              select the <b>Run analysis</b>
+              select the <b>Run Analysis</b>
                    tab to run the analysis.
                    <br><b>Important!</b> Please make sure to specify
                    whether the input data has replicates or not.
@@ -114,18 +114,18 @@ ui <- fluidPage(
                    if the input data does not have replicates,
                    the Fisher's exact test will be used.")),
       tags$li(HTML("After the analysis is done,
-              select the <b>Save results</b> tab
+              select the <b>Save Results</b> tab
                    to save the results.")),
     ),
     tags$p(HTML("For more details, please refer to the
-                <b>User's manual</b> tab"))
+                <b>User Manual</b> tab"))
   ),
 
   # layout with tabs
   tabsetPanel(
     #============================
     # tab for loading the data
-    tabPanel("Load data",
+    tabPanel("Load Data",
              sidebarLayout(
                # the left side panel
                sidebarPanel(
@@ -146,7 +146,7 @@ ui <- fluidPage(
                  # if files with raw data will be uploaded
                  conditionalPanel(
                    condition = "input.inputFiles == 'FEST files'",
-                   fileInput('sourceFiles', 'Upload FEST files (.tsv)',
+                   fileInput('sourceFiles', 'Upload FEST files',
                              multiple = TRUE,
                              accept=c('text/tsv', 'text/comma-separated-values,text/plain', '.tsv')),
                    downloadButton('saveInputObj', 'Save Input Object')
@@ -164,7 +164,7 @@ ui <- fluidPage(
     #==============================
     # tab for analysis
     #==============================
-  	tabPanel("Run analysis",
+  	tabPanel("Run Analysis",
   	 sidebarLayout(
   	   # the left side panel
   		sidebarPanel(
@@ -183,10 +183,8 @@ ui <- fluidPage(
 
 
 
-    		  		# specify if analysis should be performed on nucleotide level data
-    		checkboxInput('nuctleotideFlag','Use nucleotide level data'),
-
-    		# check box that controls the type of analysis -
+    		# specify if analysis should be performed on nucleotide level data
+    	checkboxInput('nucleotideFlag','Use nucleotide level data'),    		# check box that controls the type of analysis -
     		# if the comparison with a reference should be performed or not
     		shinyjs::useShinyjs(),
     		checkboxInput('compareToRef','Compare to reference', value = TRUE),
@@ -216,7 +214,7 @@ ui <- fluidPage(
     #=============================
     # tab for saving results of the analysis
     #=============================
-    tabPanel("Save results",
+    tabPanel("Save Results",
          sidebarLayout(
            # the left side panel
            sidebarPanel(
@@ -248,7 +246,7 @@ ui <- fluidPage(
     #=============================
     # the tab with manual
     #=============================
-	 tabPanel("User\'s manual",
+	 tabPanel("User Manual",
 	          includeHTML('userManual.html'))
 
  ) # end tabsetPanel
@@ -457,7 +455,7 @@ server <- function(input, output,session) {
     {
         # run analysis on aa level data
         # load object with input data
-        if (!input$nuctleotideFlag){
+        if (!input$nucleotideFlag){
           sampNames = names(mergedData)
           obj = mergedData
         }else{ # run analysis on nucleotide level data
@@ -602,7 +600,7 @@ server <- function(input, output,session) {
         saveParams$condsThr = as.numeric(saveParams$condsThr)
 
         # check if analysis was done on aa or nt level
-        if (analysisRes$params$nuctleotideFlag) obj = ntData else obj = mergedData
+        if (analysisRes$params$nucleotideFlag) obj = ntData else obj = mergedData
         sampForAnalysis = setdiff(names(obj), c(analysisRes$params$excludeSamp,analysisRes$params$refSamp))
         #======================
         # get positive clones
@@ -726,7 +724,7 @@ server <- function(input, output,session) {
                   saveParams$orThr,
                   saveParams$percentThr,
                   ifelse(is.null(saveParams$condsThr),"",saveParams$condsThr),
-                  analysisRes$params$nuctleotideFlag,
+                  analysisRes$params$nucleotideFlag,
                   length(s),
                   productiveReadCounts[s])
 
@@ -759,7 +757,7 @@ server <- function(input, output,session) {
         saveParams$condsThr = as.numeric(saveParams$condsThr)
 
         # check if analysis was done on aa or nt level
-        if (analysisRes$params$nuctleotideFlag) obj = ntData else obj = mergedData
+        if (analysisRes$params$nucleotideFlag) obj = ntData else obj = mergedData
         sampForAnalysis = setdiff(names(obj),
                                   c(analysisRes$params$excludeSamp,
                                     analysisRes$params$refSamp))

@@ -25,21 +25,21 @@
 		<p>The <a href="http://www.stat-apps.onc.jhmi.edu/FEST/">FEST</a> (Functional Expansion of Specific T-cells) platform is 
 			a Shiny application for analysis of TCR sequencing of short-term, 
 		peptide-stimulated cultures to identify antigen-specific clonotypic amplifications. 
-		The app loads TCR sequencing data in the tab-delimited format,
+		The app loads T cell receptor (TCR) sequencing data in the tab-delimited format,
  performs the analysis, and visualizes and saves results. For analysis, we use only productive clones and
- summarize template counts for nucleotide sequences that translated into the same amino acid sequence.
+ summarize template counts for nucleotide sequences that translated into the same amino acid sequence. There is also an option to perform the analysis on the nucleotide level data (with the <b>Use nucleotide level data</b> option on the <b>Run Analysis</b> tab).
  The analysis can be performed for two types of experiments - with and without replicates. The different tests are used for each type.
 For experiments without replicates, we use the pairwise Fisher’s exact test to compare the number of templates in a culture of interest		
  (with peptide) and a reference culture (T cells cultured with cytokines but without peptide). For experiments with replicates, we fit 
  the negative binomial model for all conditions. The analysis is done for each clone separately. The p-values are adjusted by Benjamini-Hochberg
  procedure (FDR). 
  <p>
-	The analysis is performed in the follwoing steps:
+	The analysis is performed in the following steps:
    <ol>
-     <li><b>Load data</b>: upload FEST files or a previously saved R
+     <li><b>Load Data</b>: upload FEST files or a previously saved R
               object with data.</li>
       <li>After the data is successfully loaded,
-              select the <b>Run analysis</b>
+              select the <b>Run Analysis</b>
                    tab to run the analysis. Please make sure to specify
                    whether the input data has replicates or not.
                    <br><b>Important!</b> If the input data has replicates, the conditions
@@ -48,13 +48,13 @@ For experiments without replicates, we use the pairwise Fisher’s exact test to
                    follow the format 'sampleID_condition_replicate.ext'.
                    E.g. 'sample1_HIV_1.tsv'.                   
       <li>After the analysis is done,
-              select the <b>Save results</b> tab to save the results.</li>
+              select the <b>Save Results</b> tab to save the results.</li>
 	</ol>
     
  </p>
  
  To determine antigen-specific clonotypes (FEST positive clones), we use the following criteria specified on 
- the <b>Save results</b> tab, a clonotype: 
+ the <b>Save Results</b> tab, a clonotype: 
  <ol>
 	 <li>should be significantly expanded in the culture of interest compared to the reference
 	 culture at an FDR less than the specified threshold, <br>
@@ -62,11 +62,13 @@ For experiments without replicates, we use the pairwise Fisher’s exact test to
 	 <li>should be significantly expanded in the culture of interest compared to every other culture
 	 performed in tandem,</li> 
 	 <li>should have an odds ratio above a specified value, </li>
-	 <li>should have a percent above a specified value. </li>	 
+	 <li>should have abundance (in percent) above a specified value, </li>	
+	 <li>should have non-zero abundance in the specified percent of conditions.</li> 
  </ol>
+ The results from the same run can be saved several times with different thresholds without re-running the analysis.
  Clones can then be subject to a threshold for a minimal number of templates (the <b>Specify the minimal number of templates</b> field 
- on the <b>Run analysis</b> tab). FEST positive clones are saved in the output table (the <b>Download Results</b> button on 
- the <b>Save results</b> tab) and plotted as an output heat map (the <b>Create Heat Map</b> button).</p>
+ on the <b>Run Analysis</b> tab). FEST positive clones are saved in the output table (the <b>Download Results</b> button on 
+ the <b>Save Results</b> tab) and plotted as an output heat map (the <b>Create Heat Map</b> button).</p>
 
 <a href="#top"><font size="2">Top of Page</font></a></P>
 
@@ -87,10 +89,10 @@ For experiments without replicates, we use the pairwise Fisher’s exact test to
 	<p>After loading the data, go to the <b>Run Analysis</b> tab and specify the following input parameters:
 	
 	<ul>
-		<li> <b>The input with replicates</b>. If your experiment has replicates.</li>
-		<li> <b>Compare to reference</b>. If you want to omit the comparison to a reference sample step, disable this option.</li>
+		<li> <b>Analyze with replicates</b>. If your experiment has replicates.</li>
 		<li> <b>Use nucleotide level data</b>. Select this option if you want to perform analysis on the nucleotide level data instead of amino acid level data. 
 			By default, the analysis is performed on amino acid level.</li>
+		<li> <b>Compare to reference</b>. If you want to omit the comparison to a reference sample step, disable this option.</li>
 		<li> <b>Select a reference sample</b>. It is usually T cells cultured with cytokines but without peptide.</li>
 		<li> <b>Select sample(s) to exclude</b>. The samples will be excluded from analysis, but information about 
 			them will be included in the output file</li>
@@ -102,8 +104,7 @@ For experiments without replicates, we use the pairwise Fisher’s exact test to
 	<a href="#top"><font size="2">Top of Page</font></a>
 
 <h2><a name="outputParams">Output</a></h2>
-		<p>	After the analysis is done, go to the <b>Save results</b> tab and specify FDR, odds ratio, and percentage thresholds 
-			that will be used to determine FEST positive clones. 
+		<p>	After the analysis is done, go to the <b>Save Results</b> tab and specify the thresholds that will be used to determine FEST positive clones. 
 		The positive odds ratio corresponds to the expansion of a clone in cultures of interest. 
 		The results are saved by clicking the <b>Download Results</b> button in an Excel file with the following spreadsheets:
 		<ul>
@@ -114,7 +115,7 @@ For experiments without replicates, we use the pairwise Fisher’s exact test to
 			the number of templates (the '*_abundance' columns) and the percent (the '*_percent' columns)
 			in all samples including those that were excluded from analysis 
 
-			<li> The <b>ref_comparison_only</b> sheet contains a list of all analyzed clones, FDRs (the 'FDR:*' columns) and odds ratios (the 'OR:*' columns) for comparisons between cultures of interest 
+			<li> The <b>ref_comparison_only</b> sheet contains a list of all significantly expanded clones relative to the reference sample, FDRs (the 'FDR:*' columns) and odds ratios (the 'OR:*' columns) for comparisons between cultures of interest 
 				and the reference sample, as well as the number of templates (the '*_abundance' columns) and the percent (the '*_percent' columns)
 				in all samples including those that were excluded from analysis<br>
 				<b>NOTE:</b> This sheet is omitted if the <b>Compare to reference</b> option is disabled</li>
@@ -149,15 +150,17 @@ and the current version of is available at <a href="https://github.com/OncologyQ
 				<li>increased the default for the number of reads to 50</li>
 				<li>removed the baseline option</li>
 				<li>switched to openxlsx for saving results into an Excel file</li>
-				<li>made a list with analysis results and parameters that were used for the analysis 
-					insted of just analysis results (the analysisRes object)</li>				
+				<li>save a list with analysis results and the input parameters that were used for the analysis 
+					insted of just analysis results (the analysisRes object)</li>
+				<li>switched to the pheatmap package for creating heatmaps</li>
+				<li>added the threshold for the percent of non-zero conditions</li>
 			</ol>	
 		</li><li> <b>Version 14</b> (2025-03-05) 
 			<a href=https://dobbs-onc-jhmi.shinyapps.io/Manafest_analysis_v14/> https://dobbs-onc-jhmi.shinyapps.io/Manafest_analysis_v14/</a>
 			<ol>
 				<li>use the immunarch package for reading input tab-delimited files</li>
 				<li>split loading the data and analysis to different tabs</li>
-				<li>added percentage threshold to the version without replicates</li>
+				<li>added the percentage threshold</li>
 				<li>fixed output to heatmap when there is no or one clone</li>
 				<li>added all functions to the replicateFest package</li>
 			</ol>	
