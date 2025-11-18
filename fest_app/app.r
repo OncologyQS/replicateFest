@@ -278,91 +278,88 @@ server <- function(input, output,session) {
 #  source("R/manafest_shiny_functions.r")
 #  source("R/repManFunctions.r")
 
+  # -----------------------
+  # Reactive storage instead of global env
+  # -----------------------
+  rv <- reactiveValues(
+    mergedData = NULL,
+    ntData = NULL,
+    analysisRes = NULL
+  )
+
+
   #===================
   # read input files
   observeEvent(input$sourceFiles,{
     # remove all previously loaded data and analysis
-    rm(list = ls(envir = .GlobalEnv), envir = .GlobalEnv)
+#    rm(list = ls(envir = .GlobalEnv), envir = .GlobalEnv)
+    # reset reactive storage (do not touch global env)
+    rv$mergedData <- NULL
+    rv$ntData <- NULL
+    rv$analysisRes <- NULL
 
-    output$message_load = renderUI({
-    # check if there is file to analyze
-    if (length(input$sourceFiles) == 0)
-    {
-      HTML('There are no files to analyze. Please upload files')
-    }else if(length(input$sourceFiles$name) == 1){
-      HTML('There should be at least two files to analyze')
-    }else if(length(input$sourceFiles$name) > 1){
-      # read loaded files in and save into inputData object
-
-      # if there are previously loaded data, remove it
-      if (exists('mergedData', envir = .GlobalEnv))
-      {
-        rm(list = c('mergedData','productiveReadCounts','ntData'), envir = .GlobalEnv)
-        updateSelectInput(session, "refSamp", choices=list('None'))
-#        updateSelectInput(session, "baselineSamp", choices=list('None'))
-        updateSelectInput(session, "excludeSamp", choices=list('None'))
+    output$message_load <- renderUI({
+      req(input$sourceFiles)
+      if (length(input$sourceFiles$name) < 2) {
+        return(HTML('There should be at least two files to analyze'))
       }
-      # specify input file format
-      if (input$inputFiles == 'FEST files') fileFormat = 'fest'
-      # extract path to a folder with input file to pass into reading function
-      # supplied source names of loaded files to be used as names for data objects
-      #  and read in input files
-      res = readMergeSave(files = dirname(input$sourceFiles$datapath[1]),
-                          filenames = unlist(input$sourceFiles$name))
 
-      if(!is.null(res))
-      {
-        assign('mergedData', res$mergedData, envir = .GlobalEnv)
-        assign('ntData', res$ntData, envir = .GlobalEnv)
-        assign('productiveReadCounts', sapply(res$mergedData,sum), envir = .GlobalEnv)
+      # Use progress indicator and safe read
+      tryCatch({
+        withProgress(message = "Reading files...", value = 0.1, {
+          files_dir <- dirname(input$sourceFiles$datapath[1])
+          incProgress(0.2)
+          res <- readMergeSave(files = files_dir, filenames = unlist(input$sourceFiles$name))
+          incProgress(0.7)
+        })
 
-        if(file.exists('inputData.rda')) file.remove('inputData.rda')
-        updateSelectInput(session, "refSamp", choices=c('None',names(mergedData)))
-        updateSelectInput(session, "excludeSamp", choices=names(mergedData))
+        if (is.null(res)) stop("readMergeSave returned NULL")
 
-        HTML(c('Uploaded files:<br/>',paste(names(mergedData), collapse = '<br/>')))
-      }else{
-        HTML('Error in reading files')
-      }
-    }
+        rv$mergedData <- res$mergedData
+        rv$ntData <- res$ntData
 
+        updateSelectInput(session, "refSamp", choices = c('None', names(rv$mergedData)))
+        updateSelectInput(session, "excludeSamp", choices = names(rv$mergedData))
+
+        HTML(c('Uploaded files:<br/>', paste(names(rv$mergedData), collapse = '<br/>')))
+      }, error = function(e) {
+        message("Error reading files: ", e$message)
+        HTML(paste("Error in reading files:", e$message))
+      })
+    })
   })
-  })
+
 
   #===================
   # load RDA file with the input data
   observeEvent(input$inputObj,{
     # remove all previously loaded data and analysis
-    rm(list = ls(envir = .GlobalEnv), envir = .GlobalEnv)
+ #   rm(list = ls(envir = .GlobalEnv), envir = .GlobalEnv)
+    # clear reactive storage and load the uploaded .rda into rv
+    rv$mergedData <- NULL;
+    rv$ntData <- NULL;
+    rv$analysisRes <- NULL
 
-    output$message_load = renderUI({
+    output$message_load <- renderUI({
       # check if there is a file to analyze
       if (length(input$inputObj) == 0)
       {
         HTML('There are no files to analyze. Please upload files')
       }else if(length(input$inputObj$name) > 0 )
       {
-        # if there are previously loaded data, remove it
-        if (exists('mergedData', envir = .GlobalEnv))
-        {
-          rm(list = c('mergedData','productiveReadCounts','ntData'), envir = .GlobalEnv)
-          updateSelectInput(session, "refSamp", choices=list('None'))
-#          updateSelectInput(session, "baselineSamp", choices=list('None'))
-          updateSelectInput(session, "excludeSamp", choices=list('None'))
+        if (tolower(file_ext(input$inputObj$name)) != 'rda') {
+          return(HTML('This is not an .rda file. Please check the input file'))
         }
-        if (tolower(file_ext(input$inputObj$name)) == 'rda'){
-          # upload an existing input object
-          load(input$inputObj$datapath, envir = .GlobalEnv)
-          if (exists('mergedData', envir = .GlobalEnv))
-          {
-            updateSelectInput(session, "refSamp", choices=c('None',names(mergedData)))
-#            updateSelectInput(session, "baselineSamp", choices=c('None',names(mergedData)))
-            updateSelectInput(session, "excludeSamp", choices=names(mergedData))
-            HTML(c('Uploaded samples:<br/>',paste(names(mergedData), collapse = '<br/>')))
-          }else{ HTML('There are no input data to analyze. Please check the input file')}
-        }else{
-          HTML('This is not an .rda file. Please check the input file')
+        tmpenv <- new.env(parent = emptyenv())
+        load(input$inputObj$datapath, envir = tmpenv)
+        if (!exists("mergedData", envir = tmpenv)) {
+          return(HTML('There are no input data to analyze. Please check the input file'))
         }
+        rv$mergedData <- get("mergedData", envir = tmpenv)
+        rv$ntData <- get0("ntData", envir = tmpenv)
+        updateSelectInput(session, "refSamp", choices=c('None',names(rv$mergedData)))
+        updateSelectInput(session, "excludeSamp", choices=names(rv$mergedData))
+        HTML(c('Uploaded samples:<br/>',paste(names(rv$mergedData), collapse = '<br/>')))
       }
     })
   })
@@ -373,7 +370,10 @@ server <- function(input, output,session) {
     filename='inputData.rda',
     content=function(file){
       #		load('inputData.rda')
-      if (exists('mergedData', envir = .GlobalEnv)) {
+      if (!is.null(rv$mergedData)) {
+        mergedData = rv$mergedData
+        ntData = rv$ntData
+        productiveReadCounts <- sapply(mergedData, sum)
         save(mergedData,productiveReadCounts,ntData,file=file)
       }else{
         print('No data to save')
@@ -447,22 +447,22 @@ server <- function(input, output,session) {
   #================
   # run analysis with the Run Analysis button is clicked
   observeEvent(input$runAnalysis,{
+    #browser()
     output$message_analysis = renderText('Analysis is running...')
     # remove results of the previous analysis
-    if(exists('analysisRes', envir = .GlobalEnv)) rm('analysisRes', envir = .GlobalEnv)
+#    if(exists('analysisRes', envir = .GlobalEnv)) rm('analysisRes', envir = .GlobalEnv)
     # check if there are objects to run analysis
-    if(exists('mergedData', envir = .GlobalEnv) && exists('ntData', envir = .GlobalEnv))
+    if(!is.null(rv$mergedData) && !is.null(rv$ntData))
     {
         # run analysis on aa level data
         # load object with input data
         if (!input$nucleotideFlag){
-          sampNames = names(mergedData)
-          obj = mergedData
+          obj = rv$mergedData
         }else{ # run analysis on nucleotide level data
           #if 'Use nucleotide level data' checkbox is selected
-          sampNames = names(ntData)
-          obj = ntData
+          obj = rv$ntData
         }
+      sampNames = names(obj)
 
         # create an object with results
         # it's a list with two elements:
@@ -513,7 +513,6 @@ server <- function(input, output,session) {
   #          if(input$ignoreBaseline) clonesToTest = NULL
             # take only clones that have the number of reads more then nReads and compare with top second and top third conditions
             analysisRes$res = compareWithOtherTopConditions(obj,
-                                                      productiveReadCounts,
                                                       sampForAnalysis,
                                                       nReads = as.numeric(input$nReads),
                                                       clones = clonesToTest)
@@ -570,7 +569,8 @@ server <- function(input, output,session) {
       if (!is.null(analysisRes$res))
       {
           output$message_analysis = renderText('Analysis is done. Go to the Save results tab')
-          assign('analysisRes',analysisRes, envir = .GlobalEnv)
+          rv$analysisRes = analysisRes
+#          assign('analysisRes',analysisRes, envir = .GlobalEnv)
       }	else{
           output$message_analysis = renderText('There are no clones to analyze. Try to reduce the number of templates')
       }
@@ -589,8 +589,9 @@ server <- function(input, output,session) {
     },
     contentType = "text/xlsx",
     content=function(file){
-      if (exists('analysisRes', envir = .GlobalEnv))
+      if (!is.null(rv$analysisRes))
       {
+        analysisRes = rv$analysisRes
         # get parameters for output results from the interface
         saveParams = reactiveValuesToList(input)
         # convert value to numeric
@@ -600,7 +601,8 @@ server <- function(input, output,session) {
         saveParams$condsThr = as.numeric(saveParams$condsThr)
 
         # check if analysis was done on aa or nt level
-        if (analysisRes$params$nucleotideFlag) obj = ntData else obj = mergedData
+        if (analysisRes$params$nucleotideFlag)
+          obj = rv$ntData else obj = rv$mergedData
         sampForAnalysis = setdiff(names(obj), c(analysisRes$params$excludeSamp,analysisRes$params$refSamp))
         #======================
         # get positive clones
@@ -703,6 +705,7 @@ server <- function(input, output,session) {
         # add a sheet with parameters
         #============
         s = names(obj)
+        productiveReadCounts <- sapply(obj, sum)
         param = c("Data with replicates",
                   'Reference sample',
                   'Excluded samples',
@@ -747,8 +750,10 @@ server <- function(input, output,session) {
       paste0('heatmap_',Sys.Date(),'.pdf')},
     contentType = "image/pdf",
     content=function(file){
-      if (exists('analysisRes', envir = .GlobalEnv))
+      if (!is.null(rv$analysisRes))
       {
+        analysisRes = rv$analysisRes
+
         saveParams = reactiveValuesToList(input)
         # convert value to numeric
         saveParams$orThr = as.numeric(saveParams$orThr)
@@ -757,7 +762,8 @@ server <- function(input, output,session) {
         saveParams$condsThr = as.numeric(saveParams$condsThr)
 
         # check if analysis was done on aa or nt level
-        if (analysisRes$params$nucleotideFlag) obj = ntData else obj = mergedData
+        if (analysisRes$params$nucleotideFlag)
+          obj = rv$ntData else obj = rv$mergedData
         sampForAnalysis = setdiff(names(obj),
                                   c(analysisRes$params$excludeSamp,
                                     analysisRes$params$refSamp))
@@ -810,9 +816,11 @@ server <- function(input, output,session) {
           text(0.5,0.5,m)
           dev.off()
         }
+  browser()
+        # if there are positive clones,
+        # make heatmap
       if (nrow(posClones)>1)
         {
-          # make heatmap with positive clones
         # if with replicates, plot abundances, not FC
         # for this refSamp should be NULL
         if (analysisRes$params$replicates) ref = NULL else
@@ -829,7 +837,6 @@ server <- function(input, output,session) {
 
   # Register cleanup code when session ends
   session$onSessionEnded(function() {
-    rm(list = ls(envir = .GlobalEnv), envir = .GlobalEnv)
     gc()
 #    message("Global environment cleaned up.")
   })

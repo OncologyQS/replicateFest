@@ -730,6 +730,7 @@ getFreqThreshold = function(n, p)
 #' @param clones an optional vector with clones to analyze.
 #' Default is NULL, which means that all clones with the number of reads more than nReads will be analyzed
 #' @return a table with FDRs and ORs for comparisons with the second and third top conditions
+#' @export
 compareWithOtherTopConditions = function(mergedData,
                                          sampForAnalysis,
                                          nReads = 10,
