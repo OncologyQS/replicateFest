@@ -371,6 +371,7 @@ server <- function(input, output,session) {
     content=function(file){
       #		load('inputData.rda')
       if (!is.null(rv$mergedData)) {
+        #
         mergedData = rv$mergedData
         ntData = rv$ntData
         productiveReadCounts <- sapply(mergedData, sum)
@@ -398,8 +399,9 @@ server <- function(input, output,session) {
       shinyjs::enable('condsThr')
     }
     # if data is loaded
-    if(exists('mergedData', envir = .GlobalEnv))
+    if(!is.null(rv$mergedData))
     {
+      mergedData = rv$mergedData
 
       if (input$replicates == TRUE){
         # if the input data has replicates, then the reference sample should be selected
@@ -462,6 +464,7 @@ server <- function(input, output,session) {
           #if 'Use nucleotide level data' checkbox is selected
           obj = rv$ntData
         }
+      # get samples to analyze
       sampNames = names(obj)
 
         # create an object with results
@@ -549,7 +552,7 @@ server <- function(input, output,session) {
               # get clones to test
               clonesToTest = getClonesToTest(obj, nReads = as.numeric(input$nReads))
 
-              # check if there are enought clones to analyze
+              # check if there are enough clones to analyze
               if (length(clonesToTest)<1)
               {
                 output$message_analysis = renderText('There are no clones to analyze. Try to reduce confidence or the number of templates 1')
