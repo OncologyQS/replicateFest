@@ -1,47 +1,33 @@
 # 2025-01-24
 # Ludmila Danilova, Leslie Cope
 #================================================================
-# usage of replicateFest on experimental data with replicates
+# usage of replicateFest on mock data with replicates
 #================================================================
 
-library(tools)
-library(dplyr)
-# load functions
-devtools::install_github("OncologyQS/replicateFest")
-library(replicateFest)
+#=============
+# run test data with replicates
+inputDir = "./tests/testthat/testdata/with_replicates/"
 
+# list paths to files with data
+files = list.files(inputDir, full.names = T,
+                   pattern = "tsv", recursive = TRUE)
 
-# load data
-# list files with data
-files=list.files("Data/",pattern = ".txt", full.name=T, recursive=T)
-# extract file names without extension
 filenames = file_path_sans_ext(basename(files))
 sampAnnot = splitFileName(filenames)
 
-######################
-# usage
-#====================
 # run all clones in a patient and time point and return the results
 res = runExperiment(files,
                     peptides = sampAnnot$condition,
-                    cont= "DMSO",
+                    refSamp= "control",
                     fdrThr = 0.05,
-                    xrCond = NA,
-                    outputFile = "test.xlsx",
-                    saveToFile = T)
+                    nReads = 20,
+                    percentThr = 0,
+                    xrCond = NULL,
+                    ntLevel = F,
+#                   outputFile = "mock-data-replicates-output.xlsx",
+                    saveToFile = F)
 
+# save results to be used during package tests in testthat
+saveRDS(res, file = paste0(inputDir, "replicate_results.rds"))
 
-
-#================================
-# running analysis for one clone
-#================================
-# read in data
-mergedData=readMergeSave(files, filenames = NULL)$mergedData
-
-# specify a clone
-clone1 = "CASSFGRGAEKLFF"
-# fit model for the clone
-fitModel(clone1,mergedData,
-         peptides = sampAnnot$condition,
-         control="DMSO")
 
