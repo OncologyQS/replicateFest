@@ -659,8 +659,6 @@ server <- function(input, output,session) {
     }
   })
 
-
-  # save results with selected thresholds when the Download Results button is clicked
   # save results with selected thresholds when the Download Results button is clicked
   output$saveResults <- downloadHandler(
     filename = function() {
