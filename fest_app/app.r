@@ -292,6 +292,58 @@ server <- function(input, output,session) {
     analysisRes = NULL
   )
 
+  # -----------------------
+  # Helper functions to avoid duplicated code between saveResults and saveHeatmaps
+  # -----------------------
+  get_save_params <- function() {
+    sp <- reactiveValuesToList(input)
+    sp$orThr     <- suppressWarnings(as.numeric(sp$orThr))
+    sp$fdrThr    <- suppressWarnings(as.numeric(sp$fdrThr))
+    sp$percentThr<- suppressWarnings(as.numeric(sp$percentThr))
+    sp$condsThr  <- suppressWarnings(as.numeric(sp$condsThr))
+    sp
+  }
+
+  prepare_obj_and_samp <- function(analysisRes) {
+    obj <- if (isTRUE(analysisRes$params$nucleotideFlag)) rv$ntData else rv$mergedData
+    sampForAnalysis <- if (!is.null(obj)) setdiff(names(obj), c(analysisRes$params$excludeSamp, analysisRes$params$refSamp)) else character()
+    list(obj = obj, sampForAnalysis = sampForAnalysis)
+  }
+
+  get_positive_clones <- function(analysisRes, obj, sampForAnalysis, saveParams) {
+    if (isTRUE(analysisRes$params$compareToRef)) {
+      if (isTRUE(analysisRes$params$replicates)) {
+        getPositiveClonesReplicates(
+          analysisRes$res, obj,
+          refSamp = analysisRes$params$refSamp,
+          samp = sampForAnalysis,
+          excludeCond = analysisRes$params$excludeSamp,
+          orThr = saveParams$orThr,
+          fdrThr = saveParams$fdrThr,
+          percentThr = saveParams$percentThr
+        )
+      } else {
+        getPositiveClones(
+          analysisRes$res, obj,
+          samp = sampForAnalysis,
+          orThr = saveParams$orThr,
+          fdrThr = saveParams$fdrThr,
+          percentThr = saveParams$percentThr,
+          condsThr = saveParams$condsThr
+        )
+      }
+    } else {
+      getPositiveClonesFromTopConditions(
+        analysisRes$res,
+        orThr = saveParams$orThr,
+        fdrThr = saveParams$fdrThr,
+        percentThr = saveParams$percentThr,
+        condsThr = saveParams$condsThr,
+        mergedData = obj,
+        samp = sampForAnalysis
+      )
+    }
+  }
 
   #===================
   # read input files
@@ -609,257 +661,165 @@ server <- function(input, output,session) {
 
 
   # save results with selected thresholds when the Download Results button is clicked
+  # save results with selected thresholds when the Download Results button is clicked
   output$saveResults <- downloadHandler(
-    filename=function() {
-      paste0('analysisRes_',Sys.Date(),'.xlsx')
+    filename = function() {
+      paste0('analysisRes_', Sys.Date(), '.xlsx')
     },
     contentType = "text/xlsx",
-    content=function(file){
-      if (!is.null(rv$analysisRes))
-      {
-        analysisRes = rv$analysisRes
-        # get parameters for output results from the interface
-        saveParams = reactiveValuesToList(input)
-        # convert value to numeric
-        saveParams$orThr = as.numeric(saveParams$orThr)
-        saveParams$fdrThr = as.numeric(saveParams$fdrThr)
-        saveParams$percentThr = as.numeric(saveParams$percentThr)
-        saveParams$condsThr = as.numeric(saveParams$condsThr)
-
-        # check if analysis was done on aa or nt level
-        if (analysisRes$params$nucleotideFlag)
-          obj = rv$ntData else obj = rv$mergedData
-        # get samples to analyze
-        sampForAnalysis = setdiff(names(obj), c(analysisRes$params$excludeSamp,analysisRes$params$refSamp))
-        #======================
-        # get positive clones
-        posClones = NULL
-        if(analysisRes$params$compareToRef) #if there is comparison to the ref sample
-        {
-
-         # if analyzed data with replicate
-          if(analysisRes$params$replicates)
-          {
-            posClones = getPositiveClonesReplicates(analysisRes$res,
-                                                    obj,
-                                                    refSamp = analysisRes$params$refSamp,
-                                                    samp = sampForAnalysis,
-                                                    excludeCond = analysisRes$params$excludeSamp,
-                                                    orThr = saveParams$orThr,
-                                                    fdrThr = saveParams$fdrThr,
-                                                    percentThr = saveParams$percentThr)
-            }else{ # if analyzed data without replicates
-              #browser()
-              posClones = getPositiveClones(analysisRes$res, obj,
-                                        samp = sampForAnalysis,
-                                        orThr = saveParams$orThr,
-                                        fdrThr = saveParams$fdrThr,
-                                        percentThr = saveParams$percentThr,
-                                        condsThr = saveParams$condsThr)
-            }
-        }else{ # if there is no comparison to ref sample
-          posClones = getPositiveClonesFromTopConditions(analysisRes$res,
-                                                         orThr = saveParams$orThr,
-                                                         fdrThr=saveParams$fdrThr,
-                                                         percentThr = saveParams$percentThr,
-                                                         condsThr =  saveParams$condsThr,
-                                                         mergedData = obj,
-                                                         samp = sampForAnalysis)
-        }
-
-        #===============================
-        # change "None" to NULL for reference sample
-        refSamp = analysisRes$params$refSamp
-        if(refSamp == 'None') refSamp = NULL
-
-        #========================
-        # create object with results to write to Excel
-        #=======================
-        tablesToXls = vector(mode = 'list')
-
-        # check if there are positive clones
-        # if not, skip positive clone output
-        if (nrow(posClones)==0)
-        {
-          tablesToXls$summary = "There are no positive clone with the specified thresholds"
-          output$save_results = renderText('There are no positive clones. Try to adjust thresholds')
-        }else{
-          # create table with results
-          tablesToXls = createPosClonesOutput(posClones,
-                                              obj,
-                                              analysisRes$params$refSamp,
-                                              replicates = analysisRes$params$replicates)
-        }
-        #===================
-        # add the ref_comparison_only sheet
-        #===================
-        if(analysisRes$params$compareToRef) #if there is comparison to the ref sample
-        {
-          # if analyzing data with replicate
-          if(analysisRes$params$replicates)
-          {
-            resTable = createResTableReplicates(
-              analysisRes$res,
-              obj,
-              percentThr = saveParams$percentThr,
-              refSamp = analysisRes$params$refSamp,
-              orThr = saveParams$orThr,
-              fdrThr = saveParams$fdrThr)
-
-          }else{ # if without replicates
-          # create a table with results
-#            browser()
-            resTable = createResTable(analysisRes$res,obj,
-                                    orThr = saveParams$orThr,
-                                    fdrThr = saveParams$fdrThr,
-                                    percentThr = saveParams$percentThr,
-                                    condsThr = saveParams$condsThr,
-                                    saveCI = F)
-          }
-           #===========================
-           # check if there are no clones to save
-           if (is.null(resTable))
-             tablesToXls$ref_comparison_only =
-               data.frame(res = 'There are no significant clones')
-           # if there are clones
-           if(nrow(resTable) > 0)
-             tablesToXls$ref_comparison_only = resTable
-          }
-        #============
-        # add a sheet with parameters
-        #============
-        s = names(obj)
-        productiveReadCounts <- sapply(obj, sum)
-        param = c("Data with replicates",
-                  'Reference sample',
-                  'Excluded samples',
-                  'Compare to reference',
-                  'n template threshold',
-                  'FDR threshold',
-                  'OR threshold',
-                  'percent threshold',
-                  'percent non-zero conditions',
-                  'Nucleotide level analysis',
-                  'n samples',
-                  paste(s, 'n templates',sep = '_'))
-        value = c(analysisRes$params$replicates,
-                  analysisRes$params$refSamp,
-                  paste(analysisRes$params$excludeSamp, collapse = ', '),
-                  analysisRes$params$compareToRef,
-                  analysisRes$params$nReads,
-                  saveParams$fdrThr,
-                  saveParams$orThr,
-                  saveParams$percentThr,
-                  ifelse(is.null(saveParams$condsThr),"",saveParams$condsThr),
-                  analysisRes$params$nucleotideFlag,
-                  length(s),
-                  productiveReadCounts[s])
-
-        tablesToXls$parameters = data.frame(param, value)
-
-        #========
-        # save results to xlsx
-        saveResults(tablesToXls,file)
-        output$save_results = renderText('The results are saved')
-      }else{
-
-        output$save_results = renderText('Please click the Run Analysis button')
-
+    content = function(file) {
+      if (is.null(rv$analysisRes)) {
+        output$save_results <- renderText('Please click the Run Analysis button')
+        return()
       }
-    })
+
+      analysisRes <- rv$analysisRes
+      saveParams <- get_save_params()
+      prep <- prepare_obj_and_samp(analysisRes)
+      obj <- prep$obj
+      sampForAnalysis <- prep$sampForAnalysis
+
+      posClones <- tryCatch(
+        get_positive_clones(analysisRes, obj, sampForAnalysis, saveParams),
+        error = function(e) {
+          message("Error getting positive clones: ", e$message)
+          NULL
+        }
+      )
+
+      tablesToXls <- list()
+
+      if (is.null(posClones) || nrow(posClones) == 0) {
+        tablesToXls$summary <- "There are no positive clone with the specified thresholds"
+        output$save_results <- renderText('There are no positive clones. Try to adjust thresholds')
+      } else {
+        tablesToXls <- createPosClonesOutput(
+          posClones,
+          obj,
+          analysisRes$params$refSamp,
+          replicates = analysisRes$params$replicates
+        )
+      }
+
+      if (isTRUE(analysisRes$params$compareToRef)) {
+        resTable <- if (isTRUE(analysisRes$params$replicates)) {
+          createResTableReplicates(
+            analysisRes$res,
+            obj,
+            percentThr = saveParams$percentThr,
+            refSamp = analysisRes$params$refSamp,
+            orThr = saveParams$orThr,
+            fdrThr = saveParams$fdrThr
+          )
+        } else {
+          createResTable(
+            analysisRes$res, obj,
+            orThr = saveParams$orThr,
+            fdrThr = saveParams$fdrThr,
+            percentThr = saveParams$percentThr,
+            condsThr = saveParams$condsThr,
+            saveCI = FALSE
+          )
+        }
+
+        if (is.null(resTable)) {
+          tablesToXls$ref_comparison_only <- data.frame(res = 'There are no significant clones', stringsAsFactors = FALSE)
+        } else if (nrow(resTable) > 0) {
+          tablesToXls$ref_comparison_only <- resTable
+        }
+      }
+
+      # parameters sheet
+      s <- if (!is.null(obj)) names(obj) else character()
+      productiveReadCounts <- if (!is.null(obj) && length(s) > 0) sapply(obj, sum) else numeric(0)
+
+      param <- c(
+        "Data with replicates",
+        "Reference sample",
+        "Excluded samples",
+        "Compare to reference",
+        "n template threshold",
+        "FDR threshold",
+        "OR threshold",
+        "percent threshold",
+        "percent non-zero conditions",
+        "Nucleotide level analysis",
+        "n samples",
+        paste(s, "n templates", sep = "_")
+      )
+
+      value <- c(
+        analysisRes$params$replicates,
+        analysisRes$params$refSamp,
+        paste(analysisRes$params$excludeSamp, collapse = ", "),
+        analysisRes$params$compareToRef,
+        analysisRes$params$nReads,
+        saveParams$fdrThr,
+        saveParams$orThr,
+        saveParams$percentThr,
+        ifelse(is.null(saveParams$condsThr), "", saveParams$condsThr),
+        analysisRes$params$nucleotideFlag,
+        length(s),
+        if (length(productiveReadCounts) > 0) productiveReadCounts[s] else numeric(0)
+      )
+
+      tablesToXls$parameters <- data.frame(param = param, value = value, stringsAsFactors = FALSE)
+
+      # write out xlsx
+      saveResults(tablesToXls, file)
+      output$save_results <- renderText('The results are saved')
+    }
+  )
 
   # save heatmaps with selected thresholds when the Download Heatmaps button is clicked
   output$saveHeatmaps <- downloadHandler(
-    filename=function(){
-      paste0('heatmap_',Sys.Date(),'.pdf')},
+    filename = function() {
+      paste0('heatmap_', Sys.Date(), '.pdf')
+    },
     contentType = "image/pdf",
-    content=function(file){
-      if (!is.null(rv$analysisRes))
-      {
-
-        analysisRes = rv$analysisRes
-        # get parameters for output results from the interface
-        saveParams = reactiveValuesToList(input)
-        # convert value to numeric
-        saveParams$orThr = as.numeric(saveParams$orThr)
-        saveParams$fdrThr = as.numeric(saveParams$fdrThr)
-        saveParams$percentThr = as.numeric(saveParams$percentThr)
-        saveParams$condsThr = as.numeric(saveParams$condsThr)
-
-        # check if analysis was done on aa or nt level
-        if (analysisRes$params$nucleotideFlag)
-          obj = rv$ntData else obj = rv$mergedData
-        sampForAnalysis = setdiff(names(obj),
-                                  c(analysisRes$params$excludeSamp,
-                                    analysisRes$params$refSamp))
-
-        #======================
-        # get positive clones
-        posClones = NULL
-        if(analysisRes$params$compareToRef) #if there is comparison to the ref sample
-        {
-
-          # if analyzed data with replicate
-          if(analysisRes$params$replicates)
-          {
-            posClones = getPositiveClonesReplicates(analysisRes$res,
-                                                    obj,
-                                                    refSamp = analysisRes$params$refSamp,
-                                                    samp = sampForAnalysis,
-                                                    excludeCond = analysisRes$params$excludeSamp,
-                                                    orThr = saveParams$orThr,
-                                                    fdrThr = saveParams$fdrThr,
-                                                    percentThr = saveParams$percentThr)
-          }else{ # if analyzed data without replicates
-           posClones = getPositiveClones(analysisRes$res, obj,
-                                          samp = sampForAnalysis,
-                                          orThr = saveParams$orThr,
-                                          fdrThr = saveParams$fdrThr,
-                                          percentThr = saveParams$percentThr,
-                                          condsThr =  saveParams$condsThr)
-          }
-        }else{ # if there is no comparison to ref sample
-          posClones = getPositiveClonesFromTopConditions(analysisRes$res,
-                                                         orThr = saveParams$orThr,
-                                                         fdrThr = saveParams$fdrThr,
-                                                         percentThr = saveParams$percentThr,
-                                                         condsThr = saveParams$condsThr,
-                                                         mergedData = obj,
-                                                         samp = sampForAnalysis)
-        }
-        # if there is no positive clones,
-        # with a message about that
-        if (nrow(posClones) <= 1)
-        {
-          # message
-          m = 'There are not enough positive clones to plot. Try to adjust thresholds'
-          # show in the app
-          output$save_results = renderText(m)
-          # save in pdf
-          pdf(file)
-          plot.new()
-          text(0.5,0.5,m)
-          dev.off()
-        }
-# browser()
-        # if there are positive clones,
-        # make heatmap
-      if (nrow(posClones)>1)
-        {
-        # if with replicates, plot abundances, not FC
-        # for this refSamp should be NULL
-        if (analysisRes$params$replicates) ref = NULL else
-          ref = analysisRes$params$refSamp
-        # create a heatmap and save in file
-         makeHeatmaps(unique(posClones$clone), obj,
-                       refSamp = ref,
-                       fileName = file, size = 7)
-          output$save_results = renderText('The heat map is saved')
-        }
-
+    content = function(file) {
+      if (is.null(rv$analysisRes)) {
+        output$save_results <- renderText('Please click the Run Analysis button')
+        return()
       }
-    })
 
+      analysisRes <- rv$analysisRes
+      saveParams <- get_save_params()
+      prep <- prepare_obj_and_samp(analysisRes)
+      obj <- prep$obj
+      sampForAnalysis <- prep$sampForAnalysis
+
+      posClones <- tryCatch(
+        get_positive_clones(analysisRes, obj, sampForAnalysis, saveParams),
+        error = function(e) {
+          message("Error getting positive clones for heatmap: ", e$message)
+          NULL
+        }
+      )
+
+      if (is.null(posClones) || nrow(posClones) <= 1) {
+        m <- "There are not enough positive clones to plot. Try to adjust thresholds"
+        output$save_results <- renderText(m)
+        pdf(file)
+        plot.new()
+        text(0.5, 0.5, m)
+        dev.off()
+        return()
+      }
+
+      ref <- if (isTRUE(analysisRes$params$replicates)) NULL else analysisRes$params$refSamp
+
+      tryCatch({
+        makeHeatmaps(unique(posClones$clone), obj,
+                     refSamp = ref,
+                     fileName = file, size = 7)
+        output$save_results <- renderText('The heat map is saved')
+      }, error = function(e) {
+        message("Error creating heatmap: ", e$message)
+        output$save_results <- renderText(paste("Heatmap generation failed:", e$message))
+      })
+    }
+  )
   # Register cleanup code when session ends
   session$onSessionEnded(function() {
     gc()
