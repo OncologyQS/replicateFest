@@ -247,8 +247,13 @@ ui <- fluidPage(
     # the tab with manual
     #=============================
 	 tabPanel("User Manual",
-	          includeHTML('userManual.html'))
-
+	          tags$iframe(
+	            src = "userManual.html",
+	            width = "100%",
+	            height = "800px",
+	            frameborder = 0
+	          )
+	 )
  ) # end tabsetPanel
 )# end of the UI
 
@@ -359,9 +364,29 @@ server <- function(input, output,session) {
         rv$ntData <- get0("ntData", envir = tmpenv)
         updateSelectInput(session, "refSamp", choices=c('None',names(rv$mergedData)))
         updateSelectInput(session, "excludeSamp", choices=names(rv$mergedData))
-        HTML(c('Uploaded samples:<br/>',paste(names(rv$mergedData), collapse = '<br/>')))
+        # generate message about loaded samples
+        message = c('Uploaded samples:<br/>',paste(names(rv$mergedData), collapse = '<br/>'))
+        # return the message as HTML
+        HTML(message)
       }
     })
+  })
+
+  # enable the Save Input Object button only if data is loaded
+  observe({
+    shinyjs::toggleState("saveInputObj", !is.null(rv$mergedData))
+  })
+  # enable the Run Analysis button only if data is loaded
+  observe({
+    shinyjs::toggleState("runAnalysis", !is.null(rv$mergedData))
+  })
+  # enable the Download Results and Save Heat Map buttons
+  # only if analysis is done
+  observe({
+    shinyjs::toggleState("saveResults", !is.null(rv$analysisRes))
+  })
+  observe({
+    shinyjs::toggleState("saveHeatmaps", !is.null(rv$analysisRes))
   })
 
   #===================
@@ -374,8 +399,7 @@ server <- function(input, output,session) {
         #
         mergedData = rv$mergedData
         ntData = rv$ntData
-        productiveReadCounts <- sapply(mergedData, sum)
-        save(mergedData,productiveReadCounts,ntData,file=file)
+        save(mergedData,ntData,file=file)
       }else{
         print('No data to save')
         output$message_load = renderText('No data to save')
@@ -451,12 +475,16 @@ server <- function(input, output,session) {
   observeEvent(input$runAnalysis,{
     #browser()
     output$message_analysis = renderText('Analysis is running...')
-    # remove results of the previous analysis
-#    if(exists('analysisRes', envir = .GlobalEnv)) rm('analysisRes', envir = .GlobalEnv)
+
     # check if there are objects to run analysis
     if(!is.null(rv$mergedData) && !is.null(rv$ntData))
     {
-        # run analysis on aa level data
+      # Check if comparison to reference is enabled but no reference sample is selected
+      if (input$compareToRef && input$refSamp == 'None') {
+        output$message_analysis <- renderText('There is no reference sample. Please select a reference sample.')
+        return() # Exit the observer to prevent further execution
+      }
+      # run analysis on aa level data
         # load object with input data
         if (!input$nucleotideFlag){
           obj = rv$mergedData
@@ -490,12 +518,7 @@ server <- function(input, output,session) {
           # if the comparison to reference should be included in the analysis
           if(input$compareToRef)
           {
-            if (input$refSamp == 'None')
-            {
-              output$message_analysis = renderText('There is no reference. Please select a reference sample')
-            }else{
-
-              # create comparing pairs (to refSamp)
+             # create comparing pairs (to refSamp)
               compPairs = cbind(sampForAnalysis,rep(input$refSamp,length(sampForAnalysis)))
 
               # run Fisher's test
@@ -510,7 +533,7 @@ server <- function(input, output,session) {
               {
                 names(analysisRes$res) = apply(compPairs,1,paste,collapse = '_vs_')
              }
-            }
+
           }else{
             # if there is no comparison with the reference, then compare only within conditions
   #          if(input$ignoreBaseline) clonesToTest = NULL
@@ -606,6 +629,7 @@ server <- function(input, output,session) {
         # check if analysis was done on aa or nt level
         if (analysisRes$params$nucleotideFlag)
           obj = rv$ntData else obj = rv$mergedData
+        # get samples to analyze
         sampForAnalysis = setdiff(names(obj), c(analysisRes$params$excludeSamp,analysisRes$params$refSamp))
         #======================
         # get positive clones
@@ -700,9 +724,6 @@ server <- function(input, output,session) {
            # if there are clones
            if(nrow(resTable) > 0)
              tablesToXls$ref_comparison_only = resTable
-          }else{
-            tablesToXls$ref_comparison_only =
-              data.frame(res = 'There are no significant clones')
           }
         #============
         # add a sheet with parameters
@@ -755,8 +776,9 @@ server <- function(input, output,session) {
     content=function(file){
       if (!is.null(rv$analysisRes))
       {
-        analysisRes = rv$analysisRes
 
+        analysisRes = rv$analysisRes
+        # get parameters for output results from the interface
         saveParams = reactiveValuesToList(input)
         # convert value to numeric
         saveParams$orThr = as.numeric(saveParams$orThr)
@@ -819,7 +841,7 @@ server <- function(input, output,session) {
           text(0.5,0.5,m)
           dev.off()
         }
-  browser()
+# browser()
         # if there are positive clones,
         # make heatmap
       if (nrow(posClones)>1)
