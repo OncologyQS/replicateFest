@@ -3,7 +3,8 @@
 #================================================================
 # usage of replicateFest on mock data with replicates
 #================================================================
-
+library(tools)
+library(replicateFest)
 #=============
 # run test data with replicates
 inputDir = "./tests/testthat/testdata/with_replicates/"
