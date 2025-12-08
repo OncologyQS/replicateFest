@@ -11,6 +11,7 @@
 #' @importFrom multcomp glht
 #' @importFrom stats p.adjust setNames
 #' @importFrom pheatmap pheatmap
+#' @importFrom data.table data.table rbindlist
 
 #' @export
 #' @param files a list of filenames with full paths
