@@ -477,14 +477,13 @@ getClonesToTest = function(countDat, nReads = 50)
   # maxCt = tapply(cts, clones, max)
 
   # alternative faster implementation
-  # create a data.table with all samples, clones, and counts
-  library(data.table)
+  # create a data.table with all sampples, clones, and counts
   dt_list = lapply(names(countDat), function(samp){
     data.table(clone = names(countDat[[samp]]),
                count = as.numeric(countDat[[samp]]),
                sample = samp)
   })
-  dt = rbindlist(dt_list)
+  dt <- rbindlist(dt_list)
   # get maximum count for each clone across all samples
   maxCt = dt[, .(max_count = max(count)), by = clone]
   maxCt = setNames(maxCt$max_count, maxCt$clone)
