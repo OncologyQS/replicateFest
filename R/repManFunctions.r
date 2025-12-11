@@ -7,7 +7,7 @@
 #' Reads files, removes non-productive sequences, extracts counts,
 #' creates all necessary objects for further analysis
 #'
-#' @importFrom dplyr bind_rows filter select group_by summarise %>%
+#' @importFrom duckplyr bind_rows filter select group_by summarise %>%
 #' @importFrom multcomp glht
 #' @importFrom stats p.adjust setNames
 #' @importFrom pheatmap pheatmap
