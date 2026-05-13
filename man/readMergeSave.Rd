@@ -2,9 +2,7 @@
 % Please edit documentation in R/repManFunctions.r
 \name{readMergeSave}
 \alias{readMergeSave}
-\title{readMergeSave
-Reads files, removes non-productive sequences, extracts counts,
-creates all necessary objects for further analysis}
+\title{Prepare data for the analysis}
 \usage{
 readMergeSave(files, filenames = NULL)
 }
@@ -17,7 +15,6 @@ readMergeSave(files, filenames = NULL)
 a list of AA level counts, nucleotide level counts, and total number of reads
 }
 \description{
-readMergeSave
 Reads files, removes non-productive sequences, extracts counts,
 creates all necessary objects for further analysis
 }

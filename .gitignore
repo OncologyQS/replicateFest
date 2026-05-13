@@ -20,3 +20,5 @@ fest_app/rsconnect/shinyapps.io/dobbs-onc-jhmi/fest_app_debug.dcf
 getPositiveClonesReplicates.r
 debug_script.r
 .vscode/launch.json
+.positai
+NUL

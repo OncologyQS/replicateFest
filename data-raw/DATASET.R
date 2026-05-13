@@ -93,7 +93,7 @@ for (i in 1:5) {
   }
 }
 
-# Generate and save reolicates of control sample
+# Generate and save replicates of control sample
 for(j in rep){
   df_control <- generate_vdjtools_df()
 write.table(df_control, file = paste0("replicates/sample1_control", "_",j,".tsv"),  sep = '\t',

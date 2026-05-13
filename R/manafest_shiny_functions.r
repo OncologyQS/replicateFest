@@ -233,7 +233,7 @@ getCountsPercent = function(clones, mergedData, samp = names(mergedData))
 }
 
 
-#' @title getFreq
+#' @title Return frequencies in percent
 #' @description Returns frequencies in percent for selected clones and samples
 #' @param clones a vector with clones, for which frequencies should be calculated
 #' @param mergedData a list of data frames with read counts for each sample

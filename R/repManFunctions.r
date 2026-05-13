@@ -3,8 +3,9 @@
 # using input with replicates
 # based on Leslie's development for the Cervical SPORE project
 
-#' readMergeSave
-#' Reads files, removes non-productive sequences, extracts counts,
+#' @title Prepare data for the analysis
+#'
+#' @description Reads files, removes non-productive sequences, extracts counts,
 #' creates all necessary objects for further analysis
 #'
 #' @importFrom duckplyr bind_rows filter select group_by summarise %>%
@@ -846,3 +847,21 @@ createResTableReplicates = function(res,mergedData,
 
   return(tab)
 }
+
+# function to run analysis using counts data
+# made to run simulations
+# takes counts matrix and returns/saves expanded clones
+runFromMatrix =  function(countMatrix,saveToFile = "results.csv", ...) {
+  mergedData = asplit(countMatrix, MARGIN = 2)
+  sampAnnot = splitFileName(names(mergedData))
+  # run the analysis for selected clones
+  res = fitModelSet(rownames(countMatrix),
+                    mergedData,...)
+  rownames(res) = res$clone
+
+  res_exp = getExpanded(res,mergedData,...)
+  if(length(saveToFile) >0) write.csv(res_exp, file = saveToFile, row.names = F)
+
+  res_exp
+}
+

@@ -2,7 +2,7 @@
 % Please edit documentation in R/manafest_shiny_functions.r
 \name{getFreq}
 \alias{getFreq}
-\title{getFreq}
+\title{Return frequencies in percent}
 \usage{
 getFreq(
   clones,
