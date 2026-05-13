@@ -6,7 +6,7 @@ This package provides tools for functional evaluation of T-cell clonotypes using
 
 ## Installation
 
-Install the development version from GitHub using `remotes`:
+Install the development version from GitHub:
 
 ```r
 # Using pak (recommended)
