@@ -2,7 +2,7 @@
 % Please edit documentation in R/manafest_shiny_functions.r
 \name{createPosClonesOutput}
 \alias{createPosClonesOutput}
-\title{createPosClonesOutput}
+\title{Create output tables to be saved in the Excel file}
 \usage{
 createPosClonesOutput(
   posClones,
@@ -12,23 +12,27 @@ createPosClonesOutput(
 )
 }
 \arguments{
-\item{posClones}{a data frame with positive clones in the first column
+\item{posClones}{a data frame with positive clones
+in the first column
 and their conditions to be summarized in the second.
-In the replication version, these should be samples}
+In the replication version, these should be samples.}
 
-\item{mergedData}{a list of data frames with read counts for each sample}
+\item{mergedData}{a list of data frames with read counts
+for each sample.}
 
-\item{refSamp}{a reference sample ID. If NULL, then FC columns will not be added}
+\item{refSamp}{a reference sample/condition.
+If NULL, then FC columns will not be added}
 
-\item{replicates}{a logical value indicating if there are replicates}
+\item{replicates}{a logical value indicating if there are replicates.}
 }
 \value{
 a list with two data frames:
 1) condition_summary - a table with the number of positive clones per sample
-and the sum of their frequencies
+and the sum of their frequencies;
 2) positive_clones_summary - a table with per clone information
-including frequencies and fold changes relative to the reference sample
+including frequencies and fold changes relative to the reference sample.
 }
 \description{
-Creates output tables to be saved in Excel
+`createPosClonesOutput` creates output tables
+to be saved in the specified Excel file.
 }

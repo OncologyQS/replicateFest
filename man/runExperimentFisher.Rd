@@ -2,7 +2,7 @@
 % Please edit documentation in R/manafest_shiny_functions.r
 \name{runExperimentFisher}
 \alias{runExperimentFisher}
-\title{runExperimentFisher}
+\title{Run analysis using Fisher's exact test}
 \usage{
 runExperimentFisher(
   files,
@@ -20,37 +20,41 @@ runExperimentFisher(
 )
 }
 \arguments{
-\item{files}{a list of file names with read counts}
+\item{files}{a list of file names with read counts.}
 
-\item{refSamp}{a reference sample ID}
+\item{refSamp}{a reference sample name.}
 
-\item{nReads}{a threshold for the number of reads}
+\item{nReads}{a threshold for the number of reads.}
 
-\item{fdrThr}{a threshold for FDR}
+\item{fdrThr}{a threshold for FDR.}
 
-\item{orThr}{a threshold for OR}
+\item{orThr}{a threshold for odd ratio.}
 
-\item{percentThr}{a threshold for percentage}
+\item{percentThr}{a threshold for percentage.}
 
-\item{condsThr}{a threshold for the percent of conditions with non-zero counts}
+\item{condsThr}{a threshold for the percent of conditions
+with non-zero counts.}
 
-\item{excludeSamp}{a sample ID to exclude from analysis}
+\item{excludeSamp}{sample names to exclude from analysis.}
 
-\item{compareToRef}{a logical value indicating if the comparison to the reference sample should be performed}
+\item{compareToRef}{a logical value indicating if the comparison
+to the reference sample should be performed.}
 
-\item{ntLevel}{a logical value indicating if the analysis should be performed at the nucleotide level}
+\item{ntLevel}{a logical value indicating if the analysis should be
+performed at the nucleotide level.}
 
-\item{outputFile}{a name of the output file}
+\item{outputFile}{a name of the output file.}
 
-\item{saveToFile}{a logical value indicating if the output should be saved to a file}
+\item{saveToFile}{a logical value indicating if the output should be
+saved to a file.}
 }
 \value{
-a list with output tables
+a list with output tables.
 }
 \description{
-Reads in files with TCR repertoires from
-a FEST experiment without replicate samples. It
-performs pairwise Fisher's test find expanded clones
+`runExperimentFisher` reads in files with TCR
+repertoires from a FEST experiment without replicate samples. It
+performs pairwise Fisher's exact test to find expanded clones
 comparing to a reference samples.
 It also compares top conditions to find unique expansions.
 The results are return and saved in an Excel file.

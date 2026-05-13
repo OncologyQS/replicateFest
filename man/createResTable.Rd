@@ -2,7 +2,7 @@
 % Please edit documentation in R/manafest_shiny_functions.r
 \name{createResTable}
 \alias{createResTable}
-\title{createResTable}
+\title{Prepare results in a table format}
 \usage{
 createResTable(
   res,
@@ -16,26 +16,32 @@ createResTable(
 )
 }
 \arguments{
-\item{res}{a list of tables with results of Fisher's test for each pair of comparisons}
+\item{res}{a list of tables with results of Fisher's test
+for each pair of comparisons.}
 
-\item{mergedData}{a list of data frames with read counts for each sample}
+\item{mergedData}{a list of data frames with read counts
+for each sample.}
 
-\item{orThr}{a threshold for odds ratio}
+\item{orThr}{a threshold for odds ratio.}
 
-\item{fdrThr}{a threshold for FDR}
+\item{fdrThr}{a threshold for FDR.}
 
-\item{percentThr}{a threshold for the percentage of reads}
+\item{percentThr}{a threshold for the percentage of reads.}
 
-\item{condsThr}{a threshold for the percent of conditions with non-zero counts}
+\item{condsThr}{a threshold for the percent of conditions
+with non-zero counts.}
 
-\item{saveCI}{a logical value indicating if confidence intervals should be saved}
+\item{saveCI}{a logical value indicating if confidence intervals
+should be saved.}
 
-\item{significanceTable}{a logical value indicating if a table with significant clones should be returned}
+\item{significanceTable}{a logical value indicating
+if a table with significant clones should be returned.}
 }
 \value{
 a data frame with significant clones and the corresponding
- OR, FDR, counts, and percentages for all conditions
+ odd ratios, FDRs, counts, and percentages for all conditions.
 }
 \description{
-Creates a table with significant clones and conditions
+`createResTableCreates`creates a table with significantly
+expanded clones and the corresponding conditions.
 }

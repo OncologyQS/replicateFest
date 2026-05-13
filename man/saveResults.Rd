@@ -2,17 +2,17 @@
 % Please edit documentation in R/repManFunctions.r
 \name{saveResults}
 \alias{saveResults}
-\title{saveResults}
+\title{Save results to an Excel file}
 \usage{
 saveResults(results, outputFile = "output.xlsx")
 }
 \arguments{
-\item{results}{a list of data frames with results}
+\item{results}{a list of data frames with results.}
 
-\item{outputFile}{name of the output file}
+\item{outputFile}{name of the output file.}
 }
 \description{
-Saves results to an excel file
+`saveResults` saves results to an excel file.
 }
 \details{
 saveResults

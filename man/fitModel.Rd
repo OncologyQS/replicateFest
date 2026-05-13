@@ -2,26 +2,25 @@
 % Please edit documentation in R/repManFunctions.r
 \name{fitModel}
 \alias{fitModel}
-\title{fitModel
-Perform analysis for one clone}
+\title{Perform analysis for one clone}
 \usage{
 fitModel(clone, countData, peptides, refSamp, c.corr = 1)
 }
 \arguments{
-\item{clone}{a clone to get counts for}
+\item{clone}{a clone to get counts for.}
 
-\item{countData}{a list of per clone counts for all samples from readMergeSave}
+\item{countData}{a list of per clone counts for all samples from `readMergeSave`.}
 
-\item{peptides}{a vector of peptides corresponding to columns in merged data}
+\item{peptides}{a vector of peptides corresponding to columns in merged data.}
 
-\item{refSamp}{name of reference condition}
+\item{refSamp}{name of reference condition.}
 
-\item{c.corr}{a parameter to add to all counts to avoid 0s}
+\item{c.corr}{a parameter to add to all counts to avoid 0s.}
 }
 \value{
 odds ratios and p-values of regression for comparisons to the reference condition
-and comparison of the best to the second best condition
+and comparison of the best to the second best condition.
 }
 \description{
-The function fits negative binomial regression model for a clone
+The function fits negative binomial regression model for a clone.
 }

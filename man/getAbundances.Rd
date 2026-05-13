@@ -2,18 +2,20 @@
 % Please edit documentation in R/repManFunctions.r
 \name{getAbundances}
 \alias{getAbundances}
-\title{getAbundances}
+\title{Return counts for the specified clones}
 \usage{
 getAbundances(clones, countData)
 }
 \arguments{
-\item{clones}{a vector of clones of interest}
+\item{clones}{a vector of clones of interest.}
 
-\item{countData}{a list of counts for all samples}
+\item{countData}{a list of counts for all samples.}
 }
 \value{
-a data.frame of clone abundances across samples in `countData`
+a data.frame of clone abundances across samples
+in `countData`.
 }
 \description{
-returns the read count for clones of interest in all samples
+Returns the read count for clones of interest
+in all samples.
 }

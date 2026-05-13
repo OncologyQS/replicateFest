@@ -2,7 +2,7 @@
 % Please edit documentation in R/manafest_shiny_functions.r
 \name{runFisher}
 \alias{runFisher}
-\title{runFisher}
+\title{Run Fisher's exact test for a pair of samples}
 \usage{
 runFisher(pair, mergedData, nReadFilter = c(10, 0), dir = T, clones = NULL)
 }
@@ -10,20 +10,24 @@ runFisher(pair, mergedData, nReadFilter = c(10, 0), dir = T, clones = NULL)
 \item{pair}{a pair of samples to compare.
 The reference sample is the second sample in pair if dir = T
 (suggesting expansion compare to the reference and
-corresponding OR > 1)}
+corresponding OR > 1).}
 
-\item{mergedData}{a list of data frames with read counts for each sample}
+\item{mergedData}{a list of data frames with read counts
+for each sample.}
 
-\item{nReadFilter}{a vector with the number of reads for each sample in the pair}
+\item{nReadFilter}{a vector with the number of reads
+for each sample in the pair.}
 
-\item{dir}{a logical value indicating the direction of comparison}
+\item{dir}{a logical value indicating the direction of comparison.}
 
 \item{clones}{a vector with clones to analyze. If NULL, all clones
-with the number of reads >= nReadFilter[1] are analyzed}
+with the number of reads >= nReadFilter[1] are analyzed.}
 }
 \value{
-a data frame with p-value, FDR, odds ratio, and confidence interval
+a data frame with p-value, FDR, odds ratio,
+and confidence interval.
 }
 \description{
-Runs Fisher's exact test for a pair of samples
+The function runs Fisher's exact test for
+a pair of samples for data without replicates.
 }

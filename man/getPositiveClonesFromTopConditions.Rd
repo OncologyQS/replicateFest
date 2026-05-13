@@ -2,7 +2,7 @@
 % Please edit documentation in R/manafest_shiny_functions.r
 \name{getPositiveClonesFromTopConditions}
 \alias{getPositiveClonesFromTopConditions}
-\title{getPositiveClonesFromTopConditions}
+\title{Find positive clones when there is no comparison to reference}
 \usage{
 getPositiveClonesFromTopConditions(
   fisherResTable,
@@ -14,34 +14,35 @@ getPositiveClonesFromTopConditions(
 )
 }
 \arguments{
-\item{fisherResTable}{a table with FDRs, ORs, and condition
+\item{fisherResTable}{a table with FDRs, odd ratios, and condition
 in which the clone is the most abundant.
-This table is an output from compareWithOtherTopConditions function}
+This table is an output from `compareWithOtherTopConditions`function}
 
-\item{orThr}{a threshold for odds ratio}
+\item{orThr}{a threshold for odds ratio.}
 
-\item{fdrThr}{a threshold for FDR}
+\item{fdrThr}{a threshold for FDR.}
 
-\item{percentThr}{a threshold for percentage}
+\item{percentThr}{a threshold for percentage.}
 
 \item{condsThr}{a threshold for the percent of conditions with
-non-zero counts}
+non-zero counts.}
 
-\item{...}{additional parameters passed to getFreqOrCount function}
+\item{...}{additional parameters passed to `getFreqOrCount` function.}
 }
 \value{
 a vector with positive clones as names and conditions,
 in which a clone is significant, as values
 }
 \description{
-Selects clones that have significant FDRs and OR higher than threshold
-meaning that a clone is significant and uniquely expanded
-also select clones that have NAs in FDR and OR, which means that
+`getPositiveClonesFromTopConditions` selects clones
+that have significant FDRs and odd ratios higher than threshold
+meaning that a clone is significant and uniquely expanded.
+Also select clones that have NAs in FDR and OR, which means that
 this clone appears in only one condition and there is nothing to compare
 checks if there is a condition that is also significantly expanded.
-This function takes a table with FDRs, ORs, and condition in which
+This function takes a table with FDRs, odd ratios, and condition in which
 the clone is the most abundant
-Column 1 and 2 are FDRs, 3 and 4 - ORs, and 5 is condition
+Column 1 and 2 are FDRs, 3 and 4 - odd ratios, and 5 is condition
 It returns a vector with positive clones as names and conditions,
-in which a clone is significant, as values
+in which a clone is significant, as values.
 }

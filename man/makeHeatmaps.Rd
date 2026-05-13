@@ -2,7 +2,7 @@
 % Please edit documentation in R/manafest_shiny_functions.r
 \name{makeHeatmaps}
 \alias{makeHeatmaps}
-\title{makeHeatmaps}
+\title{Plot heatmap of frequencies or fold changes}
 \usage{
 makeHeatmaps(
   clones,
@@ -13,18 +13,19 @@ makeHeatmaps(
 )
 }
 \arguments{
-\item{clones}{a vector of clones to plot}
+\item{clones}{a vector of clones to plot.}
 
-\item{mergedData}{a list of data frames with read counts for each sample}
+\item{mergedData}{a list of data frames with read counts
+for each sample.}
 
-\item{refSamp}{a reference sample ID. If NULL, then a heatmap of abundances will be plotted}
+\item{refSamp}{a reference sample. If NULL,
+then a heatmap of frequencies is plotted.}
 
-\item{fileName}{a name of the output file}
+\item{fileName}{a name of the output PDF file.}
 
-\item{size}{a height and width of heatmap in the output PDF file}
+\item{size}{a height and width of heatmap in the output PDF file.}
 }
 \description{
-Makes heatmaps of frequencies of each element
-of input clones and samples
-and plots fold change if refSamp is specified
+Makes heatmap of frequencies or fold changes
+(if `refSamp` is specified) for the specified clones and samples.
 }

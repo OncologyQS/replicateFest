@@ -2,18 +2,19 @@
 % Please edit documentation in R/repManFunctions.r
 \name{getClonesToTest}
 \alias{getClonesToTest}
-\title{getClonesToTest}
+\title{Return a vector of clones to analyze}
 \usage{
 getClonesToTest(countDat, nReads = 50)
 }
 \arguments{
-\item{countDat}{a list of merged data}
+\item{countDat}{a list of merged data.}
 
-\item{nReads}{a minimal number of reads required to consider a clone}
+\item{nReads}{a minimal number of reads required to consider a clone.}
 }
 \value{
-a vector of clones of interest
+a vector of clones of interest.
 }
 \description{
-function that returns clones of interest in all samples
+`getClonesToTest` returns clones that meet threshold
+for downstream analysis.
 }

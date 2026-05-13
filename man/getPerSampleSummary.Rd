@@ -2,20 +2,24 @@
 % Please edit documentation in R/manafest_shiny_functions.r
 \name{getPerSampleSummary}
 \alias{getPerSampleSummary}
-\title{getPerSampleSummary}
+\title{Create per sample summary of the positive clone for output}
 \usage{
 getPerSampleSummary(posClones, mergedData, replicates = FALSE)
 }
 \arguments{
-\item{posClones}{a data frame with positive clones in the first column
+\item{posClones}{a data frame with the positive clones in
+the first column
 and their conditions to be summarized in the second.
-In the replication version, these should be samples}
+In the replication version, these should be samples.}
 
-\item{mergedData}{a list of data frames with read counts for each sample}
+\item{mergedData}{a list of data frames with read counts
+for each sample.}
 
-\item{replicates}{a logical value indicating if there are replicates}
+\item{replicates}{a logical value indicating if there are replicates.}
 }
 \description{
-returns per sample summary of positive clones as a table with the
-number of positive clones per sample and the sum of their frequencies
+`getPerSampleSummary` returns per sample summary of
+the positive clones as a table with the
+number of positive clones per sample and
+the sum of their frequencies
 }

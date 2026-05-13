@@ -2,24 +2,21 @@
 % Please edit documentation in R/repManFunctions.r
 \name{splitFileName}
 \alias{splitFileName}
-\title{splitFileName
-function that extracts condition and replicate information
-from the file names. The condition and replicate should
-be separated by "_" and be the last two elements.}
+\title{Return condition and replicate information}
 \usage{
 splitFileName(filenames, sep = "_")
 }
 \arguments{
-\item{filenames}{a vector of file names}
+\item{filenames}{a vector of file names.}
 
-\item{sep}{a separator to split the file names, default is "_"}
+\item{sep}{a separator to split the file names, default is "_".}
 }
 \value{
-a data frame with condition and replicate information
+a data frame with condition and replicate
+information for further analysis.
 }
 \description{
-splitFileName
-function that extracts condition and replicate information
-from the file names. The condition and replicate should
+`splitFileName`extracts condition and replicate
+information from the file names. The condition and replicate should
 be separated by "_" and be the last two elements.
 }

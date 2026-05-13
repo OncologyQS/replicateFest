@@ -2,7 +2,7 @@
 % Please edit documentation in R/manafest_shiny_functions.r
 \name{getFreqOrCount}
 \alias{getFreqOrCount}
-\title{getFreqOrCount}
+\title{Return read counts and frequencies in percent}
 \usage{
 getFreqOrCount(
   clones,
@@ -33,5 +33,6 @@ Otherwise, counts will be returned}
 a data frame with frequencies or abundances in percent for selected clones and samples
 }
 \description{
-Returns frequencies or abundances in percent for selected clones and samples
+The function returns frequencies in percent and/or abundances
+for selected clones and samples
 }

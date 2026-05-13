@@ -27,5 +27,6 @@ getFreq(
 a data frame with frequencies in percent for selected clones and samples
 }
 \description{
-Returns frequencies in percent for selected clones and samples
+Returns frequencies in percent for
+the specified clones and samples
 }

@@ -2,22 +2,21 @@
 % Please edit documentation in R/repManFunctions.r
 \name{cTabPR}
 \alias{cTabPR}
-\title{cTabPR
-function to make the count matrix for 1 clone, from merged data}
+\title{Make matrix for one clone}
 \usage{
 cTabPR(clone, countData, correct = 0.5)
 }
 \arguments{
-\item{clone}{a clone to get counts for}
+\item{clone}{a clone to get counts for.}
 
-\item{countData}{a list of per clone counts for all samples from readMergeSave}
+\item{countData}{a list of per clone counts for all samples
+from `readMergeSave`.}
 
-\item{correct}{a parameter to add to all counts to avoid 0s}
+\item{correct}{a parameter to add to all counts to avoid zeros.}
 }
 \value{
-a vector with counts for a clone across all samples
+a vector with counts for a clone across all samples.
 }
 \description{
-cTabPR
-function to make the count matrix for 1 clone, from merged data
+Returns the count matrix for one clone from merged data.
 }

@@ -2,8 +2,7 @@
 % Please edit documentation in R/repManFunctions.r
 \name{getPositiveClonesReplicates}
 \alias{getPositiveClonesReplicates}
-\title{getPositiveClonesReplicates
-returns positive clones for version with replicates}
+\title{Find positive clones}
 \usage{
 getPositiveClonesReplicates(
   analysisRes,
@@ -17,26 +16,31 @@ getPositiveClonesReplicates(
 )
 }
 \arguments{
-\item{analysisRes}{a data frame with results of analysis}
+\item{analysisRes}{a data frame with results of analysis
+returned by `fitModelSet`.}
 
-\item{mergedData}{a list of data frames with read counts for each sample}
+\item{mergedData}{a list of data frames with read counts
+for each sample.}
 
-\item{refSamp}{a name of reference condition to compare to}
+\item{refSamp}{a name of reference condition to compare to.}
 
-\item{samp}{a vector of sample names to include in the analysis}
+\item{samp}{a vector of sample names to include in the analysis.}
 
-\item{excludeCond}{a vector of conditions to exclude from the analysis}
+\item{excludeCond}{a vector of conditions to exclude from
+the analysis.}
 
-\item{orThr}{a threshold for odds ratio}
+\item{orThr}{a threshold for odds ratio.}
 
-\item{fdrThr}{a threshold for FDR}
+\item{fdrThr}{a threshold for FDR.}
 
-\item{percentThr}{a threshold for percentage of reads in a sample to consider a clone expanded}
+\item{percentThr}{a threshold for percentage of reads in
+a sample to consider a clone expanded.}
 }
 \value{
-a data frame with positive clones, significant condition,
+a data frame with positive clones and expanded condition
 }
 \description{
-getPositiveClonesReplicates
-returns positive clones for version with replicates
+`getPositiveClonesReplicates` returns positive
+(uniquely expanded) clones for version with replicates
+using output from `fitModelSet`.
 }

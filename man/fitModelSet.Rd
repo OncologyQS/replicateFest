@@ -2,24 +2,33 @@
 % Please edit documentation in R/repManFunctions.r
 \name{fitModelSet}
 \alias{fitModelSet}
-\title{fit model for a set of clones}
+\title{Fit model for a set of clones.}
 \usage{
 fitModelSet(clones, countData, peptides, excludeCond = NA, ...)
 }
 \arguments{
-\item{clones}{a list of clones to fit the model}
+\item{clones}{a list of clones to fit the model.}
 
-\item{countData}{a list of counts for all samples}
+\item{countData}{a list of counts for all samples.}
 
-\item{peptides}{a vector of peptides corresponding to columns in merged data}
+\item{peptides}{a vector of peptides corresponding to columns
+in merged data.}
 
-\item{excludeCond}{a vector of conditions to exclude from the analysis}
+\item{excludeCond}{a vector of conditions to exclude from
+the analysis if any.}
 
-\item{...}{additional parameters to pass to fitModel}
+\item{...}{additional parameters to pass to `fitModel`.}
 }
 \value{
-a matrix with all ORs, p-values and FDRs
+a matrix with all ORs, p-values, and FDRs
 }
 \description{
-fit model for a set of clones
+Fit model for a set of clones.
 }
+\section{Functions}{
+\itemize{
+\item \code{fitModelSet()}: fits negative binomial model for
+a set of clones and returns  odds ratios, p-values, and
+Benjamini-Hochberg adjusted p-values for each clone.
+
+}}

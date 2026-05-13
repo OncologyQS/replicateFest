@@ -73,11 +73,12 @@ readMergeSave = function(files, filenames = NULL)
 }
 
 #' @title Make matrix for one clone
-#' Returns the count matrix for one clone from merged data
-#' @param clone a clone to get counts for
-#' @param countData a list of per clone counts for all samples from readMergeSave
-#' @param correct a parameter to add to all counts to avoid 0s
-#' @return a vector with counts for a clone across all samples
+#' @description Returns the count matrix for one clone from merged data.
+#' @param clone a clone to get counts for.
+#' @param countData a list of per clone counts for all samples
+#' from `readMergeSave`.
+#' @param correct a parameter to add to all counts to avoid zeros.
+#' @return a vector with counts for a clone across all samples.
 #'
 #'
 #### requires 1 input:
@@ -552,6 +553,7 @@ fitModelSet = function(clones, countData, peptides,
 #' @param fdrThr threshold for FDR to consider a clone expanded.
 #' @return a data frame with expanded clones.
 #' @export
+#'
 getExpanded = function(fitResults, countData,
                        refSamp,
                        orThr = 1,

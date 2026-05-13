@@ -7,20 +7,23 @@
 createResTableReplicates(res, mergedData, percentThr = 0, ...)
 }
 \arguments{
-\item{res}{a table with results of analysis}
+\item{res}{a table with results of analysis returned by `fitModelSet`.}
 
-\item{mergedData}{a list of data frames with read counts for each sample}
+\item{mergedData}{a list of data frames with read counts
+for each sample.}
 
-\item{percentThr}{a threshold for percentage of reads in a sample to consider a clone expanded}
+\item{percentThr}{a threshold for percentage of reads
+in a sample to consider a clone expanded.}
 
-\item{...}{additional parameters to pass to getExpanded function}
+\item{...}{additional parameters to pass to
+the `getExpanded` function.}
 }
 \value{
 a data frame with significant clones and the corresponding
- OR, FDR, counts, and percentages for all conditions
+ odd ratios, FDRs, counts, and percentages for all conditions
 }
 \description{
 Creates a table with significantly expanded clones
 relative to the reference condition and all corresponding data,
-such as OR, FDR, abundances, and percentages
+such as odd rations, p-values, FDRs, abundances, and percentages
 }

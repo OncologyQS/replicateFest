@@ -2,7 +2,7 @@
 % Please edit documentation in R/repManFunctions.r
 \name{runExperiment}
 \alias{runExperiment}
-\title{runExperiment}
+\title{Run analysis using negative binomial model}
 \usage{
 runExperiment(
   files,
@@ -21,33 +21,37 @@ runExperiment(
 )
 }
 \arguments{
-\item{files}{a list of filenames with full paths}
+\item{files}{a list of filenames with full paths.}
 
-\item{peptides}{a vector of peptides corresponding to columns in merged data}
+\item{peptides}{a vector of peptides corresponding to columns
+in merged data.}
 
 \item{nReads}{minimal number of reads required to consider a clone}
 
-\item{refSamp}{name of reference condition}
+\item{refSamp}{name of reference condition.}
 
-\item{orThr}{threshold for OR to consider a clone expanded}
+\item{orThr}{threshold for OR to consider a clone expanded.}
 
-\item{fdrThr}{threshold for FDR to consider a clone expanded}
+\item{fdrThr}{threshold for FDR to consider a clone expanded.}
 
-\item{excludeCond}{a vector of conditions to exclude from the analysis}
+\item{excludeCond}{a vector of conditions to exclude from
+the analysis.}
 
-\item{xrCond}{a vector of cross-reactive conditions}
+\item{xrCond}{a vector of cross-reactive conditions.}
 
-\item{percentThr}{a threshold for percentage of reads in a sample to consider a clone expanded}
+\item{percentThr}{a threshold for percentage of reads in
+a sample to consider a clone expanded.}
 
-\item{outputFile}{name of the output file}
+\item{outputFile}{name of the output file.}
 
-\item{saveToFile}{logical, if TRUE save results to a file}
+\item{saveToFile}{logical, if TRUE save results to a file.}
 
-\item{permute}{logical, if TRUE permute sample labels to run a permutation test}
+\item{permute}{logical, if TRUE permute sample labels to run
+a permutation test.}
 }
 \value{
-a list of all expanded clones, uniquely expanded clones
-and parameters of the run
+a list of all expanded clones, uniquely expanded clones.
+and parameters of the run.
 }
 \description{
 Reads in files with TCR repertoires from

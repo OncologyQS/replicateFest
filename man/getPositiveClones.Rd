@@ -2,28 +2,29 @@
 % Please edit documentation in R/manafest_shiny_functions.r
 \name{getPositiveClones}
 \alias{getPositiveClones}
-\title{getPositiveClones}
+\title{Find positive clones}
 \usage{
 getPositiveClones(analysisRes, mergedData, samp = names(mergedData), ...)
 }
 \arguments{
 \item{analysisRes}{a list with results of Fisher's test
-for pairwise comparisons}
+for pairwise comparisons.}
 
 \item{mergedData}{a list of data frames with read counts
-for each sample}
+for each sample.}
 
-\item{samp}{a vector with sample IDs to analyze}
+\item{samp}{a vector with sample names to analyze.}
 
-\item{...}{additional parameters passed to createResTable function}
+\item{...}{additional parameters passed to `createResTable` function}
 }
 \value{
 a vector with positive clones as names and conditions,
-in which a clone is significant, as values
+in which a clone is significant, as values.
 }
 \description{
-returns a vector with positive clones as names and conditions,
+Returns a vector with positive
+(uniquely expanded) clones as names and conditions,
 in which a clone is significant, as values.
 For every clone, checks top two conditions with the highest number of reads
-to see if a clone is uniquely expanded
+to see if a clone is uniquely expanded.
 }

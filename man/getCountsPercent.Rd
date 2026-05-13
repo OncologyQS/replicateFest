@@ -2,20 +2,23 @@
 % Please edit documentation in R/manafest_shiny_functions.r
 \name{getCountsPercent}
 \alias{getCountsPercent}
-\title{getCountsPercent}
+\title{Prepares a data frame with counts and frequencies}
 \usage{
 getCountsPercent(clones, mergedData, samp = names(mergedData))
 }
 \arguments{
-\item{clones}{a vector with clones to analyze}
+\item{clones}{a vector with clones to analyze.}
 
-\item{mergedData}{a list of data frames with read counts for each sample}
+\item{mergedData}{a list of data frames with read counts
+for each sample.}
 
-\item{samp}{a vector with sample IDs}
+\item{samp}{a vector with sample names.}
 }
 \value{
-a data frame with read counts and frequencies for selected clones and samples
+a data frame with read counts and frequencies
+for the specified clones and samples
 }
 \description{
-Returns read counts and frequencies for selected clones and samples
+`getCountsPercent` returns a data frame with
+read counts and frequencies for the specified clones and samples.
 }
