@@ -72,8 +72,8 @@ readMergeSave = function(files, filenames = NULL)
 		return(list(mergedData = mergedData,ntData = ntData))
 }
 
-#' cTabPR
-#' function to make the count matrix for 1 clone, from merged data
+#' @title Make matrix for one clone
+#' Returns the count matrix for one clone from merged data
 #' @param clone a clone to get counts for
 #' @param countData a list of per clone counts for all samples from readMergeSave
 #' @param correct a parameter to add to all counts to avoid 0s
@@ -150,17 +150,16 @@ dfResultPR=function(cts,cfs){
 
 
 #####################################
-#' fitModel
-#' Perform analysis for one clone
-#' @description  The function fits negative binomial regression model for a clone
+#' @title Perform analysis for one clone
+#' @description  The function fits negative binomial regression model for a clone.
 #' @export
-#' @param clone a clone to get counts for
-#' @param countData a list of per clone counts for all samples from readMergeSave
-#' @param peptides a vector of peptides corresponding to columns in merged data
-#' @param refSamp name of reference condition
-#' @param c.corr a parameter to add to all counts to avoid 0s
+#' @param clone a clone to get counts for.
+#' @param countData a list of per clone counts for all samples from `readMergeSave`.
+#' @param peptides a vector of peptides corresponding to columns in merged data.
+#' @param refSamp name of reference condition.
+#' @param c.corr a parameter to add to all counts to avoid 0s.
 #' @return odds ratios and p-values of regression for comparisons to the reference condition
-#' and comparison of the best to the second best condition
+#' and comparison of the best to the second best condition.
 #'
 
 
@@ -258,40 +257,33 @@ fitModel = function(clone,countData,peptides,refSamp,
 # from reading files to output all results
 #################
 #' @export
-#' @title runExperiment
+#' @title Run analysis using negative binomial model
 #' @description Reads in files with TCR repertoires from
 #' a FEST experiment with replicate samples per condition (stimulating peptide).
 #' It fits negative binomial model to find expanded clones
 #' comparing to a reference samples.
 #' It also compares top conditions to find unique expansions.
 #' The results are return and saved in an Excel file.
-#' @param files a list of filenames with full paths
-#' @param peptides a vector of peptides corresponding to columns in merged data
+#' @param files a list of filenames with full paths.
+#' @param peptides a vector of peptides corresponding to columns
+#' in merged data.
 #' @param nReads minimal number of reads required to consider a clone
-#' @param refSamp name of reference condition
-#' @param orThr threshold for OR to consider a clone expanded
-#' @param fdrThr threshold for FDR to consider a clone expanded
-#' @param excludeCond a vector of conditions to exclude from the analysis
-#' @param xrCond a vector of cross-reactive conditions
-#' @param percentThr a threshold for percentage of reads in a sample to consider a clone expanded
-#' @param outputFile name of the output file
-#' @param saveToFile logical, if TRUE save results to a file
-#' @param permute logical, if TRUE permute sample labels to run a permutation test
-#' @return a list of all expanded clones, uniquely expanded clones
-#' and parameters of the run
+#' @param refSamp name of reference condition.
+#' @param orThr threshold for OR to consider a clone expanded.
+#' @param fdrThr threshold for FDR to consider a clone expanded.
+#' @param excludeCond a vector of conditions to exclude from
+#' the analysis.
+#' @param xrCond a vector of cross-reactive conditions.
+#' @param percentThr a threshold for percentage of reads in
+#' a sample to consider a clone expanded.
+#' @param outputFile name of the output file.
+#' @param saveToFile logical, if TRUE save results to a file.
+#' @param permute logical, if TRUE permute sample labels to run
+#' a permutation test.
+#' @return a list of all expanded clones, uniquely expanded clones.
+#' and parameters of the run.
 #'
-#### returns a list of all expanded clones, uniquely expanded clones
-#### and parameters of the run
 
-#### requires the following inputs:
-#### main arguments are filenames (full paths in current implementation)
-#### and a vector of peptide ids for each file.
-#### additional arguments include a minimal number of reads required
-#### to consider a clone
-#### the reference peptide ID,
-#### a vector of conditions to exclude from the analysis
-#### a threshold for OR and FDR to consider a clone expanded
-#### a vector of cross-reactive conditions
 #### added option for permuting labels to answer to Kellie's request. Need to remove for the app and package
 
 #### 2025-01-29 added comparison to the second best to find unique expansions
@@ -436,11 +428,13 @@ runExperiment=function(files,
 }
 
 #' @export
-#' @title getAbundances
-#' @description returns the read count for clones of interest in all samples
-#' @param clones a vector of clones of interest
-#' @param countData a list of counts for all samples
-#' @return a data.frame of clone abundances across samples in `countData`
+#' @title Return counts for the specified clones
+#' @description Returns the read count for clones of interest
+#' in all samples.
+#' @param clones a vector of clones of interest.
+#' @param countData a list of counts for all samples.
+#' @return a data.frame of clone abundances across samples
+#' in `countData`.
 # input: a list of merged data, a vector of clones of interest
 getAbundances = function(clones,countData)
 {
@@ -461,11 +455,12 @@ getAbundances = function(clones,countData)
   return(output_counts)
 }
 
-#' @title getClonesToTest
-#' @description function that returns clones of interest in all samples
-#' @param countDat a list of merged data
-#' @param nReads a minimal number of reads required to consider a clone
-#' @return a vector of clones of interest
+#' @title Return a vector of clones to analyze
+#' @description `getClonesToTest` returns clones that meet threshold
+#' for downstream analysis.
+#' @param countDat a list of merged data.
+#' @param nReads a minimal number of reads required to consider a clone.
+#' @return a vector of clones of interest.
 #' @export
 #'
 getClonesToTest = function(countDat, nReads = 50)
@@ -494,16 +489,19 @@ getClonesToTest = function(countDat, nReads = 50)
   return(goodClones)
 }
 
-#' fit model for a set of clones
-#' @param clones a list of clones to fit the model
-#' @param countData a list of counts for all samples
-#' @param peptides a vector of peptides corresponding to columns in merged data
-#' @param excludeCond a vector of conditions to exclude from the analysis
-#' @param ... additional parameters to pass to fitModel
-#' @return a matrix with all ORs, p-values and FDRs
+#' @title Fit model for a set of clones.
+#' @describeIn `fitModelSet` fits negative binomial model for
+#' a set of clones and returns  odds ratios, p-values, and
+#' Benjamini-Hochberg adjusted p-values for each clone.
+#' @param clones a list of clones to fit the model.
+#' @param countData a list of counts for all samples.
+#' @param peptides a vector of peptides corresponding to columns
+#' in merged data.
+#' @param excludeCond a vector of conditions to exclude from
+#' the analysis if any.
+#' @param ... additional parameters to pass to `fitModel`.
+#' @return a matrix with all ORs, p-values, and FDRs
 #' @export
-# return a matrix with all ORs, p-values and FDRs
-# input: a list of clones, merged data, peptides,
 
 fitModelSet = function(clones, countData, peptides,
                        excludeCond = NA, ...)
@@ -544,16 +542,16 @@ fitModelSet = function(clones, countData, peptides,
   return(fitResults)
 }
 
-#' function that returns the expanded clones relative to reference
-#' @param fitResults a data frame with ORs, p-values and FDRs
-#' @param countData a list of counts for all samples
-#' @param refSamp name of reference sample
-#' @param orThr threshold for OR to consider a clone expanded
-#' @param fdrThr threshold for FDR to consider a clone expanded
-#' @return a data frame with expanded clones
+#' @title
+#' @description function that returns the expanded clones relative to reference
+#' @param fitResults a data frame with odd ratios, p-values, and FDRs
+#' that outputs `fitModelSet`.
+#' @param countData a list of counts for all samples.
+#' @param refSamp name of reference sample.
+#' @param orThr threshold for OR to consider a clone expanded.
+#' @param fdrThr threshold for FDR to consider a clone expanded.
+#' @return a data frame with expanded clones.
 #' @export
-# input: a data frame with ORs, p-values and FDRs
-# output: a data frame with expanded clones
 getExpanded = function(fitResults, countData,
                        refSamp,
                        orThr = 1,
@@ -686,10 +684,10 @@ getXR = function(res, conditions, refSamp, xrCond,
 
 #' saveResults
 #' @export
-#' @title saveResults
-#' @description Saves results to an excel file
-#' @param results a list of data frames with results
-#' @param outputFile name of the output file
+#' @title Save results to an Excel file
+#' @description `saveResults` saves results to an excel file.
+#' @param results a list of data frames with results.
+#' @param outputFile name of the output file.
 
 saveResults = function(results, outputFile = "output.xlsx")
 {
@@ -708,13 +706,14 @@ saveResults = function(results, outputFile = "output.xlsx")
   saveWorkbook(wb, outputFile, overwrite = TRUE)
 }
 
-#' splitFileName
-#' function that extracts condition and replicate information
-#' from the file names. The condition and replicate should
+#' @title Return condition and replicate information
+#' @description `splitFileName`extracts condition and replicate
+#' information from the file names. The condition and replicate should
 #' be separated by "_" and be the last two elements.
-#' @param filenames a vector of file names
-#' @param sep a separator to split the file names, default is "_"
-#' @return a data frame with condition and replicate information
+#' @param filenames a vector of file names.
+#' @param sep a separator to split the file names, default is "_".
+#' @return a data frame with condition and replicate
+#' information for further analysis.
 #' @export
 
 splitFileName = function(filenames, sep = "_")
@@ -736,17 +735,24 @@ splitFileName = function(filenames, sep = "_")
   return(condRep)
 }
 
-#' getPositiveClonesReplicates
-#' returns positive clones for version with replicates
+#' @title Find positive clones
+#' @description `getPositiveClonesReplicates` returns positive
+#' (uniquely expanded) clones for version with replicates
+#' using output from `fitModelSet`.
 #' @param analysisRes a data frame with results of analysis
-#' @param mergedData a list of data frames with read counts for each sample
-#' @param refSamp a name of reference condition to compare to
-#' @param samp a vector of sample names to include in the analysis
-#' @param excludeCond a vector of conditions to exclude from the analysis
-#' @param orThr a threshold for odds ratio
-#' @param fdrThr a threshold for FDR
-#' @param percentThr a threshold for percentage of reads in a sample to consider a clone expanded
-#' @return a data frame with positive clones, significant condition,
+#' returned by `fitModelSet`.
+#' @param mergedData a list of data frames with read counts
+#' for each sample.
+#' @param refSamp a name of reference condition to compare to.
+#' @param samp a vector of sample names to include in the analysis.
+#' @param excludeCond a vector of conditions to exclude from
+#' the analysis.
+#' @param orThr a threshold for odds ratio.
+#' @param fdrThr a threshold for FDR.
+#' @param percentThr a threshold for percentage of reads in
+#' a sample to consider a clone expanded.
+#' @return a data frame with positive clones and expanded condition
+#'
 #' @export
 
 getPositiveClonesReplicates = function(analysisRes,
@@ -811,16 +817,17 @@ getPositiveClonesReplicates = function(analysisRes,
 #' createResTableReplicates
 #' @description Creates a table with significantly expanded clones
 #' relative to the reference condition and all corresponding data,
-#' such as OR, FDR, abundances, and percentages
-#' @param res a table with results of analysis
-#' @param mergedData a list of data frames with read counts for each sample
-#' @param percentThr a threshold for percentage of reads in a sample to consider a clone expanded
-#' @param ... additional parameters to pass to getExpanded function
+#' such as odd rations, p-values, FDRs, abundances, and percentages
+#' @param res a table with results of analysis returned by `fitModelSet`.
+#' @param mergedData a list of data frames with read counts
+#' for each sample.
+#' @param percentThr a threshold for percentage of reads
+#' in a sample to consider a clone expanded.
+#' @param ... additional parameters to pass to
+#' the `getExpanded` function.
 #' @return a data frame with significant clones and the corresponding
-#'  OR, FDR, counts, and percentages for all conditions
+#'  odd ratios, FDRs, counts, and percentages for all conditions
 #' @export
-# write output
-# OR, p-value, FDR, abundance, percent
 createResTableReplicates = function(res,mergedData,
                           percentThr = 0,
                           ...)
