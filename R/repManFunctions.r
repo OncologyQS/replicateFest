@@ -543,8 +543,10 @@ fitModelSet = function(clones, countData, peptides,
   return(fitResults)
 }
 
-#' @title
-#' @description function that returns the expanded clones relative to reference
+#' @title Find expanded clones
+#' @export
+#' @description `getExpanded` returns the expanded clones relative
+#' to reference condition.
 #' @param fitResults a data frame with odd ratios, p-values, and FDRs
 #' that outputs `fitModelSet`.
 #' @param countData a list of counts for all samples.
