@@ -862,12 +862,14 @@ createResTableReplicates = function(res,mergedData,
 # function to run analysis using counts data
 # made to run simulations
 # takes counts matrix and returns/saves expanded clones
-runFromMatrix =  function(countMatrix,saveToFile = "results.csv", ...) {
+runFromMatrix =  function(countMatrix, saveToFile = "results.csv", ...) {
   mergedData = asplit(countMatrix, MARGIN = 2)
   sampAnnot = splitFileName(names(mergedData))
   # run the analysis for selected clones
   res = fitModelSet(rownames(countMatrix),
-                    mergedData,...)
+                    mergedData,
+                    peptides = sampAnnot$condition,
+                    ...)
   rownames(res) = res$clone
 
   res_exp = getExpanded(res,mergedData,...)
