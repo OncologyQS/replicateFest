@@ -32,12 +32,10 @@ generate_d_name <- function() {
 
 # Function to generate VDJtools formatted data
 generate_vdjtools_df <- function(expanded_clonotype = NULL,
-                                 expanded_count = 1000,
-                                 base_count = 10,
                                  n_clonotypes = 50) {
 #  total_count <- expanded_count + base_count * (n_clonotypes - 1)
   df <- data.frame(
-    count = rep(base_count, n_clonotypes),
+    count = sample(5:15, 1, size = n_clonotypes),
     freq = NA,
     cdr3nt = replicate(n_clonotypes, generate_cdr3_nt()),
     cdr3aa = replicate(n_clonotypes, generate_cdr3_aa()),
@@ -52,21 +50,21 @@ generate_vdjtools_df <- function(expanded_clonotype = NULL,
     stringsAsFactors = FALSE
   )
 
-  if (!is.null(expanded_clonotype)) {
-    # get random index for a clone to be expanded
-    i = sample(1:n_clonotypes, 1)
-    df$cdr3aa[i] <- expanded_clonotype
-    df$cdr3nt[i] <- generate_cdr3_nt()
-    df$v[i] <- generate_v_name()
-    df$j[i] <- generate_j_name()
-    df$d[i] <- generate_d_name()
-    df$count[i] <- expanded_count
+   if (!is.null(expanded_clonotype)) {
+
+    df$cdr3aa[1] <- expanded_clonotype
+    df$cdr3nt[1] <- generate_cdr3_nt()
+    df$v[1] <- generate_v_name()
+    df$j[1] <- generate_j_name()
+    df$d[1] <- generate_d_name()
+    df$count[1] <- sample(980:1020, size = 1)
   }
 
   df$freq <- round(df$count / sum(df$count), 6)
   return(df)
 }
 
+set.seed(123456)
 # Generate and save peptide-stimulated samples
 for (i in 1:5) {
   clonotype <- generate_cdr3_aa()
@@ -81,6 +79,11 @@ write.table(df_control, file = "sample1_control.tsv",  sep = '\t',
             row.names = FALSE, quote = FALSE)
 
 
+# create replicates folder if doesn't exist
+if (!dir.exists("replicates")) {
+  dir.create("replicates")
+}
+set.seed(123456)
 
 # Generate data with replicates
 rep = c("A","B","C")
