@@ -61,6 +61,7 @@
 # - switched to pheatmap
 # - added filter for the percent of non-zero wells
 # - added threshold for frequency
+# - added cross-validation option to the app
 
 # TODO:
 # - add custom separator into interface
@@ -288,6 +289,8 @@ server <- function(input, output,session) {
   if (!require(devtools)) install.packages("devtools")
   if (!require(contrast)) install.packages("contrast")
   if (!require(multcomp)) install.packages("multcomp")
+  if (!require(vroom)) install.packages("vroom")
+  if (!require(lme4)) install.packages("lme4")
 
 #  source("R/manafest_shiny_functions.r")
 #  source("R/repManFunctions.r")
@@ -746,7 +749,7 @@ server <- function(input, output,session) {
             saveCI = FALSE
           )
         }
-browser()
+
         # add a spreadsheet with cross-reactive clones if specified
         if(!is.null(saveParams$crossReact))
         {
