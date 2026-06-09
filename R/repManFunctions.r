@@ -683,6 +683,8 @@ getXR = function(res, conditions, refSamp, xrCond,
 
   # exclude conditions that are not in xrCond
   excl = inclXR %>% filter(!grepl(paste(excludeCond,collapse = "|"),significant_condition))
+
+  if(nrow(excl) == 0) excl = data.frame("No cross-reactive clones for the specified conditions")
   return(excl)
 }
 

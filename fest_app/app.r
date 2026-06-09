@@ -67,7 +67,7 @@
 #   Couldn't easily add, because the getPerSampleSummary function
 #   also requires separator, but it's not straightforward to pass it
 #   Probably, need to save that as another element in analysisRes object
-#  added a custom separatro to the splitFileName function for now
+#  added a custom separator to the splitFileName function for now
 
 # - what do you think about removing the “compare to reference* button
 # in favor of  testing reference==’none’?
@@ -190,12 +190,15 @@ ui <- fluidPage(
     		checkboxInput('compareToRef','Compare to reference', value = TRUE),
 
     		# drop down menu to select a reference
-    		selectInput('refSamp', 'Select a reference', choices = list('None'), selected = NULL, multiple = FALSE,
-    			selectize = TRUE, width = NULL, size = NULL),
+    		selectInput('refSamp', 'Select a reference', choices = list('None'),
+    		            selected = NULL, multiple = FALSE,
+    		            selectize = TRUE, width = NULL, size = NULL),
 
-
-    		selectInput('excludeSamp', 'Select conditions to exclude', choices = list('None'), selected = NULL, multiple = TRUE,
-    			selectize = TRUE, width = NULL, size = NULL),
+    	# drop down menu to select samples to exclude from analysis
+    		selectInput('excludeSamp', 'Select conditions to exclude',
+    		            choices = list('None'), selected = NULL, multiple = TRUE,
+    		            selectize = TRUE, width = NULL, size = NULL),
+    	#
     		textInput('nReads', 'Specify the minimal number of templates (increase in case of large files)',
     		          value = "50", width = NULL, placeholder = NULL),
 
@@ -230,6 +233,12 @@ ui <- fluidPage(
              shinyjs::useShinyjs(),
              textInput('condsThr', 'for conditions with non-zero abundance (in percent)',
                        value = "0"),
+             # drop down menu to select samples for cross-reactivity
+             shinyjs::useShinyjs(),
+             selectInput('crossReact', 'Select conditions for cross-reactivity',
+                         choices = list('None'), selected = NULL, multiple = TRUE,
+                         selectize = TRUE, width = NULL, size = NULL),
+
              downloadButton('saveResults', 'Download Results'),
              downloadButton('saveHeatmaps', 'Save Heatmap')
            ), # end sidebarPanel
@@ -301,6 +310,9 @@ server <- function(input, output,session) {
     sp$fdrThr    <- suppressWarnings(as.numeric(sp$fdrThr))
     sp$percentThr<- suppressWarnings(as.numeric(sp$percentThr))
     sp$condsThr  <- suppressWarnings(as.numeric(sp$condsThr))
+    # sp$crossReact <- ifelse(identical(sp$crossReact, "None"),
+    #                         NULL,
+    #                         sp$crossReact)
     sp
   }
 
@@ -377,6 +389,7 @@ server <- function(input, output,session) {
 
         updateSelectInput(session, "refSamp", choices = c('None', names(rv$mergedData)))
         updateSelectInput(session, "excludeSamp", choices = names(rv$mergedData))
+        updateSelectInput(session, "crossReact", choices=names(rv$mergedData))
 
         HTML(c('Uploaded files:<br/>', paste(names(rv$mergedData), collapse = '<br/>')))
       }, error = function(e) {
@@ -416,6 +429,7 @@ server <- function(input, output,session) {
         rv$ntData <- get0("ntData", envir = tmpenv)
         updateSelectInput(session, "refSamp", choices=c('None',names(rv$mergedData)))
         updateSelectInput(session, "excludeSamp", choices=names(rv$mergedData))
+        updateSelectInput(session, "crossReact", choices=names(rv$mergedData))
         # generate message about loaded samples
         message = c('Uploaded samples:<br/>',paste(names(rv$mergedData), collapse = '<br/>'))
         # return the message as HTML
@@ -455,8 +469,8 @@ server <- function(input, output,session) {
       }else{
         print('No data to save')
         output$message_load = renderText('No data to save')
-        emptyObj = NULL
-        save(emptyObj,file=file)
+#        emptyObj = NULL
+#        save(emptyObj,file=file)
       }
     })
 
@@ -464,17 +478,19 @@ server <- function(input, output,session) {
   # an observerEvent for checking the The input with replicates checkbox
   # if it checked, disable the compare to reference and condition threshold fields
   observeEvent(input$replicates, {
-    # if the checkbox is selected
+    # if the Analysis with replicates checkbox is selected
     if (input$replicates == TRUE){
       # make compareToRef checked before disabling
       updateCheckboxInput(session, "compareToRef", value = TRUE)
     # disable the Compare to reference option and condition threshold
       shinyjs::disable('compareToRef')
-      # and enable
       shinyjs::disable('condsThr')
+      shinyjs::enable("crossReact")
     }else{ # and enable otherwise
       shinyjs::enable('compareToRef')
       shinyjs::enable('condsThr')
+      shinyjs::disable("crossReact")
+
     }
     # if data is loaded
     if(!is.null(rv$mergedData))
@@ -504,6 +520,7 @@ server <- function(input, output,session) {
           updateSelectInput(session, "refSamp",
                             choices=c('None',sampAnnot$condition))
           updateSelectInput(session, "excludeSamp", choices=sampAnnot$condition)
+          updateSelectInput(session, "crossReact", choices=sampAnnot$condition)
 
         }
         # make compareToRef checked before disabling
@@ -517,6 +534,7 @@ server <- function(input, output,session) {
         # update conditions
         updateSelectInput(session, "refSamp", choices=c('None',names(mergedData)))
         updateSelectInput(session, "excludeSamp", choices=names(mergedData))
+        updateSelectInput(session, "crossReact", choices=names(mergedData))
         shinyjs::enable('compareToRef')
         # output sample names in the main panel
         output$message_analysis = renderText(
@@ -628,6 +646,7 @@ server <- function(input, output,session) {
               updateSelectInput(session, "refSamp", choices=c('None',sampAnnot$condition))
   #            updateSelectInput(session, "baselineSamp", choices=c('None',sampAnnot$condition))
               updateSelectInput(session, "excludeSamp", choices=sampAnnot$condition)
+              updateSelectInput(session, "crossReact", choices=sampAnnot$condition)
 
               # get clones to test
               clonesToTest = getClonesToTest(obj, nReads = as.numeric(input$nReads))
@@ -703,8 +722,9 @@ server <- function(input, output,session) {
           replicates = analysisRes$params$replicates
         )
       }
-
+      # create tables with results
       if (isTRUE(analysisRes$params$compareToRef)) {
+        # analysis with replicates
         resTable <- if (isTRUE(analysisRes$params$replicates)) {
           createResTableReplicates(
             analysisRes$res,
@@ -714,7 +734,9 @@ server <- function(input, output,session) {
             orThr = saveParams$orThr,
             fdrThr = saveParams$fdrThr
           )
+
         } else {
+          # analysis without replicates
           createResTable(
             analysisRes$res, obj,
             orThr = saveParams$orThr,
@@ -724,12 +746,32 @@ server <- function(input, output,session) {
             saveCI = FALSE
           )
         }
+browser()
+        # add a spreadsheet with cross-reactive clones if specified
+        if(!is.null(saveParams$crossReact))
+        {
 
+          tablesToXls$cross_reactive =
+            getXR(analysisRes$res,
+                  analysisRes$sampAnnot$conditions,
+                  refSamp = analysisRes$params$refSamp,
+                  xrCond = saveParams$crossReact,
+                  excludeCond = analysisRes$params$excludeCond,
+                  percentThr = saveParams$percentThr,
+                  countData = obj,
+                  orThr = saveParams$orThr,
+                  fdrThr = saveParams$fdrThr)
+        }
+
+
+        # add the results from the comparison to reference
         if (is.null(resTable)) {
           tablesToXls$ref_comparison_only <- data.frame(res = 'There are no significant clones', stringsAsFactors = FALSE)
         } else if (nrow(resTable) > 0) {
           tablesToXls$ref_comparison_only <- resTable
         }
+
+
       }
 
       # parameters sheet
@@ -740,6 +782,7 @@ server <- function(input, output,session) {
         "Data with replicates",
         "Reference sample",
         "Excluded samples",
+        "Cross-reactive samples",
         "Compare to reference",
         "n template threshold",
         "FDR threshold",
@@ -755,6 +798,7 @@ server <- function(input, output,session) {
         analysisRes$params$replicates,
         analysisRes$params$refSamp,
         paste(analysisRes$params$excludeSamp, collapse = ", "),
+        paste(saveParams$crossReact, collapse = ", "),
         analysisRes$params$compareToRef,
         analysisRes$params$nReads,
         saveParams$fdrThr,
