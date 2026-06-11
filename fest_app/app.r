@@ -277,7 +277,7 @@ server <- function(input, output,session) {
   options(shiny.maxRequestSize=100*1024^2, java.parameters = "-Xmx8000m")
   library(shiny)
   library(tools)
-  if (!require(replicateFest)) devtools::install_github("OncologyQS/replicateFest")
+  if (!require(replicateFest)) pak::pak("OncologyQS/replicateFest")
   library(replicateFest)
   library("Matrix")
   library(DT)
