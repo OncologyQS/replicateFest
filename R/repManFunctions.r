@@ -645,6 +645,23 @@ getExpanded = function(fitResults, countData,
 # and a vector of cross-reactive conditions
 # output: a data frame with cross-reactive clones
 
+#' @title Returns the cross-reactive clones
+#' @export
+#' @description `getXR` returns output with cross-reactive clones in specified
+#' conditions, if any.
+#' @param res a data frame with odd ratios, p-values, and FDRs
+#' that outputs `fitModelSet`.
+#' @param conditions a vector of all conditions that were used in the analysis
+#' @param refSamp name of reference sample.
+#' @param xrCond a vector of conditions that could be cross-reactive
+#' @param excludeCond a vector of conditions that were excluded from the analysis
+#' @param percentThr a threshold for percentage of reads in
+#' a sample to consider a clone expanded.
+#' @param ...  additional parameters to pass to `getExpanded`
+
+#' @return a data frame with cross-reactive clones.
+#' @export
+#'
 getXR = function(res, conditions, refSamp, xrCond,
                  excludeCond = NULL,percentThr = 0, ...)
 {

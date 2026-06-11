@@ -69,11 +69,12 @@
 <p><a href="#top"><font size="2">Top of Page</font></a></p>
 
 <h2><a name="outputParams">Output</a></h2>
-<p>After analysis completes, go to the <b>Save Results</b> tab and specify thresholds to determine FEST‑expanded and FEST‑positive clones. The odds ratio measures the magnitude of expansion of a clone in cultures of interest. Additionally, in the analysis with replicates you can specify conditions  The results are exported by clicking the <b>Download Results</b> button as an Excel workbook containing the following sheets:</p>
+<p>After analysis completes, go to the <b>Save Results</b> tab and specify thresholds to determine FEST‑expanded and FEST‑positive clones. The odds ratio measures the magnitude of expansion of a clone in cultures of interest. Additionally, in the analysis with replicates, you can specify cross-reactive conditions. The results are exported by clicking the <b>Download Results</b> button as an Excel workbook containing the following sheets:</p>
 <ul>
   <li><b>condition_summary</b>: number of FEST‑positive clones and the sum of their percents per condition.</li>
   <li><b>positive_clones_summary</b>: list of FEST‑positive clones, the condition where each clone is expanded, per‑sample frequencies, and fold changes relative to baseline/reference where applicable.</li>
   <li><b>positive_clones_all_data</b>: extended information for FEST‑positive clones including template counts (<code>*_abundance</code> columns) and percents (<code>*_percent</code> columns) for all samples (including those excluded from the analysis).</li>
+   <li><b>cross_reactive</b>: list of FEST‑expanded clones that are expanded in the specifed condtions.</li>
   <li><b>ref_comparison_only</b>: FEST‑expanded clones relative to the reference sample; includes FDR columns (<code>FDR:*</code>), odds ratios (<code>OR:*</code>), and abundance/percent columns for all samples. (This sheet is omitted if <b>Compare to reference</b> is disabled.)</li>
   <li><b>parameters</b>: all input parameters, number of samples analyzed, and total template counts for productive clones per sample.</li>
 </ul>
