@@ -23,3 +23,5 @@ NUL
 _UL
 replicate_inputData.rda
 *.code-workspace
+fest_app/.vscode/settings.json
+fest_app/replicateFest.code-workspace
