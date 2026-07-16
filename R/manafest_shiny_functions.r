@@ -153,7 +153,7 @@ createResTable = function(res,mergedData,
 		}
 		colnames(output_OR_CI) = paste(rep(c('OR:','CI95%:'),length(res)),rep(names(res),each = 2))
 	}else {output_OR_CI = output_OR}
-	# calculate the number of significant comaprisons
+	# calculate the number of significant comparisons
 	significant_comparisons = apply((as.numeric(output_fdr) < fdrThr &
 	                                   output_OR > orThr),1,sum,na.rm = T)
 
@@ -415,6 +415,7 @@ getPositiveClones = function(analysisRes, mergedData,
                              samp = names(mergedData),
                              ...)
 {
+
   resTable = createResTable(analysisRes, mergedData, saveCI =F, ...)
 	if(is.null(resTable)) return(NULL)
 
@@ -433,7 +434,8 @@ getPositiveClones = function(analysisRes, mergedData,
 			dimnames = list(clones,sapply(strsplit(colnames(signTable),'_vs_'), function(x)x[1])))
 
 	# returns condition in which a clone is significant
-	signCond = apply(signMatrix,1,function(x) colnames(signMatrix)[which(x)])
+	signCond = apply(signMatrix,1,
+	                 function(x) colnames(signMatrix)[which(x)])
 	#=====================
 	# if we have only one comparison
 	if (length(analysisRes) == 1)
@@ -457,11 +459,15 @@ getPositiveClones = function(analysisRes, mergedData,
 
 	#===============================
 	# compare with the second highest
-	fishRes1 = getFisherForNclone(freqMatrix, rownames(freqMatrix),2,mergedData)
+	fishRes1 = getFisherForNclone(freqMatrix,
+	                              rownames(freqMatrix),2,mergedData)
 	# compare with the third highest
-	fishRes2 = getFisherForNclone(freqMatrix, rownames(freqMatrix),3,mergedData)
+	fishRes2 = getFisherForNclone(freqMatrix,
+	                              rownames(freqMatrix),3,mergedData)
 	# combine results
-	fishResComb = cbind(fishRes1[,'FDR'],fishRes2[,'FDR'], fishRes1[,'odds.ratio'],fishRes2[,'odds.ratio'])
+	fishResComb = cbind(FDR1 = fishRes1[,'FDR'],FDR2 = fishRes2[,'FDR'],
+	                    OR1 = fishRes1[,'odds.ratio'],
+	                    OR2 = fishRes2[,'odds.ratio'])
 
 	# select clones that have significant FDRs and OR higher than threshold
 	# meaning that a clone is significant and unique expansion
@@ -469,7 +475,13 @@ getPositiveClones = function(analysisRes, mergedData,
 	# that this clone appears in only one condition and
 	# there is nothing to compare
 	# check if there is a condition that is also significantly expanded
-	fdrClones2 = applyThresholds(fishResComb, ...)
+
+	# extract thresholds from parameters passed to getPositiveClones
+	dots <- list(...)
+	fdrClones2 = applyThresholds(fishResComb,
+	                             orThr = dots$orThr,
+	                             fdrThr = dots$fdrThr)
+
 
 	# select clones that have maximum frequency across conditions
 	# more than the threshold
@@ -483,11 +495,13 @@ getPositiveClones = function(analysisRes, mergedData,
 	}else{return(NULL)}
 }
 
-# auxiliary function to apply thresholds for comparison to the second best
-applyThresholds = function(tab, fdrThr = 0.05, orThr = 1, ...)
+# auxiliary function to apply thresholds for comparison
+# to the second and third best conditions
+# FDR should be < fdrThr and OR should be > orThr
+applyThresholds = function(tab, fdrThr, orThr)
 {
   fdrClones2 = apply(tab,1,function(x)
-    any(as.numeric(x[1:2])>fdrThr|as.numeric(x[3:4])<orThr))
+    any(as.numeric(x[1:2])<fdrThr&as.numeric(x[3:4])>orThr))
 }
 
 #' @title Find positive clones when there is no comparison to reference
