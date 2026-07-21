@@ -488,11 +488,11 @@ server <- function(input, output,session) {
     # disable the Compare to reference option and condition threshold
       shinyjs::disable('compareToRef')
       shinyjs::disable('condsThr')
-      shinyjs::enable("crossReact")
+#      shinyjs::enable("crossReact")
     }else{ # and enable otherwise
       shinyjs::enable('compareToRef')
       shinyjs::enable('condsThr')
-      shinyjs::disable("crossReact")
+#      shinyjs::disable("crossReact")
 
     }
     # if data is loaded
@@ -547,6 +547,19 @@ server <- function(input, output,session) {
       }
     }
   } )
+
+  #==================
+  # an observerEvent for checking the compare to reference
+  # then disable cross-reactivity option
+  observeEvent(input$compareToRef, {
+    # if
+    if (input$compareToRef == FALSE){
+      shinyjs::disable("crossReact")
+    }else{
+      shinyjs::enable("crossReact")
+    }
+
+  })
 
   #================
   # run analysis with the Run Analysis button is clicked
