@@ -214,7 +214,7 @@ createResTable = function(res,mergedData,
 	# generate the output table with clones, significant conditions, ORs, FDRs, counts and percentages
 	outTab = data.frame(clone = clones,
 	                    n_significant_comparisons = rowSums(sig[clones,], na.rm = T),
-	                    significant_comparisons = sigComp[clones],
+	                    significant_condition = sigComp[clones],
 	                    output_fdr[clones,],
 	                    output_OR_CI[clones,],
 	                    output_counts_percent[clones,],
