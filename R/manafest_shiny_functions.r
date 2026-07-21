@@ -142,8 +142,10 @@ createResTable = function(res,mergedData,
 		output_OR[rows,i] = round(res[[i]][rows,'odds.ratio'],3)
 		if (saveCI) {output_CI[rows,i] = paste(round(res[[i]][rows,'CI_low'],3),'-',round(res[[i]][rows,'CI_up'],3), sep = '')}
 	}
-	colnames(output_fdr) = paste('FDR:',names(res))
-	colnames(output_OR) = paste('OR:',names(res))
+	fdrCols = paste('FDR:',names(res))
+	colnames(output_fdr) = fdrCols
+	orCols = paste('OR:',names(res))
+	colnames(output_OR) = orCols
 	colnames(output_CI) = paste('CI95%:',names(res))
 	if(saveCI) {
 		output_OR_CI = c()
@@ -153,10 +155,27 @@ createResTable = function(res,mergedData,
 		}
 		colnames(output_OR_CI) = paste(rep(c('OR:','CI95%:'),length(res)),rep(names(res),each = 2))
 	}else {output_OR_CI = output_OR}
-	# calculate the number of significant comparisons
-	significant_comparisons = apply((as.numeric(output_fdr) < fdrThr &
-	                                   output_OR > orThr),1,sum,na.rm = T)
 
+	# find significant comparisons and
+    # combine FDR and OR to find significant conditions
+    res_exp = data.frame(output_fdr,output_OR, check.names = F)
+  # create a matrix that says which clone is significant in which comparison
+	 sig = (res_exp[,fdrCols] < fdrThr &
+	         res_exp[,orCols] >= orThr)
+	# # list significant comparisons for each clone
+	comp = names(res)
+
+	sigComp = apply(sig, 1, function(x){
+	  # select significant comparisons and get first condition before "vs"
+	  # because after "vs" goes the reference condition
+	  # find significant comparison
+	  sigComp = comp[x]
+	  # remove NAs
+	  sigComp = sigComp[!is.na(sigComp)]
+	  s = sapply(strsplit(sigComp, split = "_vs_"), getElement, 1)
+	  # list significant comparisons using comma
+	  paste(s, collapse = ",")
+	})
 
 	# get abundances and percentages
 	output_counts_percent = getCountsPercent(clones, mergedData,
@@ -191,12 +210,15 @@ createResTable = function(res,mergedData,
 	# update clones to output
 	clones = rownames(output_counts_percent)
 
-  # generate the output table with clones, significant conditions, ORs, FDRs, counts and percentages
+#	browser()
+	# generate the output table with clones, significant conditions, ORs, FDRs, counts and percentages
 	outTab = data.frame(clone = clones,
-	                    n_significant_comparisons = significant_comparisons[clones],
+	                    n_significant_comparisons = rowSums(sig[clones,], na.rm = T),
+	                    significant_comparisons = sigComp[clones],
 	                    output_fdr[clones,],
 	                    output_OR_CI[clones,],
-	                    output_counts_percent, check.names = F)
+	                    output_counts_percent[clones,],
+	                    check.names = F)
 	# remove not significant clones
 	outTab = outTab[which(outTab[,'n_significant_comparisons'] > 0),]
 

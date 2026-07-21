@@ -750,31 +750,20 @@ server <- function(input, output,session) {
           )
         }
 
-        # add a spreadsheet with cross-reactive clones if specified
-        if(!is.null(saveParams$crossReact))
-        {
-
-          tablesToXls$cross_reactive =
-            getXR(analysisRes$res,
-                  analysisRes$sampAnnot$conditions,
-                  refSamp = analysisRes$params$refSamp,
-                  xrCond = saveParams$crossReact,
-                  excludeCond = analysisRes$params$excludeCond,
-                  percentThr = saveParams$percentThr,
-                  countData = obj,
-                  orThr = saveParams$orThr,
-                  fdrThr = saveParams$fdrThr)
-        }
-
-
         # add the results from the comparison to reference
         if (is.null(resTable)) {
           tablesToXls$ref_comparison_only <- data.frame(res = 'There are no significant clones', stringsAsFactors = FALSE)
         } else if (nrow(resTable) > 0) {
           tablesToXls$ref_comparison_only <- resTable
+          # add a spreadsheet with cross-reactive clones if specified
+          if(!is.null(saveParams$crossReact))
+          {
+            tablesToXls$cross_reactive =
+              getXR(resTable,
+                    analysisRes$sampAnnot$conditions,
+                    xrCond = saveParams$crossReact)
+          }
         }
-
-
       }
 
       # parameters sheet
