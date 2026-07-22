@@ -4,32 +4,17 @@
 \alias{getXR}
 \title{Returns the cross-reactive clones}
 \usage{
-getXR(
-  res,
-  conditions,
-  refSamp,
-  xrCond,
-  excludeCond = NULL,
-  percentThr = 0,
-  ...
-)
+getXR(res, conditions, xrCond)
 }
 \arguments{
 \item{res}{a data frame with odd ratios, p-values, and FDRs
-that outputs `fitModelSet`.}
+that outputs `createResTableReplicates`.}
 
 \item{conditions}{a vector of all conditions that were used in the analysis}
-
-\item{refSamp}{name of reference sample.}
 
 \item{xrCond}{a vector of conditions that could be cross-reactive}
 
 \item{excludeCond}{a vector of conditions that were excluded from the analysis}
-
-\item{percentThr}{a threshold for percentage of reads in
-a sample to consider a clone expanded.}
-
-\item{...}{additional parameters to pass to `getExpanded`}
 }
 \value{
 a data frame with cross-reactive clones.
