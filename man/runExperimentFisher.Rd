@@ -14,6 +14,7 @@ runExperimentFisher(
   condsThr = 0,
   excludeSamp = "",
   compareToRef = TRUE,
+  xrCond = NULL,
   ntLevel = FALSE,
   outputFile = "output.xlsx",
   saveToFile = T
@@ -37,7 +38,9 @@ with non-zero counts.}
 
 \item{excludeSamp}{sample names to exclude from analysis.}
 
-\item{compareToRef}{a logical value indicating if the comparison
+\item{compareToRef}{a logical value indicating if the comparison}
+
+\item{xrCond}{a vector of cross-reactive conditions.
 to the reference sample should be performed.}
 
 \item{ntLevel}{a logical value indicating if the analysis should be

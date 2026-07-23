@@ -851,6 +851,7 @@ compareWithOtherTopConditions = function(mergedData,
 #' with non-zero counts.
 #' @param excludeSamp sample names to exclude from analysis.
 #' @param compareToRef a logical value indicating if the comparison
+#' @param xrCond a vector of cross-reactive conditions.
 #' to the reference sample should be performed.
 #' @param ntLevel a logical value indicating if the analysis should be
 #' performed at the nucleotide level.
@@ -869,6 +870,7 @@ runExperimentFisher=function(files,
                              condsThr = 0,
                              excludeSamp = '',
                              compareToRef = TRUE,
+                             xrCond = NULL,
                              ntLevel = FALSE,
                              outputFile = "output.xlsx",
                              saveToFile = T)
@@ -961,6 +963,14 @@ runExperimentFisher=function(files,
     if (!is.null(resTable))
     {
       tablesToXls$ref_comparison_only = resTable
+      # add a spreadsheet with cross-reactive clones if specified
+      if(!is.null(xrCond))
+      {
+        tablesToXls$cross_reactive = getXR(resTable,
+                                           peptides,
+                                           xrCond = xrCond)
+      }
+
 
     }else{
       tablesToXls$ref_comparison_only =

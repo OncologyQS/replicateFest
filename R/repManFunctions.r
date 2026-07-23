@@ -377,7 +377,7 @@ runExperiment=function(files,
     # add a spreadsheet with cross-reactive clones if specified
     if(!is.null(xrCond))
     {
-      tablesToXls$cross_reactive = getXR(fitResults,
+      tablesToXls$cross_reactive = getXR(resTable,
                                          peptides,
                                          xrCond = xrCond)
     }
