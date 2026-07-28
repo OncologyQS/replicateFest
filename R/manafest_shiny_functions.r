@@ -437,13 +437,18 @@ getPositiveClones = function(analysisRes, mergedData,
                              samp = names(mergedData),
                              ...)
 {
-
   resTable = createResTable(analysisRes, mergedData, saveCI =F, ...)
 	if(is.null(resTable)) return(NULL)
 
 	# find significant expansions in one condition
 	clones = rownames(resTable)[which(resTable[,'n_significant_comparisons'] == 1)]
-	#================
+  # if there are no clones that are expanded in only one condition
+	if(length(clones)==0)
+	{
+	  return(NULL)
+	}
+
+		#================
 	# find condition in which it's expanded
 	signTable = createResTable(analysisRes, mergedData,
 	                           saveCI = F,
@@ -470,60 +475,63 @@ getPositiveClones = function(analysisRes, mergedData,
 		                  significant_condition = rep(n, length(clones))))
 	}
 	#=============================
-	# check if they are unique by checking top two conditions with the highest number of reads
+	# check if they are unique by checking top two conditions
+	# with the highest number of reads
+
+	# to do that, get frequencies for selected clones
 	freqMatrix = getFreqOrCount(clones,mergedData,samp,
 	                            colSuf = '',
 	                            returnFreq = T)
 
-	#==============================
-	# select clones with max percentage more than percentThr
-#	 freqMatrix = freqMatrix[apply(freqMatrix,1,max) > percentThr,]
-
-	#===============================
 	# compare with the second highest
 	fishRes1 = getFisherForNclone(freqMatrix,
 	                              rownames(freqMatrix),2,mergedData)
 	# compare with the third highest
 	fishRes2 = getFisherForNclone(freqMatrix,
 	                              rownames(freqMatrix),3,mergedData)
-	# combine results
-	fishResComb = cbind(FDR1 = fishRes1[,'FDR'],FDR2 = fishRes2[,'FDR'],
-	                    OR1 = fishRes1[,'odds.ratio'],
-	                    OR2 = fishRes2[,'odds.ratio'])
 
-	# select clones that have significant FDRs and OR higher than threshold
-	# meaning that a clone is significant and unique expansion
-	# also select clones that have NAs in FDR and OR, which means
-	# that this clone appears in only one condition and
-	# there is nothing to compare
-	# check if there is a condition that is also significantly expanded
+	# then apply thresholds to see is any of those comparisons are significant
 
-	# extract thresholds from parameters passed to getPositiveClones
+	# to do that, extract thresholds from parameters passed to getPositiveClones
+	# and apply them to the results of two comparisons
+	# applyThresholds returns TRUE if a clone is uniquely expanded
 	dots <- list(...)
-	fdrClones2 = applyThresholds(fishResComb,
+	fdrClones2 = applyThresholds(fishRes1, fishRes2,
 	                             orThr = dots$orThr,
 	                             fdrThr = dots$fdrThr)
 
-
-	# select clones that have maximum frequency across conditions
-	# more than the threshold
-	posClones = names(fdrClones2)[which(!fdrClones2|is.na(fdrClones2))]
+  # select uniquely expanded (positive) clones that are TRUE or
+ # NA, which means there are no other conditions to compare
+	posClones = clones[which(fdrClones2|is.na(fdrClones2))]
 	if(length(posClones)>0)
 	{
 	# get corresponding condition
-#		return(signCond[posClones])
 	  return(data.frame(clone = posClones,
 	                    significant_condition = signCond[posClones]))
 	}else{return(NULL)}
 }
 
-# auxiliary function to apply thresholds for comparison
-# to the second and third best conditions
-# FDR should be < fdrThr and OR should be > orThr
-applyThresholds = function(tab, fdrThr, orThr)
+# auxiliary function to apply thresholds for comparisons
+# to the top second and top third conditions
+# both comparison should not meet the significance criteria,
+# which means that the clone is uniquely expanded in the top condition
+# it should return TRUE for uniquely expanded clones
+# Significance criteria: FDR < fdrThr and OR > orThr
+applyThresholds = function(fishRes1, fishRes2, fdrThr, orThr)
 {
-  fdrClones2 = apply(tab,1,function(x)
-    any(as.numeric(x[1:2])<fdrThr&as.numeric(x[3:4])>orThr))
+  # fishRes1 are the results from the first comparison
+  # fishRes2 are the results from the second comparison
+
+  # is the first comparison significant
+  isSign1 = as.numeric(fishRes1[,'FDR']) < fdrThr &
+    as.numeric(fishRes1[,'odds.ratio']) > orThr
+  # is the second comparison significant
+  isSign2 = as.numeric(fishRes2[,'FDR']) < fdrThr &
+    as.numeric(fishRes2[,'odds.ratio']) > orThr
+
+  # if any comparison is significant, that means the clone
+  # is not uniquely expanded, then return FALSE, otherwise, TRUE
+  return(ifelse(isSign1|isSign2, FALSE, TRUE))
 }
 
 #' @title Find positive clones when there is no comparison to reference
