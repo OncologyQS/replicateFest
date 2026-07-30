@@ -116,7 +116,11 @@ ui <- fluidPage(
                    E.g. 'sample1_HIV_1.tsv'.")),
       tags$li(HTML("After the analysis is done,
               select the <b>Save Results</b> tab
-                   to save the results.")),
+                   to save the results."),
+              tags$br(),
+              "Examples of the output Excel files can be found ",
+              tags$a("here", href = "https://github.com/OncologyQS/replicateFest/tree/main/tests/testthat/testdata", target = "_blank")
+      ),
     ),
     tags$p(HTML("For more details, please refer to the
                 <b>User Manual</b> tab"))
