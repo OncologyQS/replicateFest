@@ -61,7 +61,7 @@
 # - switched to pheatmap
 # - added filter for the percent of non-zero wells
 # - added threshold for frequency
-# - added cross-validation option to the app
+# - added a cross-validation option to the app
 
 # TODO:
 # - add custom separator into interface
@@ -98,8 +98,12 @@ ui <- fluidPage(
            sequence."),
     tags$h3("Steps"),
     tags$ol(
-      tags$li(HTML("<b>Load Data</b>: upload FEST files or a previously saved R
-              object with data")),
+      tags$li(
+        HTML("<b>Load Data</b>: upload FEST files or a previously saved R object with data."),
+        tags$br(),
+        "Examples of the input data can be found ",
+        tags$a("here", href = "https://github.com/OncologyQS/replicateFest/tree/main/tests/testthat/testdata", target = "_blank")
+      ),
       tags$li(HTML("After the data is successfully loaded,
               select the <b>Run Analysis</b>
                    tab to run the analysis.
@@ -109,11 +113,7 @@ ui <- fluidPage(
                    will be extracted from the input file names.
                    To be able to correctly extract the conditions, file names should
                    follow the format 'sampleID_condition_replicate.ext'.
-                   E.g. 'sample1_HIV_1.tsv'.
-                   <br>If the input data has replicates,
-                   the negative binomial model will be used in the analysis;
-                   if the input data does not have replicates,
-                   the Fisher's exact test will be used.")),
+                   E.g. 'sample1_HIV_1.tsv'.")),
       tags$li(HTML("After the analysis is done,
               select the <b>Save Results</b> tab
                    to save the results.")),
@@ -771,6 +771,7 @@ server <- function(input, output,session) {
           # add a spreadsheet with cross-reactive clones if specified
           if(!is.null(saveParams$crossReact))
           {
+# browser()
             tablesToXls$cross_reactive =
               getXR(resTable,
                     analysisRes$sampAnnot$conditions,

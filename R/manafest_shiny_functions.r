@@ -477,8 +477,14 @@ getPositiveClones = function(analysisRes, mergedData,
 	#=============================
 	# check if they are unique by checking top two conditions
 	# with the highest number of reads
+	# the idea is to compare the top condition with both the second and third
+	# the top condition as a reference
+	# if any of those comparisons is significant
+	# which means that the second and third expanded more that the top
+	# and a clone is not uniquely expanded
 
-	# to do that, get frequencies for selected clones
+	# to do that, get frequencies to order conditions by frequencies
+	# for each clone and find the most abundant conditions to compare
 	freqMatrix = getFreqOrCount(clones,mergedData,samp,
 	                            colSuf = '',
 	                            returnFreq = T)
@@ -607,7 +613,7 @@ getPositiveClonesFromTopConditions = function(fisherResTable,
 }
 
 # runs Fisher's test for the nth clone with the highest frequency/the number of reads
-getFisherForNclone = function(freq, clones, n = 2,mergedData)
+getFisherForNclone = function(freq, clones, n = 2, mergedData)
 {
   productiveReadCounts = sapply(mergedData, sum)
 	fishRes = c()
