@@ -403,7 +403,10 @@ makeHeatmaps = function(clones, mergedData, refSamp = NULL,
 	dev.off()
 	NULL
 }
-
+# runs Fisher's test for one clone
+# The reference sample is the second sample in pair
+# suggesting expansion compare to the reference and
+# the corresponding OR > 1.
 runSingleFisher = function(clone, pair, mergedData)
 {
   totalReadCounts = sapply(mergedData, sum)
@@ -518,16 +521,17 @@ getPositiveClones = function(analysisRes, mergedData,
 }
 
 # auxiliary function to apply thresholds for comparisons
-# to the top second and top third conditions
-# both comparison should not meet the significance criteria,
+# to the top second and top third conditions as reference
+# both comparison shouldmeet the significance criteria,
 # which means that the clone is uniquely expanded in the top condition
 # it should return TRUE for uniquely expanded clones
 # Significance criteria: FDR < fdrThr and OR > orThr
 applyThresholds = function(fishRes1, fishRes2, fdrThr, orThr)
 {
   # fishRes1 are the results from the first comparison
+  # with the second top condition as a reference
   # fishRes2 are the results from the second comparison
-
+  # with the third top condition as a reference
   # is the first comparison significant
   isSign1 = as.numeric(fishRes1[,'FDR']) < fdrThr &
     as.numeric(fishRes1[,'odds.ratio']) > orThr
@@ -535,9 +539,9 @@ applyThresholds = function(fishRes1, fishRes2, fdrThr, orThr)
   isSign2 = as.numeric(fishRes2[,'FDR']) < fdrThr &
     as.numeric(fishRes2[,'odds.ratio']) > orThr
 
-  # if any comparison is significant, that means the clone
-  # is not uniquely expanded, then return FALSE, otherwise, TRUE
-  return(ifelse(isSign1|isSign2, FALSE, TRUE))
+  # if both comparison is significant, that means the clone
+  # is uniquely expanded, then return TRUE, otherwise, FALSE
+  return(isSign1&isSign2)
 }
 
 #' @title Find positive clones when there is no comparison to reference
@@ -612,7 +616,8 @@ getPositiveClonesFromTopConditions = function(fisherResTable,
   }else{return(NULL)}
 }
 
-# runs Fisher's test for the nth clone with the highest frequency/the number of reads
+# runs Fisher's test for the nth clone with the highest
+# frequency/the number of reads
 getFisherForNclone = function(freq, clones, n = 2, mergedData)
 {
   productiveReadCounts = sapply(mergedData, sum)
