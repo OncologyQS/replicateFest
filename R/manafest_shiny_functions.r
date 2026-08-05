@@ -499,7 +499,8 @@ getPositiveClones = function(analysisRes, mergedData,
 	fishRes2 = getFisherForNclone(freqMatrix,
 	                              rownames(freqMatrix),3,mergedData)
 
-	# then apply thresholds to see is any of those comparisons are significant
+	# then apply thresholds to see if both of those comparisons
+	# are significant
 
 	# to do that, extract thresholds from parameters passed to getPositiveClones
 	# and apply them to the results of two comparisons
