@@ -26,3 +26,4 @@ fest_app/.vscode/settings.json
 fest_app/replicateFest.code-workspace
 fest_app/replicateFest.code-workspace
 fest_app/replicateFest.code-workspace
+*.xlsx

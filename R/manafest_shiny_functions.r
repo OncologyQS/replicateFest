@@ -160,8 +160,8 @@ createResTable = function(res,mergedData,
     # combine FDR and OR to find significant conditions
     res_exp = data.frame(output_fdr,output_OR, check.names = F)
   # create a matrix that says which clone is significant in which comparison
-	 sig = (res_exp[,fdrCols] < fdrThr &
-	         res_exp[,orCols] >= orThr)
+	 sig = data.frame((res_exp[,fdrCols] < fdrThr &
+	         res_exp[,orCols] >= orThr), check.names = F)
 	# # list significant comparisons for each clone
 	comp = names(res)
 
@@ -185,10 +185,17 @@ createResTable = function(res,mergedData,
 	# grep columns with percentage
 	percCol = grep("percent",colnames(output_counts_percent), value = T)
 	# get clones with maximum percentage higher than specified threshold
+	output_counts_percent = data.frame(output_counts_percent, check.names = F)
 	output_counts_percent = output_counts_percent[
-	  apply(output_counts_percent[,percCol],1,max) >percentThr,]
+	  apply(output_counts_percent[,percCol],1,max) > percentThr,]
 
-	#browser()
+	# add check if there are any rows in output_counts_percent
+	if (is.null(output_counts_percent) || nrow(output_counts_percent) == 0)
+	{
+	  m = 'There is no significant clones after applying the percent threshold'
+	  print(m)
+	  return (NULL)
+	}
 	#=============
 	# apply threshold for conditions with non-zero counts
 	# grep columns with counts
@@ -200,9 +207,10 @@ createResTable = function(res,mergedData,
 	  which(nonZeroCounts >= condThreshold),]
 
 	# add check if there are any rows in output_counts_percent
-	if (nrow(output_counts_percent) == 0)
+	if (is.null(output_counts_percent) || nrow(output_counts_percent) == 0)
 	{
-	  m = 'There is no significant clones after applying percent and condition thresholds'
+	  m = 'There is no significant clones after applying
+	  both the percent and condition thresholds'
 	  print(m)
 	  return (NULL)
 	}
@@ -210,17 +218,20 @@ createResTable = function(res,mergedData,
 	# update clones to output
 	clones = rownames(output_counts_percent)
 
-#	browser()
 	# generate the output table with clones, significant conditions, ORs, FDRs, counts and percentages
+	# ensure subsetting preserves row structure when only one clone is selected
+	fdr_df = as.data.frame(output_fdr[clones,,drop = FALSE], check.names = FALSE)
+	or_ci_df = as.data.frame(output_OR_CI[clones,,drop = FALSE], check.names = FALSE)
+	counts_df = as.data.frame(output_counts_percent[clones,,drop = FALSE], check.names = FALSE)
+
 	outTab = data.frame(clone = clones,
-	                    n_significant_comparisons = rowSums(sig[clones,], na.rm = T),
-	                    significant_condition = sigComp[clones],
-	                    output_fdr[clones,],
-	                    output_OR_CI[clones,],
-	                    output_counts_percent[clones,],
-	                    check.names = F)
+						n_significant_comparisons = rowSums(sig[clones,,drop = FALSE], na.rm = TRUE),
+						significant_condition = sigComp[clones],
+						check.names = FALSE, stringsAsFactors = FALSE)
+	outTab = cbind(outTab, fdr_df, or_ci_df, counts_df)
+
 	# remove not significant clones
-	outTab = outTab[which(outTab[,'n_significant_comparisons'] > 0),]
+	outTab = outTab[which(outTab[, 'n_significant_comparisons'] > 0), , drop = FALSE]
 
 	# if significanceTable return a binary table clones vs conditions specifying which clone is significant in what condition
 	if (significanceTable)
@@ -445,7 +456,7 @@ getPositiveClones = function(analysisRes, mergedData,
 
 	# find significant expansions in one condition
 	clones = rownames(resTable)[which(resTable[,'n_significant_comparisons'] == 1)]
-  # if there are no clones that are expanded in only one condition
+	# if there are no clones that are expanded in only one condition
 	if(length(clones)==0)
 	{
 	  return(NULL)
@@ -457,7 +468,8 @@ getPositiveClones = function(analysisRes, mergedData,
 	                           saveCI = F,
 	                           significanceTable = T,
 	                           ...)
-#	signTable = data.frame(signTable[clones,])
+
+	#	signTable = data.frame(signTable[clones,])
 	signMatrix = matrix(signTable[clones,],
 			nrow = length(clones),
 			ncol = ncol(signTable),

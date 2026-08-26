@@ -728,7 +728,6 @@ server <- function(input, output,session) {
           NULL
         }
       )
-
       tablesToXls <- list()
 
       if (is.null(posClones) || nrow(posClones) == 0) {
