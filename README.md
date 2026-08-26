@@ -6,6 +6,18 @@ This package provides tools for functional evaluation of T-cell clonotypes using
 
 The shiny app is available [here](http://www.stat-apps.onc.jhmi.edu/FEST/).
 
+## Table of contents
+
+- [Installation](#installation)
+- [Analysis workflow](#analysis-workflow)
+- [Usage](#usage)
+  - [Example 1: analysis without replicates](#example-1-analysis-without-replicates)
+  - [Example 2: analysis with replicates](#example-2-analysis-with-replicates)
+- [Test data](#test-data)
+- [Web application](#web-application)
+- [Reference](#reference)
+
+<a id="installation"></a>
 ## Installation
 
 Install the development version from GitHub:
@@ -20,6 +32,16 @@ remotes::install_github("OncologyQS/replicateFest")
 # Using devtools
 devtools::install_github("OncologyQS/replicateFest")
 ```
+
+<a id="analysis-workflow"></a>
+## Analysis workflow
+
+<p align="center">
+  <img src="2026-07-30_replicateFest_Figure1.jpg" alt="replicateFest overview figure" width="900" />
+</p>
+T cells are cultured in parallel under one condition per peptide of interest together with a no-peptide control condition, with biological or technical replicates where the design allows, and the TCR Vβ CDR3 region is sequenced for every culture (green). The resulting per-sample tables, e.g. in Adaptive ImmunoSEQ or VDJtools format, are the input to replicateFest, which can be run either as an R package or through the accompanying Shiny application (dashed outline). At import, only productive clonotypes are retained, nucleotide sequences translating into the same amino acid CDR3 are aggregated, and clonotypes with low template counts are discarded. Clonotype abundance is then estimated in one of two ways depending on the design (purple): a negative binomial model fitted across all conditions simultaneously when replicates are available (runExperiment), or pairwise Fisher's exact tests against the control when they are not (runExperimentFisher). Both routes yield an odds ratio and a Benjamini–Hochberg adjusted p-value for every clonotype in every condition relative to the no-peptide control. Clonotypes passing the odds ratio and FDR thresholds constitute the FEST-expanded set (orange). This set is refined along two independent branches: clonotypes whose top condition is significantly above the next-ranked conditions are reported as FEST-positive, that is, antigen-specific; optionally, clonotypes expanded across a user-defined group of related epitope conditions are reported as cross-reactive. Both clonotype sets and the cross-reactive set are written out as Excel tables; additionally, a heat map of the FEST-positive clonotypes can be saved as a PDF file (grey).
+
+<a id="usage"></a>
 ## Usage
 
 The package supports two main workflows:
@@ -27,26 +49,31 @@ The package supports two main workflows:
 1. Analysis without replicates using Fisher's exact test.
 2. Analysis with replicates using negative binomial model.
 
+<a id="example-1-analysis-without-replicates"></a>
 ### Example 1: analysis without replicates
 
 A complete example for this workflow is provided in [replicateFest_Fisher_usage.R](replicateFest_Fisher_usage.R). 
 
 If there is no reference sample, the analysis can be run with `compareToRef = FALSE` and `refSamp = NULL`.
 
+<a id="example-2-analysis-with-replicates"></a>
 ### Example 2: analysis with replicates
 
 A complete example for this workflow is provided in [replicateFest_usage.R](replicateFest_usage.R):
 
 These example scripts are the best starting point for running the package on the bundled test data or your own input files.
 
+<a id="test-data"></a>
 ## Test data
 
 The package includes test data were generated using `dataset.r` to emulate VDJtools-style clonotype tables. The test data can be fourn in `tests/testthat/testdata`. Amino acid CDR3 sequences were sampled randomly from the 20 standard residues with lengths between 12 and 16, while nucleotide sequences were generated from the four canonical bases with lengths between 36 and 45. V, D, and J gene names were synthesized as TRBV1–TRBV30, TRBD1–TRBD2, and TRBJ1–TRBJ10, respectively. We generated mock repertoires containing 50 clonotypes. Each repertoire entry included a nucleotide CDR3 sequence, the translated amino acid CDR3, V/D/J gene calls, and junction coordinates consistent with VDJtools formatting. All clonotypes were initially assigned counts of between 5 and 15, and relative frequencies were computed by normalizing counts to the total clone count within each sample. To simulate peptide-driven clonal expansion, a single clonotype in each stimulated sample was replaced with an expanded clone and assigned an increased count of from 980 to 1020. This design preserved a majority of low-frequency background clonotypes while creating a dominant expanded clone representative of antigen-specific activation. Control samples were generated using the same procedure but without an intentionally expanded clonotype. Five distinct peptide-stimulated samples were generated, each containing a unique expanded clonotype, along with a single control sample. Two datasets were generated to test the analysis with and without replicates. For the dataset without replicates, we generated five peptide-stimulated samples and one control sample without expansion to be used as a reference sample. For the dataset with replicates, technical replicates were generated by replicating each peptide-stimulated condition three times, and the control sample was also replicated three times. All mock repertoires were written as tab-delimited text files, matching common input requirements for downstream immune repertoire analysis pipelines.
 
+<a id="web-application"></a>
 ## Web application
 
 The user friendly version of the framework is available as a shiny application here: http://www.stat-apps.onc.jhmi.edu/FEST/.
 
+<a id="reference"></a>
 ## Reference
 
 The preprint is available on bioRxiv: https://www.biorxiv.org/content/10.64898/2026.06.18.733036v3
