@@ -71,9 +71,9 @@ The package includes test data were generated using `dataset.r` to emulate VDJto
 <a id="web-application"></a>
 ## Web application
 
-The user friendly version of the framework is available as a shiny application here: http://www.stat-apps.onc.jhmi.edu/FEST/.
+The user-friendly version of the framework is available as a shiny application here: http://www.stat-apps.onc.jhmi.edu/FEST/.
 
 <a id="reference"></a>
 ## Reference
 
-The preprint is available on bioRxiv: https://www.biorxiv.org/content/10.64898/2026.06.18.733036v3
+The paper is published in Frontiers in Immunology: [https://www.frontiersin.org/articles/10.3389/fimmu.2026.1937788](https://www.frontiersin.org/articles/10.3389/fimmu.2026.1937788)
